@@ -1,0 +1,268 @@
+/* Seletor Universal - Remove margens e preenchimentos padrão */
+* {
+ margin: 0; /* Remove margens padrão */
+ padding: 0; /* Remove preenchimento padrão */
+ box-sizing: border-box; /* Inclui a borda e o preenchimento no cálculo do tamanho */
+ font-family: 'Titillium Web', Arial, Helvetica, sans-serif; /* Define a fonte padrão */
+} 
+/* Estilo da barra de navegação principal */
+.bng-navbar {
+ background: linear-gradient(135deg, #1b3a57 0%, #1d5c7f 100%);
+ display: flex; /* Coloca os elementos em linha */
+ align-items: center; /* Centraliza os itens verticalmente */
+ justify-content: space-between; /* Espaço entre os blocos */
+ padding: 14px 28px; /* Espaçamento interno da barra */
+ position: sticky; /* Fixa a barra no topo ao fazer scroll */
+ top: 0; /* A barra fica colada ao topo */
+ gap: 20px;
+ box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+ border-bottom-left-radius: 14px;
+ border-bottom-right-radius: 14px;
+ z-index: 100;
+}
+/* Estilo para os <div> internos da barra de navegação */
+.bng-navbar div {
+ display: flex; /* Coloca os elementos lado a lado */
+ align-items: center; /* Alinha-os verticalmente ao centro */
+}
+.navbar-brand {
+ gap: 10px;
+}
+.brand-text h3 {
+ font-size: 1.45rem;
+ color: #f8f9fa;
+ margin: 0;
+ letter-spacing: 0.8px;
+}
+.brand-text span {
+ color: #dceaf7;
+ font-size: 0.95rem;
+}
+.container-navegacao {
+ display: flex;
+ gap: 28px;
+ justify-content: center;
+ align-items: center;
+ flex-wrap: wrap;
+}
+.container-navegacao a {
+ font-size: 1rem; /* Aumenta o tamanho da fonte dos links */
+ margin: 0;
+ text-decoration: none; /* Remove o sublinhado */
+ color: #e8eff5; /* Define a cor dos links */
+ transition: color 0.2s ease, transform 0.2s ease;
+}
+.container-navegacao a:hover {
+ color: #ffffff; /* Muda a cor ao passar o mouse */
+ transform: translateY(-1px);
+}
+.nav-cliente a {
+ color: #ffffff; /* Cor do texto */
+ text-decoration: none; /* Remove sublinhado */
+ font-size: 1rem;
+ padding: 10px 18px; /* Espaçamento interno */
+ border-radius: 999px; /* Bordas arredondadas */
+ border: 1px solid rgba(255, 255, 255, 0.25);
+ background: rgba(255, 255, 255, 0.12);
+ transition: background 0.3s ease, transform 0.2s ease;
+}
+.nav-cliente a:hover {
+ background-color: rgba(255, 255, 255, 0.25); /* Cor de fundo ao passar o mouse */
+ transform: translateY(-1px);
+}
+@media (max-width: 820px) {
+ .bng-navbar {
+     flex-direction: column;
+     align-items: stretch;
+     text-align: center;
+ }
+ .container-navegacao {
+     justify-content: center;
+     width: 100%;
+     gap: 16px;
+     margin: 10px 0;
+ }
+ .nav-cliente {
+     justify-content: center;
+ }
+}
+
+/* Estilos para o Rodapé */
+.footer-container {
+ display: flex;
+ flex-direction: column;
+ gap: 18px;
+ background: linear-gradient(135deg, #1b3a57 0%, #1d5c7f 100%);
+ color: #f1f7fb;
+ padding: 20px 28px;
+ width: 100%;
+ border-top-left-radius: 14px;
+ border-top-right-radius: 14px;
+ box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.footer-start {
+ max-width: 380px;
+}
+.footer-start h4 {
+ margin: 0 0 10px;
+ font-size: 1.35rem;
+ letter-spacing: 0.8px;
+}
+.footer-start p {
+ color: #d7e5f1;
+ line-height: 1.6;
+}
+.footer-links {
+ display: grid;
+ grid-template-columns: repeat(3, minmax(180px, 1fr));
+ gap: 20px;
+}
+.footer-section {
+ background: rgba(255, 255, 255, 0.06);
+ border: 1px solid rgba(255, 255, 255, 0.14);
+ border-radius: 15px;
+ padding: 8px;
+}
+.footer-section strong {
+ display: block;
+ margin-bottom: 10px;
+ font-size: 1.05rem;
+ color: #f8f9fa;
+}
+.footer-section p {
+ color: #d7e5f1;
+ font-size: 0.96rem;
+ line-height: 1.7;
+ margin: 0;
+}
+.footer-bottom {
+ text-align: center;
+ color: rgba(255, 255, 255, 0.75);
+ font-size: 0.95rem;
+}
+@media (max-width: 920px) {
+ .footer-links {
+     grid-template-columns: repeat(2, minmax(150px, 1fr));
+ }
+}
+@media (max-width: 620px) {
+ .footer-container {
+     padding: 24px 18px;
+ }
+ .footer-links {
+     grid-template-columns: 1fr;
+ }
+ .footer-start,
+ .footer-section {
+     text-align: center;
+ }
+}
+/* Texto Genérico */
+.container-texto-generico {
+ display: flex; /* Ativa o layout flexível */
+ justify-content: center; /* Centraliza os elementos horizontalmente */
+ flex-wrap: wrap; /* Permite quebra de linha em ecrãs menores */
+ gap: 20px; /* Espaço entre os elementos */
+ padding: 100px 40px; /* Espaçamento interno (superior/inferior e laterais) */
+ text-align: center; /* Centraliza o texto dentro dos artigos */
+ min-height: 100vh; /* Garante altura mínima de uma janela (ecrã) */
+} 
+/* Seção "Quem Somos" */
+#quem-somos {
+ text-align: center; /* Centra todo o conteúdo horizontalmente */padding: 100px 0; /* Espaçamento superior e inferior de 100px */}
+.quem-somos-content {
+ max-width: 800px; /* Largura máxima de 800px para limitar o conteúdo */ margin: 0 auto; /* Centra horizontalmente o conteúdo */
+}
+.quem-somos-content h1 {
+ font-size: 3em; /* Tamanho grande para o título principal */ margin-bottom: 20px; /* Espaçamento abaixo do título */
+}
+.quem-somos-content p {
+ font-size: 1.2em; /* Aumenta o tamanho da letra do parágrafo */ margin-bottom: 30px; /* Espaço abaixo do parágrafo */
+}
+.quem-somos-content img {
+ width: 700px; /* Define uma largura fixa da imagem */
+ height: 165px; /* Define uma altura fixa da imagem */
+ display: block; /* Faz com que a imagem se comporte como bloco (para usar margin auto) */margin: 20px auto; /* Centraliza a imagem com margens acima e abaixo */ object-fit: cover; /* Corta a imagem de forma proporcional sem distorcer */}
+.button {
+ display: inline-block; /* Permite definir largura/altura e manter como botão em linha */background-color: #aaaaaa; /* Cor de fundo cinza-claro */
+ color: #fff; /* Cor do texto branca */
+ padding: 10px 20px; /* Espaçamento interno (vertical x horizontal) */ text-decoration: none; /* Remove o sublinhado do link */
+border-radius: 5px; /* Bordas arredondadas no botão */
+} 
+/* Seção Equipa */
+/* Define o estilo dos títulos h2 da secção "nossa-equipa" e "servicos" */#nossa-equipa h2, #servicos h2 {
+ font-size: 3em; /* Aumenta o tamanho da fonte para maior destaque */ margin-bottom: 20px; /* Adiciona espaço abaixo do título */}
+/* Estilo para o container que agrupa todos os membros da equipa */
+.equipa-container {
+ display: flex; /* Organiza os elementos em linha (flexível) */flex-wrap: wrap; /* Permite que os elementos passem para a linha abaixo em ecrãs pequenos */justify-content: center; /* Centraliza os elementos horizontalmente */}
+/* Estilo individual de cada membro da equipa */
+.pessoa {
+ width: 300px; /* Define uma largura fixa para cada bloco */ margin: 20px; /* Espaçamento entre os blocos */
+ padding: 20px; /* Espaço interno dentro do bloco */
+ background-color: #eee; /* Cor de fundo cinzenta clara */
+ border-radius: 5px; /* Bordas ligeiramente arredondadas */ text-align: center; /* Centraliza o conteúdo (imagem, nome, cargo) */}
+/* Estilo para a imagem de cada pessoa */
+.pessoa img {
+ width: 100px; /* Largura fixa da imagem */
+ height: 100px; /* Altura fixa da imagem */
+ border-radius: 50%; /* Transforma a imagem num círculo */
+ margin-bottom: 10px; /* Espaço entre a imagem e o nome */
+}
+section {
+ padding: 100px 40px; /* Espaçamento interno nas secções (superior/inferior e laterais) */ 
+ text-align: center; /* Centraliza todo o conteúdo textual por padrão */
+ min-height: 100vh; /* Garante que cada secção tenha pelo menos a altura de uma janela inteira */
+} 
+#servicos {
+ max-width: 1200px;
+ margin: 50px auto;
+ padding: 50px;
+ scroll-margin-top: 100px;
+}
+.servicos-container {
+ display: flex; /* Organiza os elementos internos em linha (flexível) */flex-wrap: wrap; /* Permite que os elementos passem para a linha seguinte em ecrãs menores */justify-content: center; /* Centraliza os elementos horizontalmente */}
+.servico {
+ width: 300px; /* Define a largura de cada “cartão” de serviço */ margin: 20px; /* Espaçamento entre os cartões */
+ padding: 20px; /* Espaçamento interno dentro de cada cartão */ background-color: #eee; /* Cor de fundo cinzenta clara para destacar cada serviço */ border-radius: 5px; /* Bordas arredondadas para um visual mais suave */ text-align: center; /* Centraliza o conteúdo dentro de cada serviço */}
+.servico img {
+ width: 100px; /* Largura da imagem */
+ height: 100px; /* Altura da imagem */
+ border-radius: 50%; /* Torna a imagem circular */
+ margin-bottom: 10px; /* Espaço entre a imagem e o texto seguinte */
+} 
+/* Estilos para a secção Preçário */
+.pacotes-container {
+ display: flex; /* Organiza os pacotes lado a lado */flex-wrap: wrap; /* Permite quebra de linha em ecrãs pequenos */justify-content: center; /* Centraliza os pacotes horizontalmente */}
+.pacote {
+ width: 300px; /* Largura de cada cartão */
+ margin: 20px; /* Espaço entre os cartões */
+ padding: 20px; /* Espaço interno dentro de cada cartão */ background-color: #eee; /* Fundo cinzento claro */
+ border-radius: 5px; /* Bordas arredondadas */
+ text-align: center; /* Centraliza o conteúdo */
+}
+.pacote .preco {
+ font-size: 1.5em; /* Tamanho maior para destacar o preço */ font-weight: bold; /* Texto em negrito */
+margin-bottom: 10px; /* Espaço abaixo do preço */
+}
+.pacote ul {
+ list-style: none; /* Remove os marcadores padrão da lista */padding: 0; /* Remove preenchimento interno */ margin-bottom: 20px; /* Espaço entre a lista e o botão */}
+.pacote ul li {
+ margin-bottom: 5px; /* Espaço entre cada linha da lista */
+} 
+#contacto form {
+ display: flex; /* Usa layout flexível */
+flex-direction: column; /* Organiza os elementos na vertical */max-width: 500px; /* Limita a largura do formulário */ margin: 0 auto; /* Centraliza horizontalmente */
+}
+#contacto label {
+ margin-top: 10px; /* Espaço acima de cada rótulo (label) */}
+#contacto input, #contacto textarea {
+ padding: 10px; /* Espaço interno (dentro do campo) */ margin-bottom: 15px; /* Espaço abaixo de cada campo */
+ border: 1px solid #ddd; /* Borda cinzenta clara */
+ border-radius: 5px; /* Bordas arredondadas */
+}
+#contacto button {
+ background-color: #ddd; /* Cor de fundo do botão (cinzento claro) */ color: #fff; /* Cor do texto do botão (branco) */ padding: 10px 20px; /* Espaçamento interno do botão */
+ border: none; /* Remove a borda padrão */
+border-radius: 5px; /* Bordas arredondadas */
+ cursor: pointer; /* Cursor tipo "mão" ao passar por cima */
+} 
