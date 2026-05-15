@@ -383,7 +383,8 @@ margin-bottom: 10px; /* Espaço abaixo do preço */
 flex-direction: column; /* Organiza os elementos na vertical */max-width: 500px; /* Limita a largura do formulário */ margin: 0 auto; /* Centraliza horizontalmente */
 }
 #contacto label {
- margin-top: 10px; /* Espaço acima de cada rótulo (label) */}
+ margin-top: 10px; /* Espaço acima de cada rótulo (label) */
+}
 #contacto input, #contacto textarea {
  padding: 10px; /* Espaço interno (dentro do campo) */ margin-bottom: 15px; /* Espaço abaixo de cada campo */
  border: 1px solid #ddd; /* Borda cinzenta clara */
@@ -394,6 +395,57 @@ flex-direction: column; /* Organiza os elementos na vertical */max-width: 500px;
  border: none; /* Remove a borda padrão */
 border-radius: 5px; /* Bordas arredondadas */
  cursor: pointer; /* Cursor tipo "mão" ao passar por cima */
+}
+
+/* SECÇÃO "CONVITE" — final da página*/
+
+/* Sobrepõe o estilo global de section para tornar a secção mais compacta */
+#convite {
+    min-height: auto;          /* Remove a altura mínima de 100vh aplicada globalmente */
+    padding: 80px 20px;        /* Reduz o espaçamento superior/inferior para ficar compacto */
+}
+
+/* Centra e compacta o conteúdo interno da secção convite */
+#convite .quem-somos-content {
+    max-width: 720px;          /* Limita a largura máxima para manter o conteúdo centrado */
+    margin: 0 auto;            /* Centra horizontalmente o bloco */
+    padding: 3px 0;           /* Reduz o espaçamento interno vertical */
+}
+
+#convite,
+.convite-section {
+    background: linear-gradient(135deg, #eaf3fa 0%, #ffffff 100%); /* Gradiente suave de azul claro para branco */
+    text-align: center;        /* Centra todo o conteúdo textual */
+}
+
+/* Bloco de conteúdo centrado dentro das secções de convite */
+#convite .quem-somos-content,
+.convite-section .quem-somos-content {
+    max-width: 760px;          /* Largura máxima para não esticar demasiado em ecrãs grandes */
+    margin: 0 auto;            /* Centra o bloco horizontalmente */
+    padding: 24px 0;           /* Espaçamento interno apenas no eixo vertical */
+}
+
+/* Título principal da secção de convite */
+#convite h2,
+.convite-section h2 {
+    font-size: 2.2rem;         /* Tamanho grande para dar destaque ao título */
+    line-height: 1.05;         /* Altura de linha compacta para títulos grandes */
+    margin-bottom: 30px;       /* Espaço entre o título e o conteúdo seguinte */
+    color: #1a4f72;            /* Azul escuro da paleta da MEDINV */
+}
+
+/* Botão CTA dentro das secções de convite */
+#convite .button,
+.convite-section .button {
+    padding: 14px 30px;        /* Espaçamento interno do botão (vertical e horizontal) */
+    font-size: 1rem;           /* Tamanho de letra padrão para o botão */
+}
+
+/* Efeito hover no botão CTA */
+#convite .button:hover,
+.convite-section .button:hover {
+    transform: translateY(-2px); /* Eleva ligeiramente o botão ao passar o rato por cima */
 }
 
 /* Seção "Sobre" */
