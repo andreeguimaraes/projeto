@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contactos - MEDINV</title>
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="" type="image/png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome (local) -->
+    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css"> 
+    <!-- estilos de pagina -->
+    <link rel="stylesheet" href="../../../assets/css/estilos.css">
+    
+</head>
+<body>
+    <!-- Navegação -->
+    <nav class="bng-navbar">
+        <!-- Marca -->
+        <div class="navbar-brand">
+            <div class="brand-text">
+                <h3>MEDINV</h3>
+                <span>Saúde e Performance</span>
+            </div>
+        </div>
+
+        <!-- Links da navegação -->
+        <div class="container-navegacao">
+            <a href="../../index.html">INÍCIO</a>
+            <a href="../quem-somos/quem-somos.html">QUEM SOMOS</a>
+            <a href="../serviços/servicos.html">SERVIÇOS</a>
+            <a href="../contactos/contactos.html">CONTACTOS</a>
+        </div>
+
+        <!-- Área Cliente -->
+        <div class="nav-cliente">
+            <a href="../../login_form.html" target="_blank">Área Restrita</a>
+        </div>
+    </nav>
+
+    <!-- Seção Banner/Hero com Foto -->
+    <section class="hero-banner">
+        <img src="../../../assets/img/waiting.room.jpg" alt="Banner Contactos - MEDINV" class="hero-image">
+        <div class="hero-overlay">
+            <h2>Entre em Contacto</h2>
+            <p>Estamos aqui para ajudar</p>
+        </div>
+    </section>
+
+    <!-- Seção "Contacto" -->
+    <section id="contacto">
+        <h2>Fale Connosco</h2>
+        <div class="contacto-container">
+            <!-- Informações de Contacto -->
+            <div class="contacto-info">
+                <h3>Informações de Contacto</h3>
+                
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h4>Morada</h4>
+                        <p>Rua da Saúde, nº 123<br>4000-000 Porto<br>Portugal</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <h4>Telefone</h4>
+                        <p>+351 220 000 000<br>+351 962 000 000</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <h4>Email</h4>
+                        <p>geral@medinv.pt<br>info@medinv.pt</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <h4>Horário</h4>
+                        <p>2ª–6ª: 7h — 21h<br>Sáb: 9h — 15h<br>Dom: Encerrado</p>
+                    </div>
+                </div>
+
+                <div class="social-links">
+                    <h4>Siga-nos nas Redes Sociais</h4>
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <!-- Formulário de Contacto -->
+            <div class="contacto-form">
+                <h3>Envie-nos uma Mensagem</h3>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="nome">Nome *</label>
+                        <input type="text" id="nome" name="nome" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefone">Telefone</label>
+                        <input type="tel" id="telefone" name="telefone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="assunto">Assunto *</label>
+                        <select id="assunto" name="assunto" required>
+                            <option value="">Seleccione um assunto</option>
+                            <option value="duvida">Dúvida Geral</option>
+                            <option value="adesao">Adesão</option>
+                            <option value="treino">Treino Personalizado</option>
+                            <option value="fisioterapia">Fisioterapia</option>
+                            <option value="nutricao">Nutrição</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mensagem">Mensagem *</label>
+                        <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
+                    </div>
+
+                    <button type="submit" class="button">Enviar Mensagem</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="footer-container">
+        <div class="footer-top">
+            <div class="footer-start">
+                <h4>MEDINV</h4>
+                <p>Saúde, performance e bem-estar num só lugar.</p>
+            </div>
+            <div class="footer-socials-right">
+                <div class="footer-socials">
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <div class="footer-section">
+                <strong>LOCALIZAÇÃO</strong>
+                <p>Morada<br>Codigopostal, Porto<br>Portugal</p>
+            </div>
+            <div class="footer-section">
+                <strong>HORÁRIO</strong>
+                <p>2ª–6ª: 7h — 21h<br>Sáb: 9h — 15h<br>Dom: Encerrado</p>
+            </div>
+            <div class="footer-section">
+                <strong>CONTACTOS</strong>
+                <p>Email: geral@isepgym.pt<br>Tel: +351 9xx xxx xxx</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 MEDINV. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+   
+</body>
+</html>
