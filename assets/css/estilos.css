@@ -304,7 +304,10 @@
  font-size: 3em; /* Aumenta o tamanho da fonte para maior destaque */ margin-bottom: 20px; /* Adiciona espaço abaixo do título */}
 /* Estilo para o container que agrupa todos os membros da equipa */
 .equipa-container {
- display: flex; /* Organiza os elementos em linha (flexível) */flex-wrap: wrap; /* Permite que os elementos passem para a linha abaixo em ecrãs pequenos */justify-content: center; /* Centraliza os elementos horizontalmente */}
+ display: flex; /* Organiza os elementos em linha (flexível) */
+ flex-wrap: wrap; /* Permite que os elementos passem para a linha abaixo em ecrãs pequenos */
+ justify-content: center; /* Centraliza os elementos horizontalmente */
+}
 /* Estilo individual de cada membro da equipa */
 .pessoa {
  width: 300px; /* Define uma largura fixa para cada bloco */ margin: 20px; /* Espaçamento entre os blocos */
@@ -330,16 +333,20 @@ section {
  scroll-margin-top: 100px;
 }
 .servicos-container {
- display: flex; /* Organiza os elementos internos em linha (flexível) */flex-wrap: wrap; /* Permite que os elementos passem para a linha seguinte em ecrãs menores */justify-content: center; /* Centraliza os elementos horizontalmente */}
+ display: flex; /* Organiza os elementos internos em linha (flexível) */
+ flex-wrap: wrap; /* Permite que os elementos passem para a linha seguinte em ecrãs menores */
+ justify-content: center; /* Centraliza os elementos horizontalmente */
+}
 .servico {
  width: 300px; /* Define a largura de cada “cartão” de serviço */
- margin: 20px; /* Espaçamento entre os cartões */
+ margin: 10px; /* Espaçamento entre os cartões */
+ height: 350px; /* Altura fixa para uniformizar os cartões */
  padding: 28px 24px;
- background-color: #f6f9fd; /* Fundo suave para maior contraste */
+ background-color: #edf0f4; /* Fundo suave para maior contraste */
  border: 1px solid rgba(29, 92, 127, 0.08);
- border-radius: 18px; /* Bordas arredondadas maiores */
- text-align: center;
- box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
+ border-radius: 3px; /* Bordas arredondadas maiores */
+ text-align: justified;
+ box-shadow: 0 30px 22px rgba(0, 0, 0, 0.06);
  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .servico:hover {
