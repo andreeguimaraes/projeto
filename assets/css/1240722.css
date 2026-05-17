@@ -182,20 +182,53 @@
  padding: 100px 40px; /* Espaçamento interno (superior/inferior e laterais) */
  text-align: center; /* Centraliza o texto dentro dos artigos */
  min-height: 100vh; /* Garante altura mínima de uma janela (ecrã) */
-} 
+}
+#servicos-intro {
+    padding: 40px 40px 20px;
+    min-height: auto;
+}
+#servicos-overview,
+#servicos-cards,
+#servicos-intro {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 40px;
+    min-height: auto;
+    scroll-margin-top: 100px;
+}
+.section-title,
+#servicos-intro .section-title,
+#servicos-overview .section-title,
+#servicos-cards .section-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #1b3a57;
+}
+.section-block {
+    padding: 40px 20px;
+}
+#servicos-overview {
+    padding-top: 20px;
+}
+#servicos-cards {
+    padding-top: 20px;
+}
 /* Seção "Quem Somos" */
 #quem-somos {
- text-align: center; /* Centra todo o conteúdo horizontalmente */
- padding: 100px 30px; /* Espaçamento superior/inferior e laterais */
+ text-align: center;
+ padding: 100px 30px 0px;   /* 0px no fundo elimina o espaço abaixo */
+ min-height: auto;           /* sobrepõe o 100vh global */
 }
 .quem-somos-content {
  max-width: 800px; /* Largura máxima de 800px para limitar o conteúdo */ margin: 0 auto; /* Centra horizontalmente o conteúdo */
 }
 .quem-somos-content h1 {
- font-size: 3em; /* Tamanho grande para o título principal */ margin-bottom: 20px; /* Espaçamento abaixo do título */
+ font-size: 3em; /* Tamanho grande para o título principal */ 
+ margin-bottom: 20px; /* Espaçamento abaixo do título */
 }
 .quem-somos-content p {
- font-size: 1.2em; /* Aumenta o tamanho da letra do parágrafo */ margin-bottom: 30px; /* Espaço abaixo do parágrafo */
+ font-size: 1.2em; /* Aumenta o tamanho da letra do parágrafo */ 
+ margin-bottom: 10px; /* Espaço abaixo do parágrafo */
 }
 .quem-somos-content img {
  width: 700px; /* Define uma largura fixa da imagem */
@@ -295,32 +328,12 @@
  box-shadow: 0 18px 32px rgba(29, 92, 127, 0.24);
  background: linear-gradient(135deg, #1b3a57 0%, #2b628b 100%);
 }
-.button-arrow {
- font-size: 1.1rem;
-}
+
 
 /* Seção Equipa */
-/* Define o estilo dos títulos h2 da secção "nossa-equipa" e "servicos" */#nossa-equipa h2, #servicos h2 {
+/* Define o estilo dos títulos h2 da secção "nossa-equipa" e "servicos" */#nossa-equipa h2, 
+#servicos h2 {
  font-size: 3em; /* Aumenta o tamanho da fonte para maior destaque */ margin-bottom: 20px; /* Adiciona espaço abaixo do título */}
-/* Estilo para o container que agrupa todos os membros da equipa */
-.equipa-container {
- display: flex; /* Organiza os elementos em linha (flexível) */
- flex-wrap: wrap; /* Permite que os elementos passem para a linha abaixo em ecrãs pequenos */
- justify-content: center; /* Centraliza os elementos horizontalmente */
-}
-/* Estilo individual de cada membro da equipa */
-.pessoa {
- width: 300px; /* Define uma largura fixa para cada bloco */ margin: 20px; /* Espaçamento entre os blocos */
- padding: 20px; /* Espaço interno dentro do bloco */
- background-color: #eee; /* Cor de fundo cinzenta clara */
- border-radius: 5px; /* Bordas ligeiramente arredondadas */ text-align: center; /* Centraliza o conteúdo (imagem, nome, cargo) */}
-/* Estilo para a imagem de cada pessoa */
-.pessoa img {
- width: 100px; /* Largura fixa da imagem */
- height: 100px; /* Altura fixa da imagem */
- border-radius: 50%; /* Transforma a imagem num círculo */
- margin-bottom: 10px; /* Espaço entre a imagem e o nome */
-}
 section {
  padding: 100px 40px; /* Espaçamento interno nas secções (superior/inferior e laterais) */ 
  text-align: center; /* Centraliza todo o conteúdo textual por padrão */
@@ -335,16 +348,16 @@ section {
 .servicos-container {
  display: flex; /* Organiza os elementos internos em linha (flexível) */
  flex-wrap: wrap; /* Permite que os elementos passem para a linha seguinte em ecrãs menores */
- justify-content: center; /* Centraliza os elementos horizontalmente */
+ justify-content: center; /* Centraliza os elementos horizontalmente *//* Altura fixa para uniformizar os cartões */
 }
 .servico {
  width: 300px; /* Define a largura de cada “cartão” de serviço */
  margin: 10px; /* Espaçamento entre os cartões */
- height: 350px; /* Altura fixa para uniformizar os cartões */
+ height: 200px; /* Altura fixa para uniformizar os cartões */
  padding: 28px 24px;
  background-color: #edf0f4; /* Fundo suave para maior contraste */
  border: 1px solid rgba(29, 92, 127, 0.08);
- border-radius: 3px; /* Bordas arredondadas maiores */
+ border-radius: 30px; /* Bordas arredondadas maiores */
  text-align: justified;
  box-shadow: 0 30px 22px rgba(0, 0, 0, 0.06);
  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
@@ -368,24 +381,41 @@ section {
  border-radius: 50%; /* Torna a imagem circular */
  margin-bottom: 10px; /* Espaço entre a imagem e o texto seguinte */
 } 
-/* Estilos para a secção Preçário */
-.pacotes-container {
- display: flex; /* Organiza os pacotes lado a lado */flex-wrap: wrap; /* Permite quebra de linha em ecrãs pequenos */justify-content: center; /* Centraliza os pacotes horizontalmente */}
-.pacote {
- width: 300px; /* Largura de cada cartão */
- margin: 20px; /* Espaço entre os cartões */
- padding: 20px; /* Espaço interno dentro de cada cartão */ background-color: #eee; /* Fundo cinzento claro */
- border-radius: 5px; /* Bordas arredondadas */
- text-align: center; /* Centraliza o conteúdo */
+.servicos-container-2 {
+ display: flex; /* Organiza os elementos internos em linha (flexível) */
+ flex-wrap: wrap; /* Permite que os elementos passem para a linha seguinte em ecrãs menores */
+ justify-content: center; /* Centraliza os elementos horizontalmente */
 }
-.pacote .preco {
- font-size: 1.5em; /* Tamanho maior para destacar o preço */ font-weight: bold; /* Texto em negrito */
-margin-bottom: 10px; /* Espaço abaixo do preço */
+.servico-2 {
+ width: 300px; /* Define a largura de cada “cartão” de serviço */
+ margin: 10px; /* Espaçamento entre os cartões */
+ height: 300px; /* Altura fixa para uniformizar os cartões */
+ padding: 28px 24px;
+ background-color: #edf0f4; /* Fundo suave para maior contraste */
+ border: 1px solid rgba(29, 92, 127, 0.08);
+ border-radius: 10px; /* Bordas arredondadas maiores */
+ text-align: justified;
+ box-shadow: 0 30px 22px rgba(0, 0, 0, 0.06);
+ transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
-.pacote ul {
- list-style: none; /* Remove os marcadores padrão da lista */padding: 0; /* Remove preenchimento interno */ margin-bottom: 20px; /* Espaço entre a lista e o botão */}
-.pacote ul li {
- margin-bottom: 5px; /* Espaço entre cada linha da lista */
+.servico-2:hover {
+ transform: translateY(-8px);
+ box-shadow: 0 24px 40px rgba(0, 0, 0, 0.12);
+ border-color: rgba(29, 92, 127, 0.18);
+}
+.servico-2 i {
+ color: #1d5c7f;
+ margin-bottom: 18px;
+ transition: transform 0.3s ease;
+}
+.servico-2:hover i {
+ transform: scale(1.1);
+}
+.servico-2 img {
+ width: 100px; /* Largura da imagem */
+ height: 100px; /* Altura da imagem */
+ border-radius: 50%; /* Torna a imagem circular */
+ margin-bottom: 10px; /* Espaço entre a imagem e o texto seguinte */
 } 
 #contacto form {
  display: flex; /* Usa layout flexível */
@@ -421,39 +451,34 @@ border-radius: 5px; /* Bordas arredondadas */
     padding: 3px 0;           /* Reduz o espaçamento interno vertical */
 }
 
-#convite,
-.convite-section {
+#convite {
     background: linear-gradient(135deg, #eaf3fa 0%, #ffffff 100%); /* Gradiente suave de azul claro para branco */
     text-align: center;        /* Centra todo o conteúdo textual */
 }
 
-/* Bloco de conteúdo centrado dentro das secções de convite */
-#convite .quem-somos-content,
-.convite-section .quem-somos-content {
+/* Bloco de conteúdo centrado dentro da secção de convite */
+#convite .quem-somos-content {
     max-width: 760px;          /* Largura máxima para não esticar demasiado em ecrãs grandes */
     margin: 0 auto;            /* Centra o bloco horizontalmente */
     padding: 24px 0;           /* Espaçamento interno apenas no eixo vertical */
 }
 
 /* Título principal da secção de convite */
-#convite h2,
-.convite-section h2 {
+#convite h2 {
     font-size: 2.2rem;         /* Tamanho grande para dar destaque ao título */
     line-height: 1.05;         /* Altura de linha compacta para títulos grandes */
     margin-bottom: 30px;       /* Espaço entre o título e o conteúdo seguinte */
     color: #1a4f72;            /* Azul escuro da paleta da MEDINV */
 }
 
-/* Botão CTA dentro das secções de convite */
-#convite .button,
-.convite-section .button {
+/* Botão CTA dentro da secção de convite */
+#convite .button {
     padding: 14px 30px;        /* Espaçamento interno do botão (vertical e horizontal) */
     font-size: 1rem;           /* Tamanho de letra padrão para o botão */
 }
 
 /* Efeito hover no botão CTA */
-#convite .button:hover,
-.convite-section .button:hover {
+#convite .button:hover {
     transform: translateY(-2px); /* Eleva ligeiramente o botão ao passar o rato por cima */
 }
 
@@ -517,29 +542,6 @@ border-radius: 5px; /* Bordas arredondadas */
 .value-card p {
  color: #666;
  line-height: 1.6;
-}
-
-/* Seção "Equipa" */
-.team-section {
- padding: 60px 40px;
- text-align: center;
-}
-.team-section h2 {
- font-size: 2.5em;
- margin-bottom: 10px;
- color: #1b3a57;
-}
-.team-section > p {
- font-size: 1.1em;
- color: #666;
- margin-bottom: 40px;
-}
-.specialization {
- display: block;
- font-size: 0.9em;
- color: #1d5c7f;
- margin-top: 5px;
- font-weight: 600;
 }
 
 /* Contacto Container */
@@ -667,13 +669,11 @@ border-radius: 5px; /* Bordas arredondadas */
      grid-template-columns: 1fr;
  }
  .about-section,
- .values-section,
- .team-section {
+ .values-section {
      padding: 40px 20px;
  }
  .about-section h2,
- .values-section h2,
- .team-section h2 {
+ .values-section h2 {
      font-size: 2em;
  }
 }
