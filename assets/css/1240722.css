@@ -358,7 +358,7 @@ section {
  background-color: #edf0f4; /* Fundo suave para maior contraste */
  border: 1px solid rgba(29, 92, 127, 0.08);
  border-radius: 30px; /* Bordas arredondadas maiores */
- text-align: justified;
+ text-align: justify;
  box-shadow: 0 30px 22px rgba(0, 0, 0, 0.06);
  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
@@ -442,16 +442,6 @@ border-radius: 5px; /* Bordas arredondadas */
 #convite {
     min-height: auto;          /* Remove a altura mínima de 100vh aplicada globalmente */
     padding: 80px 20px;        /* Reduz o espaçamento superior/inferior para ficar compacto */
-}
-
-/* Centra e compacta o conteúdo interno da secção convite */
-#convite .quem-somos-content {
-    max-width: 720px;          /* Limita a largura máxima para manter o conteúdo centrado */
-    margin: 0 auto;            /* Centra horizontalmente o bloco */
-    padding: 3px 0;           /* Reduz o espaçamento interno vertical */
-}
-
-#convite {
     background: linear-gradient(135deg, #eaf3fa 0%, #ffffff 100%); /* Gradiente suave de azul claro para branco */
     text-align: center;        /* Centra todo o conteúdo textual */
 }
@@ -559,11 +549,6 @@ border-radius: 5px; /* Bordas arredondadas */
  margin-bottom: 30px;
  color: #1b3a57;
  text-align: center;     
- justify-content: center;  
- text-align: center;
- display: flex;
- flex-direction: column;
- align-items: center;
 }
 .info-item {
  display: flex;
@@ -662,18 +647,102 @@ border-radius: 5px; /* Bordas arredondadas */
 /* Responsivo */
 @media (max-width: 768px) {
  .contacto-container {
-     grid-template-columns: 1fr;
+     grid-template-columns: 1fr; /*No computador o formulário e as informações ficam lado a lado. No telemóvel ficam um por baixo do outro.*/
      gap: 30px;
  }
  .values-container {
-     grid-template-columns: 1fr;
+     grid-template-columns: 1fr; /*Os cards de valores empilham verticalmente em vez de ficarem lado a lado.*/
  }
  .about-section,
  .values-section {
-     padding: 40px 20px;
+     padding: 40px 20px; /* reduz de 60px para 40px */
  }
  .about-section h2,
  .values-section h2 {
      font-size: 2em;
  }
+}
+/*  LOGIN */
+
+body.login-page {
+    background: linear-gradient(135deg, #1b3a57 0%, #1d5c7f 100%); /* Fundo com gradiente azul escuro para azul médio */
+    min-height: 100vh;        /* Garante que o fundo ocupa pelo menos a altura total do ecrã */
+    display: flex;            /* Ativa o layout flexível */
+    align-items: center;      /* Centra o conteúdo verticalmente */
+    font-family: 'Titillium Web', Arial, sans-serif; /* Define a fonte da página de login */
+}
+
+.card {
+    border: none;             /* Remove a borda padrão do Bootstrap */
+    border-radius: 20px;      /* Arredonda os cantos do card */
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3); /* Adiciona sombra profunda para efeito de elevação */
+    overflow: hidden;         /* Evita que o header ultrapasse os cantos arredondados */
+    max-width: 450px;         /* Limita a largura máxima do card */
+    margin: 0 auto;           /* Centra o card horizontalmente */
+}
+
+.card-header-custom {
+    background: linear-gradient(135deg, #1b3a57 0%, #1d5c7f 100%); /* Fundo com gradiente azul igual ao body */
+    padding: 30px;            /* Espaçamento interno do header */
+    text-align: center;       /* Centra o conteúdo do header */
+    color: white;             /* Cor do texto do header */
+}
+
+.card-header-custom h2 {
+    font-size: 1.8rem;        /* Tamanho do título MEDINV */
+    font-weight: 700;         /* Título em negrito */
+    margin: 0;                /* Remove margem padrão do h2 */
+    letter-spacing: 1px;      /* Espaçamento entre letras para maior elegância */
+    color: white;             /* Cor branca para o título */
+}
+
+.card-header-custom span {
+    font-size: 0.9rem;        /* Tamanho menor para o subtítulo */
+    color: #dceaf7;           /* Azul muito claro para o subtítulo */
+}
+
+.card-body-custom {
+    background: white;        /* Fundo branco para o corpo do card */
+    padding: 35px;            /* Espaçamento interno generoso */
+}
+
+.form-label {
+    font-weight: 600;         /* Label em semi-negrito */
+    color: #1b3a57;           /* Cor azul escuro nos labels */
+}
+
+.form-control {
+    border-radius: 8px;       /* Cantos arredondados nos campos */
+    padding: 12px;            /* Espaçamento interno dos campos */
+    border: 1px solid #dee2e6; /* Borda cinzenta clara */
+}
+
+.form-control:focus {
+    border-color: #1d5c7f;    /* Muda a borda para azul MEDINV quando o campo está ativo */
+    box-shadow: 0 0 5px rgba(29, 92, 127, 0.3); /* Brilho azul suave ao focar o campo */
+}
+
+.btn-login {
+    background: linear-gradient(135deg, #1d5c7f 0%, #3f7fbf 100%); /* Fundo com gradiente azul */
+    border: none;             /* Remove a borda do botão */
+    border-radius: 999px;     /* Torna o botão completamente arredondado */
+    padding: 12px 40px;       /* Espaçamento interno do botão */
+    color: white;             /* Texto branco no botão */
+    font-size: 1rem;          /* Tamanho do texto do botão */
+    font-weight: 600;         /* Texto em semi-negrito */
+    width: 100%;              /* Botão ocupa toda a largura disponível */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Animação suave no hover */
+}
+
+.btn-login:hover {
+    transform: translateY(-2px); /* Eleva ligeiramente o botão ao passar o rato */
+    box-shadow: 0 8px 20px rgba(29, 92, 127, 0.35); /* Sombra mais intensa no hover */
+    background: linear-gradient(135deg, #1b3a57 0%, #2b628b 100%); /* Gradiente mais escuro no hover */
+    color: white;             /* Mantém o texto branco no hover */
+}
+
+.footer-text {
+    text-align: center;       /* Centra o link "Voltar ao site" */
+    margin-top: 20px;         /* Espaço acima do link */
+    font-size: 0.9rem;        /* Tamanho de letra ligeiramente menor */
 }
