@@ -96,11 +96,8 @@
                 <!-- Boas vindas -->
                 <div class="boas-vindas-card mb-4">
                     <div class="d-flex align-items-center gap-4">
-                        <div class="avatar-circle">
-                            <i class="fas fa-user-shield fa-2x"></i>
-                        </div>
-                        <div>
-                            <h4 class="mb-1">Bem-vindo, Administrador</h4>
+                            <div>
+                            <h4 class="mb-1">Bem-vindo, Administrador(a)</h4>
                             <p class="mb-1 text-muted">
                                 <i class="fas fa-envelope me-1"></i>admin@medinv.pt
                             </p>
@@ -161,6 +158,32 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <!-- Alertas -->
+                <h5 class="mb-3 text-muted">
+                    <i class="fas fa-bell me-2"></i>Alertas
+                </h5>
+                <div class="alert alert-danger d-flex align-items-center gap-2">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <span>4 equipamentos com garantia expirada — 
+                        <a href="views/garantias/lista.html" class="alert-link">ver lista</a>
+                    </span>
+                </div>
+                <div class="alert alert-warning d-flex align-items-center gap-2">
+                    <i class="fas fa-clock"></i>
+                    <span>3 garantias a expirar nos próximos 30 dias — 
+                        <a href="views/garantias/lista.html" class="alert-link">ver lista</a>
+                    </span>
+                </div>
+                <div class="alert alert-info d-flex align-items-center gap-2">
+                    <i class="fas fa-file-circle-exclamation"></i>
+                    <span>2 equipamentos sem documentação associada — 
+                        <a href="views/documentacao/lista.html" class="alert-link">ver lista</a>
+                    </span>
+                </div>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Bem-vindo à área de gestão da MEDINV. Escolhe uma opção no menu lateral para continuar.
                 </div>
             </main>
         </div> 

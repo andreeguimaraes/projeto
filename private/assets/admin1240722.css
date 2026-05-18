@@ -63,3 +63,46 @@
 .indicador-card:hover {
     transform: translateY(-3px);
 }
+/* Card de boas vindas */
+.boas-vindas-card {
+    background: linear-gradient(135deg, #1b3a57 0%, #1d5c7f 100%);
+    border-radius: 16px;
+    padding: 28px;
+    color: white;
+}
+
+.boas-vindas-card .text-muted {
+    color: #dceaf7 !important;
+}
+
+/* Avatar */
+.avatar-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+/* Cards de acesso rápido */
+.acesso-rapido-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    color: inherit;
+}
+
+.acesso-rapido-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+/* Link ativo no sidebar */
+.sidebar-link.active {
+    background: rgba(255,255,255,0.15);
+    color: white !important;
+}
