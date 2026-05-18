@@ -110,3 +110,19 @@ table td:last-child,
 table th:last-child {
     white-space: nowrap;  /* aplica ao cabeçalho e células da última coluna */
 }
+.offcanvas{
+    width: 280px !important;
+}
+
+.offcanvas-body .nav-link{
+    margin-bottom: 10px;
+}
+
+.offcanvas-header{
+    background-color: #1b3a57;
+    color: white;
+}
+
+.offcanvas .btn-close{
+    filter: invert(1);
+}
