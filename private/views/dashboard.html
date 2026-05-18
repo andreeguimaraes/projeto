@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MEDINV</title>
+    <!-- Bootstrap CSS & custom CSS -->
+    <link rel="stylesheet" href="../../assets/bootstrap/bootstrap.min.css"> 
+    <!-- favicon  -->
+    <link rel="shortcut icon" href="../assets/img/favicon.png" type="image/png">
+    <!-- folha de estilos CSS -->
+    <link rel="stylesheet" href="../assets/admin1240722.css">
+    <!-- Google Fonts -->  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../assets/fontawesome/all.min.css">
+</head>
+
+<body> 
+    <header class="navbar-admin">
+        <div class="row align-items-center w-100 m-0">
+            <div class="col-6 d-flex align-items-center p-3">
+                <!-- logo e nome MEDINV -->
+                <a href="index-admin.html" class="text-decoration-none d-flex align-items-center gap-3">
+                    <div>
+                        <span class="navbar-brand-title">MEDINV</span>
+                        <span class="navbar-brand-sub">Área de Gestão</span>
+                    </div>
+                </a>
+            </div>        
+            <div class="col-6 text-end p-3">
+                <div class="dropdown">
+                    <!-- botão administrador-->
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-regular fa-user me-2"></i>Administrador
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fa-solid fa-key me-2"></i>Alterar password
+                        </a></li>
+                        <!-- voltar ao site público -->
+                        <li><a class="dropdown-item" href="../../frontend/public/index.html">
+                            <i class="fa-solid fa-globe me-2"></i>Ver site público
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="../../login/login.html">
+                            <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- sidebar com módulos -->
+            <aside class="col-md-3 col-lg-2 sidebar-admin min-vh-100 p-3">
+                <nav>
+                    <a href="index-admin.html" class="nav-link sidebar-link">
+                        <i class="fas fa-house me-2"></i>Ínício
+                    </a>
+                    <!-- links para os módulos -->
+                    <a href="views/dashboard/index.html" class="nav-link sidebar-link">
+                        <i class="fas fa-chart-line me-2"></i>Dashboard
+                    </a> 
+                    <a href="views/equipamentos/lista.html" class="nav-link sidebar-link">
+                        <i class="fas fa-stethoscope me-2"></i>Equipamentos
+                    </a>
+                    <a href="views/fornecedores/lista.html" class="nav-link sidebar-link">
+                        <i class="fas fa-truck-medical me-2"></i>Fornecedores
+                    </a>
+                    <a href="views/localizacoes/lista.html" class="nav-link sidebar-link">
+                        <i class="fas fa-location-dot me-2"></i>Localizações
+                    </a>
+                    <a href="views/documentacao/lista.html" class="nav-link sidebar-link">
+                        <i class="fas fa-folder-open me-2"></i>Documentação
+                    </a>
+                    <a href="views/garantias/lista.html" class="nav-link sidebar-link">
+                        <i class="fas fa-file-contract me-2"></i>Garantias e Contratos
+                    </a>
+
+                    <!-- separador para backoffice público -->
+                    <h6 class="sidebar-title mt-4">ÁREA PÚBLICA</h6>
+                    <a href="views/conteudos/lista.html" class="nav-link sidebar-link">
+                        <i class="fas fa-pen-to-square me-2"></i>Gerir Conteúdos
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Conteúdo Principal -->
+            <main class="col-md-9 col-lg-10 p-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="mb-0">Dashboard</h2>
+                        <p class="text-muted mb-0">Visão geral do parque tecnológico hospitalar</p>
+                    </div>
+                    <a href="../equipamentos/novo.html" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Novo equipamento
+                    </a>
+                </div>
+                                <!-- ==============================
+                     INDICADORES MÍNIMOS OBRIGATÓRIOS
+                     ============================== -->
+                <h5 class="mb-3 text-muted">
+                    <i class="fas fa-chart-bar me-2"></i>Indicadores gerais
+                </h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-2">
+                        <div class="card indicador-card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-hospital-user fa-2x mb-2 text-primary"></i>
+                                <h3 class="mb-0">47</h3>
+                                <p class="text-muted mb-0 small">Total</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card indicador-card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-circle-check fa-2x mb-2 text-success"></i>
+                                <h3 class="mb-0">38</h3>
+                                <p class="text-muted mb-0 small">Ativos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card indicador-card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-wrench fa-2x mb-2 text-warning"></i>
+                                <h3 class="mb-0">5</h3>
+                                <p class="text-muted mb-0 small">Em manutenção</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card indicador-card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-circle-xmark fa-2x mb-2 text-secondary"></i>
+                                <h3 class="mb-0">4</h3>
+                                <p class="text-muted mb-0 small">Inativos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card indicador-card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-file-circle-xmark fa-2x mb-2 text-danger"></i>
+                                <h3 class="mb-0">4</h3>
+                                <p class="text-muted mb-0 small">Garantia expirada</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card indicador-card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-folder-open fa-2x mb-2 text-info"></i>
+                                <h3 class="mb-0">2</h3>
+                                <p class="text-muted mb-0 small">Sem documentação</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+    <script src="assets/bootstrap/bootstrap.bundle.min.js"></script> 
+
+</body>
+</html>
