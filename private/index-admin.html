@@ -92,20 +92,77 @@
 
             <!-- Conteúdo Principal -->
             <main class="col-md-9 col-lg-10 p-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h2 class="mb-0">Dashboard</h2>
-                        <p class="text-muted mb-0">Visão geral do inventário hospitalar</p>
+
+                <!-- Boas vindas -->
+                <div class="boas-vindas-card mb-4">
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="avatar-circle">
+                            <i class="fas fa-user-shield fa-2x"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-1">Bem-vindo, Administrador</h4>
+                            <p class="mb-1 text-muted">
+                                <i class="fas fa-envelope me-1"></i>admin@medinv.pt
+                            </p>
+                            <p class="mb-0 text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                Último acesso: 17/05/2026 às 14:32
+                            </p>
+                        </div>
+                        <div class="ms-auto text-end">
+                            <span class="badge bg-success px-3 py-2">
+                                <i class="fas fa-circle me-1" style="font-size: 0.6rem;"></i>Online
+                            </span>
+                            <p class="text-muted mt-2 mb-0" style="font-size: 0.85rem;">
+                                17 de maio de 2026
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- mensagem de boas vindas -->
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Bem-vindo à área de gestão da MEDINV. Escolhe uma opção no menu lateral para continuar.
+                <!-- Indicadores -->
+                <h5 class="mb-3 text-muted">
+                    <i class="fas fa-chart-bar me-2"></i>Resumo do inventário
+                </h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card indicador-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-hospital-user fa-2x mb-2 text-primary"></i>
+                                <h3 class="mb-0">47</h3>
+                                <p class="text-muted mb-0">Total de equipamentos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card indicador-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-circle-check fa-2x mb-2 text-success"></i>
+                                <h3 class="mb-0">38</h3>
+                                <p class="text-muted mb-0">Ativos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card indicador-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-wrench fa-2x mb-2 text-warning"></i>
+                                <h3 class="mb-0">5</h3>
+                                <p class="text-muted mb-0">Em manutenção</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card indicador-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-triangle-exclamation fa-2x mb-2 text-danger"></i>
+                                <h3 class="mb-0">4</h3>
+                                <p class="text-muted mb-0">Garantias expiradas</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </main>
-
         </div> 
     </div>
 
