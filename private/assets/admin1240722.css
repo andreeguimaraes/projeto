@@ -106,3 +106,7 @@
     background: rgba(255,255,255,0.15);
     color: white !important;
 }
+table td:last-child,
+table th:last-child {
+    white-space: nowrap;  /* aplica ao cabeçalho e células da última coluna */
+}
