@@ -132,143 +132,130 @@
                 <!-- Cabeçalho -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h2 class="mb-0">Localizações</h2>
-                        <p class="text-muted mb-0">Gere a localização física dos equipamentos médicos</p>
+                        <h2 class="mb-0">Fornecedores</h2>
+                        <p class="text-muted mb-0">Gere o inventário de fornecedores</p>
                     </div>
-                    <a href="novo.html" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Nova localização
+                    <a href="novo-fornecedores.html" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Novo fornecedor
                     </a>
                 </div>
-                <!-- Tabela de equipamentos -->
+                <!-- Tabela de fornecedores -->
                 <div class="card">
                     <div class="card-body p-0">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
                                     <th>Código</th>
-                                    <th>Edifício</th>
-                                    <th>Piso</th>
-                                    <th>Serviço / Departamento</th>
-                                    <th>Sala / Gabinete</th>
+                                    <th>Empresa</th>
+                                    <th>NIF</th>
+                                    <th>Telefone</th>
+                                    <th>Email</th>
+                                    <th>Pessoa de contacto</th>
+                                    <th>Telefone contacto</th>
                                     <th>Equipamentos associados</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
+
                                 <tr>
-                                    <td>EQ001</td>
-                                    <td>Monitor IntelliVue MP5</td>
-                                    <td>Philips</td>
-                                    <td>Monitorização</td>
-                                    <td>UCI</td>
-                                    <td><span class="badge bg-success">Ativo</span></td>
-                                    <td><span class="badge bg-danger">Suporte de vida</span></td>
+                                    <td>FOR001</td>
+                                    <td>MedTech Portugal</td>
+                                    <td>509876321</td>
+                                    <td>225 456 700</td>
+                                    <td>geral@medtech.pt</td>
+                                    <td>João Ferreira</td>
+                                    <td>912 456 123</td>
+                                    <td>15 equipamentos</td>
+
                                     <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
+                                        <a href="detalhes.html"
+                                        class="btn btn-sm btn-outline-primary"
+                                        title="Ver detalhes">
+
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
+
+                                        <a href="editar.html"
+                                        class="btn btn-sm btn-outline-warning"
+                                        title="Editar">
+
                                             <i class="fas fa-pen"></i>
                                         </a>
-                                        <!-- botao eliminar modal --> 
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                            data-bs-toggle="modal" data-bs-target="#modalEliminar">
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                title="Eliminar"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEliminar">
+
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
+
                                 <tr>
-                                    <td>EQ002</td>
-                                    <td>Ventilador Evita V500</td>
-                                    <td>Dräger</td>
-                                    <td>Suporte de vida</td>
-                                    <td>UCI</td>
-                                    <td><span class="badge bg-success">Ativo</span></td>
-                                    <td><span class="badge bg-danger">Suporte de vida</span></td>
+                                    <td>FOR002</td>
+                                    <td>BioEquip Solutions</td>
+                                    <td>514223987</td>
+                                    <td>229 887 654</td>
+                                    <td>contacto@bioequip.pt</td>
+                                    <td>Ana Ribeiro</td>
+                                    <td>934 778 221</td>
+                                    <td>8 equipamentos</td>
+
                                     <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
+                                        <a href="detalhes.html"
+                                        class="btn btn-sm btn-outline-primary">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
+
+                                        <a href="editar.html"
+                                        class="btn btn-sm btn-outline-warning">
                                             <i class="fas fa-pen"></i>
                                         </a>
-                                        <!-- botao eliminar modal --> 
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                            data-bs-toggle="modal" data-bs-target="#modalEliminar">
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEliminar">
+
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
+
                                 <tr>
-                                    <td>EQ003</td>
-                                    <td>Desfibrilhador R Series</td>
-                                    <td>Zoll</td>
-                                    <td>Suporte de vida</td>
-                                    <td>Urgência</td>
-                                    <td><span class="badge bg-warning text-dark">Em manutenção</span></td>
-                                    <td><span class="badge bg-danger">Alta</span></td>
+                                    <td>FOR003</td>
+                                    <td>Hospital Devices Europe</td>
+                                    <td>501998776</td>
+                                    <td>226 345 222</td>
+                                    <td>support@hde.pt</td>
+                                    <td>Carlos Mendes</td>
+                                    <td>961 223 554</td>
+                                    <td>21 equipamentos</td>
+
                                     <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
+                                        <a href="detalhes.html"
+                                        class="btn btn-sm btn-outline-primary">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
+
+                                        <a href="editar.html"
+                                        class="btn btn-sm btn-outline-warning">
                                             <i class="fas fa-pen"></i>
                                         </a>
-                                        <!-- botao eliminar modal --> 
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                            data-bs-toggle="modal" data-bs-target="#modalEliminar">
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEliminar">
+
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>EQ004</td>
-                                    <td>Bomba de infusão Infusomat</td>
-                                    <td>B. Braun</td>
-                                    <td>Terapia</td>
-                                    <td>Medicina</td>
-                                    <td><span class="badge bg-success">Ativo</span></td>
-                                    <td><span class="badge bg-warning text-dark">Média</span></td>
-                                    <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
-                                            <i class="fas fa-pen"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                            data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>EQ005</td>
-                                    <td>Ecógrafo Venue</td>
-                                    <td>GE Healthcare</td>
-                                    <td>Diagnóstico</td>
-                                    <td>Bloco Operatório</td>
-                                    <td><span class="badge bg-secondary">Inativo</span></td>
-                                    <td><span class="badge bg-warning text-dark">Alta</span></td>
-                                    <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
-                                            <i class="fas fa-pen"></i>
-                                        </a>
-                                        <!-- botao eliminar modal --> 
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                            data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
