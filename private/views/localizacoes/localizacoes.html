@@ -135,40 +135,64 @@
                         <h2 class="mb-0">Localizações</h2>
                         <p class="text-muted mb-0">Gere a localização física dos equipamentos médicos</p>
                     </div>
-                    <a href="novo.html" class="btn btn-primary">
+                    <a href="novo-localizacoes.html" class="btn btn-primary">
                         <i class="fas fa-plus me-2"></i>Nova localização
                     </a>
                 </div>
-                <!-- Tabela de equipamentos -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" placeholder="🔍 Pesquisar localização...">
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select">
+                                    <option value="">Edifício</option>
+                                    <option>Principal</option>
+                                    <option>Anexo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select">
+                                    <option value="">Serviço</option>
+                                    <option>UCI</option>
+                                    <option>Urgência</option>
+                                    <option>Bloco Operatório</option>
+                                    <option>Medicina</option>
+                                    <option>Pediatria</option>
+                                    <option>Ortopedia</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               <!-- Tabela de localizações -->
                 <div class="card">
                     <div class="card-body p-0">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Código</th>
                                     <th>Edifício</th>
                                     <th>Piso</th>
                                     <th>Serviço / Departamento</th>
                                     <th>Sala / Gabinete</th>
-                                    <th>Equipamentos associados</th>
+                                    <th>Equipamentos</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>EQ001</td>
-                                    <td>Monitor IntelliVue MP5</td>
-                                    <td>Philips</td>
-                                    <td>Monitorização</td>
+                                    <td>Principal</td>
+                                    <td>2</td>
                                     <td>UCI</td>
-                                    <td><span class="badge bg-success">Ativo</span></td>
-                                    <td><span class="badge bg-danger">Suporte de vida</span></td>
+                                    <td>201</td>
+                                    <td><span class="badge bg-primary">12 equipamentos</span></td>
                                     <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
+                                        <a href="detalhes-localizacoes.html" class="btn btn-sm btn-outline-primary"
                                             title="Ver detalhes">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        <a href="editar-localizacoes.html" class="btn btn-sm btn-outline-warning" title="Editar">
                                             <i class="fas fa-pen"></i>
                                         </a>
                                         <!-- botao eliminar modal --> 
@@ -179,42 +203,17 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>EQ002</td>
-                                    <td>Ventilador Evita V500</td>
-                                    <td>Dräger</td>
-                                    <td>Suporte de vida</td>
-                                    <td>UCI</td>
-                                    <td><span class="badge bg-success">Ativo</span></td>
-                                    <td><span class="badge bg-danger">Suporte de vida</span></td>
-                                    <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
-                                            <i class="fas fa-pen"></i>
-                                        </a>
-                                        <!-- botao eliminar modal --> 
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                            data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>EQ003</td>
-                                    <td>Desfibrilhador R Series</td>
-                                    <td>Zoll</td>
-                                    <td>Suporte de vida</td>
+                                    <td>Principal</td>
+                                    <td>1</td>
                                     <td>Urgência</td>
-                                    <td><span class="badge bg-warning text-dark">Em manutenção</span></td>
-                                    <td><span class="badge bg-danger">Alta</span></td>
+                                    <td>101</td>
+                                    <td><span class="badge bg-primary">10 equipamentos</span></td>
                                     <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
+                                        <a href="detalhes-localizacoes.html" class="btn btn-sm btn-outline-primary"
                                             title="Ver detalhes">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        <a href="editar-localizacoes.html" class="btn btn-sm btn-outline-warning" title="Editar">
                                             <i class="fas fa-pen"></i>
                                         </a>
                                         <!-- botao eliminar modal --> 
@@ -225,21 +224,20 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>EQ004</td>
-                                    <td>Bomba de infusão Infusomat</td>
-                                    <td>B. Braun</td>
-                                    <td>Terapia</td>
-                                    <td>Medicina</td>
-                                    <td><span class="badge bg-success">Ativo</span></td>
-                                    <td><span class="badge bg-warning text-dark">Média</span></td>
+                                    <td>Principal</td>
+                                    <td>3</td>
+                                    <td>Bloco Operatório</td>
+                                    <td>301</td>
+                                    <td><span class="badge bg-primary">8 equipamentos</span></td>
                                     <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
+                                        <a href="detalhes-localizacoes.html" class="btn btn-sm btn-outline-primary"
                                             title="Ver detalhes">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        <a href="editar-localizacoes.html" class="btn btn-sm btn-outline-warning" title="Editar">
                                             <i class="fas fa-pen"></i>
                                         </a>
+                                        <!-- botao eliminar modal --> 
                                         <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                             data-bs-toggle="modal" data-bs-target="#modalEliminar">
                                             <i class="fas fa-trash"></i>
@@ -247,19 +245,38 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>EQ005</td>
-                                    <td>Ecógrafo Venue</td>
-                                    <td>GE Healthcare</td>
-                                    <td>Diagnóstico</td>
-                                    <td>Bloco Operatório</td>
-                                    <td><span class="badge bg-secondary">Inativo</span></td>
-                                    <td><span class="badge bg-warning text-dark">Alta</span></td>
+                                    <td>Principal</td>
+                                    <td>2</td>
+                                    <td>Medicina</td>
+                                    <td>210</td>
+                                    <td><span class="badge bg-primary">7 equipamentos</span></td>
                                     <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
+                                        <a href="detalhes-localizacoes.html" class="btn btn-sm btn-outline-primary"
                                             title="Ver detalhes">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        <a href="editar-localizacoes.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <i class="fas fa-pen"></i>
+                                        </a>
+                                        <!-- botao eliminar modal --> 
+                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
+                                            data-bs-toggle="modal" data-bs-target="#modalEliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Anexo</td>
+                                    <td>1</td>
+                                    <td>Pediatria</td>
+                                    <td>105</td>
+                                    <td><span class="badge bg-primary">5 equipamentos</span></td>
+                                    <td>
+                                        <a href="detalhes-localizacoes.html" class="btn btn-sm btn-outline-primary"
+                                            title="Ver detalhes">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="editar-localizacoes.html" class="btn btn-sm btn-outline-warning" title="Editar">
                                             <i class="fas fa-pen"></i>
                                         </a>
                                         <!-- botao eliminar modal --> 
@@ -273,6 +290,7 @@
                         </table>
                     </div>
                 </div>
+
             </main>
         </div>
     </div>
@@ -288,7 +306,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <p>Tem a certeza que pretende eliminar o seguinte equipamento?</p>
+                    <p>Tem a certeza que pretende eliminar a seguinte localização?</p>
                     <div>
                         <strong>EQ001 — Monitor IntelliVue MP5</strong><br>
                     </div>
@@ -303,7 +321,7 @@
                     <a href="equipamentos.html" class="btn btn-outline-secondary">
                         <i class="fas fa-trash me-1"></i>Eliminar equipamento
                     </a>
-                </div>
+                </div> 
 
             </div>
         </div>
