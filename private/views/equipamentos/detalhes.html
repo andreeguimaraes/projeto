@@ -336,8 +336,8 @@
                                 <a href="editar.html" class="btn btn-warning">
                                     <i class="fas fa-pen me-1"></i>Editar
                                 </a>
-                                <button class="btn btn-danger"
-                                    onclick="return confirm('Tem a certeza que quer eliminar este equipamento?')">
+                                <!-- botao eliminar modal -->
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar">
                                     <i class="fas fa-trash me-1"></i>Eliminar
                                 </button>
                             </div>
@@ -347,7 +347,38 @@
             </main>
         </div>
     </div>
+    <!-- Modal de confirmação -->
+    <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel">
+                        <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
 
+                <div class="modal-body">
+                    <p>Tem a certeza que pretende eliminar o seguinte equipamento?</p>
+                    <div>
+                        <strong>EQ001 — Monitor IntelliVue MP5</strong><br>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <!-- Cancela e fecha o modal -->
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-arrow-left me-1"></i>Cancelar
+                    </button>
+                    <!-- Confirma a eliminação -->
+                    <a href="equipamentos.html" class="btn btn-outline-secondary">
+                        <i class="fas fa-trash me-1"></i>Eliminar equipamento
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
 
 </body>
