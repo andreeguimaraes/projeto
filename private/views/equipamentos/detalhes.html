@@ -11,10 +11,11 @@
     <link rel="shortcut icon" href="../../../assets/img/favicon.png" type="image/png">
     <!-- folha de estilos CSS -->
     <link rel="stylesheet" href="../../assets/admin1240722.css">
-    <!-- Google Fonts -->  
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
 </head>
@@ -24,6 +25,11 @@
     <header class="navbar-admin">
         <div class="row align-items-center w-100 m-0">
             <div class="col-6 d-flex align-items-center p-3">
+                <button class="btn btn-outline-light me-3" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#sidebarOffcanvas">
+
+                    <i class="fas fa-bars"></i>
+                </button>
                 <a href="../../index-admin.html" class="text-decoration-none">
                     <span class="navbar-brand-title">MEDINV</span>
                     <span class="navbar-brand-sub">Área de Gestão</span>
@@ -36,15 +42,17 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="#">
-                            <i class="fa-solid fa-key me-2"></i>Alterar password
-                        </a></li>
+                                <i class="fa-solid fa-key me-2"></i>Alterar password
+                            </a></li>
                         <li><a class="dropdown-item" href="../../../frontend/public/index.html">
-                            <i class="fa-solid fa-globe me-2"></i>Ver site público
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
+                                <i class="fa-solid fa-globe me-2"></i>Ver site público
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li><a class="dropdown-item text-danger" href="../../../login/login.html">
-                            <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
-                        </a></li>
+                                <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
+                            </a></li>
                     </ul>
                 </div>
             </div>
@@ -54,34 +62,286 @@
     <div class="container-fluid">
         <div class="row">
 
-            <!-- Sidebar -->
-            <aside class="col-md-3 col-lg-2 sidebar-admin min-vh-100 p-3">
-                <h6 class="sidebar-title">GESTÃO</h6>
-                <nav>
-                    <a href="../../index-admin.html" class="nav-link sidebar-link">
-                        <i class="fas fa-house me-2"></i>Início
-                    </a>
-                    <a href="../dashboard/index.html" class="nav-link sidebar-link">
-                        <i class="fas fa-chart-line me-2"></i>Dashboard
-                    </a>
-                    <a href="equipamentos.html" class="nav-link sidebar-link active">
-                        <i class="fas fa-stethoscope me-2"></i>Equipamentos
-                    </a>
-                    <a href="../fornecedores/fornecedores.html" class="nav-link sidebar-link">
-                        <i class="fas fa-truck-medical me-2"></i>Fornecedores
-                    </a>
-                    <a href="../localizacoes/localizacoes.html" class="nav-link sidebar-link">
-                        <i class="fas fa-location-dot me-2"></i>Localizações
-                    </a>
-                    <a href="../documentacao/documentacao.html" class="nav-link sidebar-link">
-                        <i class="fas fa-folder-open me-2"></i>Documentação
-                    </a>
-                    <a href="../garantias/garantias.html" class="nav-link sidebar-link">
-                        <i class="fas fa-file-contract me-2"></i>Garantias e Contratos
-                    </a>
-                    <h6 class="sidebar-title mt-4">ÁREA PÚBLICA</h6>
-                    <a href="../conteudos/conteudos.html" class="nav-link sidebar-link">
-                        <i class="fas fa-pen-to-square me-2"></i>Gerir Conteúdos
-                    </a>
-                </nav>
-            </aside>
+            <!-- Offcanvas Sidebar -->
+            <div class="offcanvas offcanvas-start sidebar-admin" tabindex="-1" id="sidebarOffcanvas">
+
+                <div class="offcanvas-header border-bottom">
+
+                    <h5 class="offcanvas-title">
+                        MEDINV
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas">
+                    </button>
+
+                </div>
+
+                <div class="offcanvas-body">
+
+                    <h6 class="sidebar-title">GESTÃO</h6>
+
+                    <nav class="d-flex flex-column">
+
+                        <a href="../../index-admin.html" class="nav-link sidebar-link">
+                            <i class="fas fa-house me-2"></i>Início
+                        </a>
+
+                        <a href="../dashboard/index.html" class="nav-link sidebar-link">
+                            <i class="fas fa-chart-line me-2"></i>Dashboard
+                        </a>
+
+                        <a href="equipamentos.html" class="nav-link sidebar-link active">
+                            <i class="fas fa-stethoscope me-2"></i>Equipamentos
+                        </a>
+
+                        <a href="../fornecedores/fornecedores.html" class="nav-link sidebar-link">
+                            <i class="fas fa-truck-medical me-2"></i>Fornecedores
+                        </a>
+
+                        <a href="../localizacoes/localizacoes.html" class="nav-link sidebar-link">
+                            <i class="fas fa-location-dot me-2"></i>Localizações
+                        </a>
+
+                        <a href="../documentacao/documentacao.html" class="nav-link sidebar-link">
+                            <i class="fas fa-folder-open me-2"></i>Documentação
+                        </a>
+
+                        <a href="../garantias/garantias.html" class="nav-link sidebar-link">
+                            <i class="fas fa-file-contract me-2"></i>
+                            Garantias e Contratos
+                        </a>
+
+                        <hr>
+
+                        <h6 class="sidebar-title">
+                            ÁREA PÚBLICA
+                        </h6>
+
+                        <a href="../conteudos/conteudos.html" class="nav-link sidebar-link">
+                            <i class="fas fa-pen-to-square me-2"></i>
+                            Gerir Conteúdos
+                        </a>
+
+                    </nav>
+
+                </div>
+            </div>
+            <!-- Conteúdo Principal -->
+            <main class="col-md-9 col-lg-10 p-4">
+                <div class="card shadow rounded mt-4" style="width: 100% !important; max-width: none !important;">
+                    <div class="card-body">
+                        <!-- Cabeçalho da ficha -->
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h2 class="mb-0">
+                                <i class="fas fa-stethoscope me-2"></i>Ficha do Equipamento
+                            </h2>
+                            <div class="d-flex gap-2">
+                                <span class="badge bg-success fs-6">Ativo</span>
+                                <span class="badge bg-danger fs-6">Suporte de vida</span>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <!-- INFORMAÇÃO GERAL -->
+                        <h5 class="text-muted mb-3">
+                            <i class="fas fa-info-circle me-2"></i>Informação geral
+                        </h5>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Código interno</label>
+                                <p class="form-control-plaintext">EQ001</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Designação</label>
+                                <p class="form-control-plaintext">Monitor IntelliVue MP5</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Categoria</label>
+                                <p class="form-control-plaintext">Monitorização</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Marca</label>
+                                <p class="form-control-plaintext">Philips</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Modelo</label>
+                                <p class="form-control-plaintext">IntelliVue MP5</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Número de série</label>
+                                <p class="form-control-plaintext">MP5-2022-45873</p>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Fabricante</label>
+                                <p class="form-control-plaintext">Philips Healthcare</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Ano de fabrico</label>
+                                <p class="form-control-plaintext">2022</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Criticidade</label>
+                                <p class="form-control-plaintext">
+                                    <span class="badge bg-danger">Suporte de vida</span>
+                                </p>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <!-- AQUISIÇÃO -->
+                        <h5 class="text-muted mb-3">
+                            <i class="fas fa-shopping-cart me-2"></i>Aquisição
+                        </h5>
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Data de aquisição</label>
+                                <p class="form-control-plaintext">15/03/2022</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Custo de aquisição</label>
+                                <p class="form-control-plaintext">12.500,00 €</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Tipo de entrada</label>
+                                <p class="form-control-plaintext">Compra</p>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <!-- LOCALIZAÇÃO -->
+                        <h5 class="text-muted mb-3">
+                            <i class="fas fa-location-dot me-2"></i>Localização atual
+                        </h5>
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Edifício</label>
+                                <p class="form-control-plaintext">Principal</p>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Piso</label>
+                                <p class="form-control-plaintext">2</p>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Serviço</label>
+                                <p class="form-control-plaintext">UCI</p>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Sala</label>
+                                <p class="form-control-plaintext">201</p>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <!-- FORNECEDOR -->
+                        <h5 class="text-muted mb-3">
+                            <i class="fas fa-truck-medical me-2"></i>Fornecedor
+                        </h5>
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Empresa</label>
+                                <p class="form-control-plaintext">Philips Healthcare Portugal</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Tipo</label>
+                                <p class="form-control-plaintext">Fabricante</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Contacto</label>
+                                <p class="form-control-plaintext">+351 210 000 000</p>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <!-- GARANTIA -->
+                        <h5 class="text-muted mb-3">
+                            <i class="fas fa-file-contract me-2"></i>Garantia e contrato
+                        </h5>
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Início de garantia</label>
+                                <p class="form-control-plaintext">15/03/2022</p>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Fim de garantia</label>
+                                <p class="form-control-plaintext">15/03/2027</p>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Tipo de contrato</label>
+                                <p class="form-control-plaintext">Manutenção preventiva</p>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Periodicidade</label>
+                                <p class="form-control-plaintext">Anual</p>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <!-- DOCUMENTAÇÃO -->
+                        <h5 class="text-muted mb-3">
+                            <i class="fas fa-folder-open me-2"></i>Documentação associada
+                        </h5>
+                        <div class="mb-4">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-file-pdf me-2 text-danger"></i>Manual de
+                                        utilizador</span>
+                                    <span class="badge bg-light text-dark">PDF</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-file-pdf me-2 text-danger"></i>Certificado de
+                                        calibração</span>
+                                    <span class="badge bg-light text-dark">PDF</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-file-pdf me-2 text-danger"></i>Contrato de
+                                        manutenção</span>
+                                    <span class="badge bg-light text-dark">PDF</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-file-pdf me-2 text-danger"></i>Fatura de aquisição</span>
+                                    <span class="badge bg-light text-dark">PDF</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <hr>
+
+                        <!-- OBSERVAÇÕES -->
+                        <h5 class="text-muted mb-3">
+                            <i class="fas fa-note-sticky me-2"></i>Observações
+                        </h5>
+                        <div class="mb-4">
+                            <p class="form-control-plaintext">
+                                Equipamento em bom estado de conservação. Última manutenção preventiva realizada em
+                                janeiro de 2026.
+                            </p>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="d-flex justify-content-between">
+                            <a href="equipamentos.html" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i>Voltar
+                            </a>
+                            <div class="d-flex gap-2">
+                                <a href="editar.html" class="btn btn-warning">
+                                    <i class="fas fa-pen me-1"></i>Editar
+                                </a>
+                                <button class="btn btn-danger"
+                                    onclick="return confirm('Tem a certeza que quer eliminar este equipamento?')">
+                                    <i class="fas fa-trash me-1"></i>Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
