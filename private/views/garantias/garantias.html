@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipamentos - MEDINV</title>
+    <title>Garantias - MEDINV</title>
     <!-- Bootstrap CSS & custom CSS -->
     <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
     <!-- favicon  -->
@@ -44,7 +44,7 @@
                         <li><a class="dropdown-item" href="#">
                                 <i class="fa-solid fa-key me-2"></i>Alterar password
                             </a></li>
-                        <li><a class="dropdown-item" href="../../../frontend/public/index.html">
+                        <li><a class="dropdown-item" href="../../index-admin.html">
                                 <i class="fa-solid fa-globe me-2"></i>Ver site público
                             </a></li>
                         <li>
@@ -86,15 +86,15 @@
                             <i class="fas fa-house me-2"></i>Início
                         </a>
 
-                        <a href="../dashboard/index.html" class="nav-link sidebar-link">
+                        <a href="../dashboard.html" class="nav-link sidebar-link">
                             <i class="fas fa-chart-line me-2"></i>Dashboard
                         </a>
 
-                        <a href="equipamentos.html" class="nav-link sidebar-link active">
+                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link">
                             <i class="fas fa-stethoscope me-2"></i>Equipamentos
                         </a>
 
-                        <a href="../fornecedores/fornecedores.html" class="nav-link sidebar-link">
+                        <a href="../fornecedores/fornecedor.html" class="nav-link sidebar-link">
                             <i class="fas fa-truck-medical me-2"></i>Fornecedores
                         </a>
 
@@ -106,7 +106,7 @@
                             <i class="fas fa-folder-open me-2"></i>Documentação
                         </a>
 
-                        <a href="../garantias/garantias.html" class="nav-link sidebar-link">
+                        <a href="../garantias/garantias.html" class="nav-link sidebar-link active">
                             <i class="fas fa-file-contract me-2"></i>
                             Garantias e Contratos
                         </a>
@@ -132,14 +132,14 @@
                 <!-- Cabeçalho -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h2 class="mb-0">Equipamentos médicos</h2>
-                        <p class="text-muted mb-0">Gere o inventário de dispositivos médicos</p>
+                        <h2 class="mb-0">Garantias e Contratos</h2>
+                        <p class="text-muted mb-0">Gere a gestão de garantias e contratos dos equipamentos médicos</p>
                     </div>
-                    <a href="novo.html" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Novo equipamento
+                    <a href="novo-garantias.html" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i> Nova garantia
                     </a>
                 </div>
-                <!-- Tabela de equipamentos -->
+                <!-- Tabela de garantias -->
                 <div class="card">
                     <div class="card-body p-0">
                         <table class="table table-hover mb-0">
@@ -188,11 +188,11 @@
                                     <td><span class="badge bg-success">Ativo</span></td>
                                     <td><span class="badge bg-danger">Suporte de vida</span></td>
                                     <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
+                                        <a href="detalhes-garantias.html" class="btn btn-sm btn-outline-primary"
                                             title="Ver detalhes">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
                                             <i class="fas fa-pen"></i>
                                         </a>
                                         <!-- botao eliminar modal --> 
@@ -215,7 +215,7 @@
                                             title="Ver detalhes">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
                                             <i class="fas fa-pen"></i>
                                         </a>
                                         <!-- botao eliminar modal --> 
@@ -234,11 +234,11 @@
                                     <td><span class="badge bg-success">Ativo</span></td>
                                     <td><span class="badge bg-warning text-dark">Média</span></td>
                                     <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
+                                        <a href="detalhes-garantias.html" class="btn btn-sm btn-outline-primary"
                                             title="Ver detalhes">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
                                             <i class="fas fa-pen"></i>
                                         </a>
                                         <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
@@ -256,11 +256,11 @@
                                     <td><span class="badge bg-secondary">Inativo</span></td>
                                     <td><span class="badge bg-warning text-dark">Alta</span></td>
                                     <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
+                                        <a href="detalhes-garantias.html" class="btn btn-sm btn-outline-primary"
                                             title="Ver detalhes">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
                                             <i class="fas fa-pen"></i>
                                         </a>
                                         <!-- botao eliminar modal --> 
@@ -299,9 +299,9 @@
                     <!-- Cancela e fecha o modal -->
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-arrow-left me-1"></i>Cancelar
-                    </button>
+                    </button>\
                     <!-- Confirma a eliminação -->
-                    <a href="equipamentos.html" class="btn btn-outline-secondary">
+                    <a href="../equipamentos/equipamentos.html" class="btn btn-outline-secondary">
                         <i class="fas fa-trash me-1"></i>Eliminar equipamento
                     </a>
                 </div>

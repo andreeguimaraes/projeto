@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipamentos - MEDINV</title>
+    <title>Fornecedores - MEDINV</title>
     <!-- Bootstrap CSS & custom CSS -->
     <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
     <!-- favicon  -->
@@ -44,7 +44,7 @@
                         <li><a class="dropdown-item" href="#">
                                 <i class="fa-solid fa-key me-2"></i>Alterar password
                             </a></li>
-                        <li><a class="dropdown-item" href="../../../frontend/public/index.html">
+                        <li><a class="dropdown-item" href="../../index-admin.html">
                                 <i class="fa-solid fa-globe me-2"></i>Ver site público
                             </a></li>
                         <li>
@@ -90,11 +90,11 @@
                             <i class="fas fa-chart-line me-2"></i>Dashboard
                         </a>
 
-                        <a href="equipamentos.html" class="nav-link sidebar-link active">
+                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link">
                             <i class="fas fa-stethoscope me-2"></i>Equipamentos
                         </a>
 
-                        <a href="../fornecedores/fornecedores.html" class="nav-link sidebar-link">
+                        <a href="fornecedor.html" class="nav-link sidebar-link active">
                             <i class="fas fa-truck-medical me-2"></i>Fornecedores
                         </a>
 
@@ -143,172 +143,154 @@
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-4">
-                                <input type="text" class="form-control" placeholder="🔍 Pesquisar localização...">
-                            </div>
-                            <div class="col-md-4">
-                                <select class="form-select">
-                                    <option value="">Edifício</option>
-                                    <option>Principal</option>
-                                    <option>Anexo</option>
-                                </select>
-                            </div>
-                            <!-- Tabela de fornecedores -->
-                            <div class="card">
-                                <div class="card-body p-0">
-                                    <table class="table table-hover mb-0">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Código</th>
-                                                <th>Empresa</th>
-                                                <th>NIF</th>
-                                                <th>Telefone</th>
-                                                <th>Email</th>
-                                                <th>Pessoa de contacto</th>
-                                                <th>Telefone contacto</th>
-                                                <th>Equipamentos associados</th>
-                                                <th>Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                            <tr>
-                                                <td>FOR001</td>
-                                                <td>MedTech Portugal</td>
-                                                <td>509876321</td>
-                                                <td>225 456 700</td>
-                                                <td>geral@medtech.pt</td>
-                                                <td>João Ferreira</td>
-                                                <td>912 456 123</td>
-                                                <td>15 equipamentos</td>
-
-                                                <td>
-                                                    <a href="detalhes-fornecedor.html"
-                                                    class="btn btn-sm btn-outline-primary"
-                                                    title="Ver detalhes">
-
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-
-                                                    <a href="editar-fornecedor.html"
-                                                    class="btn btn-sm btn-outline-warning"
-                                                    title="Editar">
-
-                                                        <i class="fas fa-pen"></i>
-                                                    </a>
-
-                                                    <button type="button"
-                                                            class="btn btn-sm btn-outline-danger"
-                                                            title="Eliminar"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalEliminar">
-
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>FOR002</td>
-                                                <td>BioEquip Solutions</td>
-                                                <td>514223987</td>
-                                                <td>229 887 654</td>
-                                                <td>contacto@bioequip.pt</td>
-                                                <td>Ana Ribeiro</td>
-                                                <td>934 778 221</td>
-                                                <td>8 equipamentos</td>
-
-                                                <td>
-                                                    <a href="detalhes-fornecedor.html"
-                                                    class="btn btn-sm btn-outline-primary">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-
-                                                    <a href="editar-fornecedor.html"
-                                                    class="btn btn-sm btn-outline-warning">
-                                                        <i class="fas fa-pen"></i>
-                                                    </a>
-
-                                                    <button type="button"
-                                                            class="btn btn-sm btn-outline-danger"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalEliminar">
-
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>FOR003</td>
-                                                <td>Hospital Devices Europe</td>
-                                                <td>501998776</td>
-                                                <td>226 345 222</td>
-                                                <td>support@hde.pt</td>
-                                                <td>Carlos Mendes</td>
-                                                <td>961 223 554</td>
-                                                <td>21 equipamentos</td>
-
-                                                <td>
-                                                    <a href="detalhes-fornecedor.html"
-                                                    class="btn btn-sm btn-outline-primary">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-
-                                                    <a href="editar-fornecedor.html"
-                                                    class="btn btn-sm btn-outline-warning">
-                                                        <i class="fas fa-pen"></i>
-                                                    </a>
-
-                                                    <button type="button"
-                                                            class="btn btn-sm btn-outline-danger"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalEliminar">
-
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </main>
-                    </div>
-                </div>
-                <!-- Modal de confirmação -->
-                <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalEliminarLabel">
-                                    <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
-                                </h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                            </div>
-
-                            <div class="modal-body">
-                                <p>Tem a certeza que pretende eliminar o seguinte fornecedor?</p>
-                                <div>
-                                    <strong>FOR003 — Hospital Devices Europe</strong><br>
-                                </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <!-- Cancela e fecha o modal -->
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                    <i class="fas fa-arrow-left me-1"></i>Cancelar
-                                </button>
-                                <!-- Confirma a eliminação -->
-                                <a href="fornecedores.html" class="btn btn-outline-secondary">
-                                    <i class="fas fa-trash me-1"></i>Eliminar fornecedor
-                                </a>
+                                <input type="text" class="form-control" placeholder="🔍 Pesquisar fornecedor...">
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- Tabela de fornecedores -->
+                <div class="card">
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Empresa</th>
+                                    <th>NIF</th>
+                                    <th>Contacto</th>
+                                    <th>Email</th>
+                                    <th>Equipamentos associados</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td>FOR001</td>
+                                    <td>MedTech Portugal</td>
+                                    <td>509876321</td>
+                                    <td>225 456 700</td>
+                                    <td>geral@medtech.pt</td> 
+                                    <td>12</td>
+                                    <td>
+                                        <a href="detalhes-fornecedor.html"
+                                        class="btn btn-sm btn-outline-primary"
+                                        title="Ver detalhes">
+
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+
+                                        <a href="editar-fornecedor.html"
+                                        class="btn btn-sm btn-outline-warning"
+                                        title="Editar">
+
+                                            <i class="fas fa-pen"></i>
+                                        </a>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                title="Eliminar"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEliminar">
+
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>FOR002</td>
+                                    <td>BioEquip Solutions</td>
+                                    <td>514223987</td>
+                                    <td>229 887 654</td>
+                                    <td>contacto@bioequip.pt</td>
+                                    <td>8</td>
+                                    <td>
+                                        <a href="detalhes-fornecedor.html"
+                                        class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+
+                                        <a href="editar-fornecedor.html"
+                                        class="btn btn-sm btn-outline-warning">
+                                            <i class="fas fa-pen"></i>
+                                        </a>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEliminar">
+
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>FOR003</td>
+                                    <td>Hospital Devices Europe</td>
+                                    <td>501998776</td>
+                                    <td>226 345 222</td>
+                                    <td>support@hde.pt</td>
+                                    <td>15</td>
+                                    <td>
+                                        <a href="detalhes-fornecedor.html"
+                                        class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+
+                                        <a href="editar-fornecedor.html"
+                                        class="btn btn-sm btn-outline-warning">
+                                            <i class="fas fa-pen"></i>
+                                        </a>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEliminar">
+
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <!-- Modal de confirmação -->
+        <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEliminarLabel">
+                            <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p>Tem a certeza que pretende eliminar o seguinte fornecedor?</p>
+                        <div>
+                            <strong>FOR003 — Hospital Devices Europe</strong><br>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <!-- Cancela e fecha o modal -->
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-arrow-left me-1"></i>Cancelar
+                        </button>
+                        <!-- Confirma a eliminação -->
+                        <a href="fornecedores.html" class="btn btn-outline-secondary">
+                            <i class="fas fa-trash me-1"></i>Eliminar fornecedor
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>    
     <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
 
