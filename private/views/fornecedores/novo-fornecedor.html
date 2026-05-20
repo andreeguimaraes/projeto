@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Fornecedor - MEDINV</title>
+    <!-- Bootstrap CSS & custom CSS -->
+    <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
+    <!-- favicon  -->
+    <link rel="shortcut icon" href="../../../assets/img/favicon.png" type="image/png">
+    <!-- folha de estilos CSS -->
+    <link rel="stylesheet" href="../../assets/admin1240722.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
+
+<body>
+    <!-- Navbar -->
+    <header class="navbar-admin">
+        <div class="row align-items-center w-100 m-0">
+            <div class="col-6 d-flex align-items-center p-3">
+                <a href="../../index-admin.html" class="text-decoration-none">
+                    <span class="navbar-brand-title">MEDINV</span>
+                    <span class="navbar-brand-sub">Área de Gestão</span>
+                </a>
+            </div>
+            <div class="col-6 text-end p-3">
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fa-regular fa-user me-2"></i>Administrador
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fa-solid fa-key me-2"></i>Alterar password
+                        </a></li>
+                        <li><a class="dropdown-item" href="../../../public/index.html">
+                            <i class="fa-solid fa-globe me-2"></i>Ver site público
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="../../../login/login.html">
+                            <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <aside class="col-md-3 col-lg-2 sidebar-admin min-vh-100 p-3">
+                <h6 class="sidebar-title">GESTÃO</h6>
+                <nav>
+                    <a href="../../index-admin.html" class="nav-link sidebar-link">
+                        <i class="fas fa-house me-2"></i>Início
+                    </a>
+                    <a href="../dashboard.html" class="nav-link sidebar-link">
+                        <i class="fas fa-chart-line me-2"></i>Dashboard
+                    </a>
+                    <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link">
+                        <i class="fas fa-stethoscope me-2"></i>Equipamentos
+                    </a>
+                    <a href="fornecedor.html" class="nav-link sidebar-link active">
+                        <i class="fas fa-truck-medical me-2"></i>Fornecedores
+                    </a>
+                    <a href="../localizacoes/localizacoes.html" class="nav-link sidebar-link">
+                        <i class="fas fa-location-dot me-2"></i>Localizações
+                    </a>
+                    <a href="../documentacao/documentacao.html" class="nav-link sidebar-link">
+                        <i class="fas fa-folder-open me-2"></i>Documentação
+                    </a>
+                    <a href="../garantias/garantias.html" class="nav-link sidebar-link">
+                        <i class="fas fa-file-contract me-2"></i>Garantias e Contratos
+                    </a>
+                    <h6 class="sidebar-title mt-4">ÁREA PÚBLICA</h6>
+                    <a href="../conteudos/conteudos.html" class="nav-link sidebar-link">
+                        <i class="fas fa-pen-to-square me-2"></i>Gerir Conteúdos
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Conteúdo Principal -->
+            <main class="col-md-9 col-lg-10 p-4">
+
+                <!-- Cabeçalho -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="mb-0">Novo fornecedor</h2>
+                        <p class="text-muted mb-0">Preencha os campos para registar um novo fornecedor</p>
+                    </div>
+                    <a href="fornecedor.html" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Voltar
+                    </a>
+                </div>
+
+                <form action="" method="post">
+                    <div class="card shadow rounded">
+                        <div class="card-body">
+
+                            <!-- INFORMAÇÃO GERAL -->
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-info-circle me-2"></i>Informação geral
+                            </h5>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Nome da empresa <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="nome" placeholder="Ex: Philips Healthcare Portugal" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">NIF <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="nif" placeholder="Ex: 500 123 456" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Tipo de fornecedor <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="tipo" required>
+                                        <option value="">Selecione...</option>
+                                        <option>Fabricante</option>
+                                        <option>Distribuidor / Fornecedor comercial</option>
+                                        <option>Assistência técnica</option>
+                                        <option>Fornecedor de consumíveis</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Morada</label>
+                                    <input type="text" class="form-control" name="morada" placeholder="Ex: Av. da Liberdade, 110, Lisboa">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Website</label>
+                                    <input type="url" class="form-control" name="website" placeholder="Ex: https://www.empresa.pt">
+                                </div>
+                            </div>
+                            <hr>
+
+                            <!-- CONTACTOS GERAIS -->
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-address-book me-2"></i>Contactos gerais
+                            </h5>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Telefone <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control" name="telefone" placeholder="Ex: +351 210 000 000" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" name="email" placeholder="Ex: geral@empresa.pt" required>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <!-- PESSOA DE CONTACTO -->
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-user me-2"></i>Pessoa de contacto
+                            </h5>
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Nome</label>
+                                    <input type="text" class="form-control" name="pessoa_contacto" placeholder="Ex: João Ferreira">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Telefone direto</label>
+                                    <input type="tel" class="form-control" name="telefone_contacto" placeholder="Ex: +351 962 000 000">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Email direto</label>
+                                    <input type="email" class="form-control" name="email_contacto" placeholder="Ex: joao.ferreira@empresa.pt">
+                                </div>
+                            </div>
+                            <hr>
+
+                            <!-- OBSERVAÇÕES -->
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-note-sticky me-2"></i>Observações
+                            </h5>
+                            <div class="mb-4">
+                                <textarea class="form-control" name="observacoes" rows="4"
+                                    placeholder="Informações adicionais sobre o fornecedor..."></textarea>
+                            </div>
+
+                            <!-- Nota campos obrigatórios -->
+                            <p class="text-muted small mb-3">
+                                <span class="text-danger">*</span> Campos obrigatórios
+                            </p>
+
+                            <!-- Botões -->
+                            <div class="d-flex justify-content-between">
+                                <a href="fornecedor.html" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-1"></i>Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-floppy-disk me-1"></i>Registar fornecedor
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+
+            </main>
+        </div>
+    </div>
+
+    <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
+</body>
+</html>
