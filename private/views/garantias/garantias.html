@@ -4,19 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garantias - MEDINV</title>
-    <!-- Bootstrap CSS & custom CSS -->
+    <title>Garantias e Contratos - MEDINV</title>
     <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
-    <!-- favicon  -->
     <link rel="shortcut icon" href="../../../assets/img/favicon.png" type="image/png">
-    <!-- folha de estilos CSS -->
     <link rel="stylesheet" href="../../assets/admin1240722.css">
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap"
-        rel="stylesheet">
-    <!-- Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
 </head>
 
@@ -25,11 +19,6 @@
     <header class="navbar-admin">
         <div class="row align-items-center w-100 m-0">
             <div class="col-6 d-flex align-items-center p-3">
-                <button class="btn btn-outline-light me-3" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#sidebarOffcanvas">
-
-                    <i class="fas fa-bars"></i>
-                </button>
                 <a href="../../index-admin.html" class="text-decoration-none">
                     <span class="navbar-brand-title">MEDINV</span>
                     <span class="navbar-brand-sub">Área de Gestão</span>
@@ -42,17 +31,15 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="#">
-                                <i class="fa-solid fa-key me-2"></i>Alterar password
-                            </a></li>
-                        <li><a class="dropdown-item" href="../../index-admin.html">
-                                <i class="fa-solid fa-globe me-2"></i>Ver site público
-                            </a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
+                            <i class="fa-solid fa-key me-2"></i>Alterar password
+                        </a></li>
+                        <li><a class="dropdown-item" href="../../../frontend/public/index.html">
+                            <i class="fa-solid fa-globe me-2"></i>Ver site público
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="../../../login/login.html">
-                                <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
-                            </a></li>
+                            <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
+                        </a></li>
                     </ul>
                 </div>
             </div>
@@ -62,117 +49,171 @@
     <div class="container-fluid">
         <div class="row">
 
-            <!-- Offcanvas Sidebar -->
-            <div class="offcanvas offcanvas-start sidebar-admin" tabindex="-1" id="sidebarOffcanvas">
-
-                <div class="offcanvas-header border-bottom">
-
-                    <h5 class="offcanvas-title">
-                        MEDINV
-                    </h5>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas">
-                    </button>
-
-                </div>
-
-                <div class="offcanvas-body">
-
-                    <h6 class="sidebar-title">GESTÃO</h6>
-
-                    <nav class="d-flex flex-column">
-
-                        <a href="../../index-admin.html" class="nav-link sidebar-link">
-                            <i class="fas fa-house me-2"></i>Início
-                        </a>
-
-                        <a href="../dashboard.html" class="nav-link sidebar-link">
-                            <i class="fas fa-chart-line me-2"></i>Dashboard
-                        </a>
-
-                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link">
-                            <i class="fas fa-stethoscope me-2"></i>Equipamentos
-                        </a>
-
-                        <a href="../fornecedores/fornecedor.html" class="nav-link sidebar-link">
-                            <i class="fas fa-truck-medical me-2"></i>Fornecedores
-                        </a>
-
-                        <a href="../localizacoes/localizacoes.html" class="nav-link sidebar-link">
-                            <i class="fas fa-location-dot me-2"></i>Localizações
-                        </a>
-
-                        <a href="../documentacao/documentacao.html" class="nav-link sidebar-link">
-                            <i class="fas fa-folder-open me-2"></i>Documentação
-                        </a>
-
-                        <a href="../garantias/garantias.html" class="nav-link sidebar-link active">
-                            <i class="fas fa-file-contract me-2"></i>
-                            Garantias e Contratos
-                        </a>
-
-                        <hr>
-
-                        <h6 class="sidebar-title">
-                            ÁREA PÚBLICA
-                        </h6>
-
-                        <a href="../conteudos/conteudos.html" class="nav-link sidebar-link">
-                            <i class="fas fa-pen-to-square me-2"></i>
-                            Gerir Conteúdos
-                        </a>
-
-                    </nav>
-
-                </div>
-            </div>
+            <!-- Sidebar -->
+            <aside class="col-md-3 col-lg-2 sidebar-admin min-vh-100 p-3">
+                <h6 class="sidebar-title">GESTÃO</h6>
+                <nav>
+                    <a href="../../index-admin.html" class="nav-link sidebar-link">
+                        <i class="fas fa-house me-2"></i>Início
+                    </a>
+                    <a href="../dashboard.html" class="nav-link sidebar-link">
+                        <i class="fas fa-chart-line me-2"></i>Dashboard
+                    </a>
+                    <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link">
+                        <i class="fas fa-stethoscope me-2"></i>Equipamentos
+                    </a>
+                    <a href="../fornecedores/fornecedor.html" class="nav-link sidebar-link">
+                        <i class="fas fa-truck-medical me-2"></i>Fornecedores
+                    </a>
+                    <a href="../localizacoes/localizacoes.html" class="nav-link sidebar-link">
+                        <i class="fas fa-location-dot me-2"></i>Localizações
+                    </a>
+                    <a href="../documentacao/documentacao.html" class="nav-link sidebar-link">
+                        <i class="fas fa-folder-open me-2"></i>Documentação
+                    </a>
+                    <a href="garantias.html" class="nav-link sidebar-link active">
+                        <i class="fas fa-file-contract me-2"></i>Garantias e Contratos
+                    </a>
+                    <h6 class="sidebar-title mt-4">ÁREA PÚBLICA</h6>
+                    <a href="../conteudos/conteudos.html" class="nav-link sidebar-link">
+                        <i class="fas fa-pen-to-square me-2"></i>Gerir Conteúdos
+                    </a>
+                </nav>
+            </aside>
 
             <!-- Conteúdo Principal -->
-            <main class="col-12 p-4">
+            <main class="col-md-9 col-lg-10 p-4">
+
                 <!-- Cabeçalho -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h2 class="mb-0">Garantias e Contratos</h2>
-                        <p class="text-muted mb-0">Gere a gestão de garantias e contratos dos equipamentos médicos</p>
+                        <p class="text-muted mb-0">Gestão de garantias e contratos de manutenção dos equipamentos</p>
                     </div>
-                    <a href="novo-garantias.html" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i> Nova garantia
-                    </a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNovaGarantia">
+                        <i class="fas fa-plus me-2"></i>Nova garantia / contrato
+                    </button>
                 </div>
-                <!-- Tabela de garantias -->
+
+                <!-- Alertas
+                <div class="alert alert-danger d-flex align-items-center gap-2 mb-3">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <span>4 garantias expiradas — revisão necessária</span>
+                </div>
+                <div class="alert alert-warning d-flex align-items-center gap-2 mb-4">
+                    <i class="fas fa-clock"></i>
+                    <span>3 garantias a expirar nos próximos 30 dias</span>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card indicador-card text-center">
+                            <div class="card-body py-3">
+                                <h4 class="mb-0 text-primary">47</h4>
+                                <p class="text-muted mb-0 small">Total de registos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card indicador-card text-center">
+                            <div class="card-body py-3">
+                                <h4 class="mb-0 text-success">39</h4>
+                                <p class="text-muted mb-0 small">Garantias ativas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card indicador-card text-center">
+                            <div class="card-body py-3">
+                                <h4 class="mb-0 text-warning">3</h4>
+                                <p class="text-muted mb-0 small">A expirar em 30 dias</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card indicador-card text-center">
+                            <div class="card-body py-3">
+                                <h4 class="mb-0 text-danger">4</h4>
+                                <p class="text-muted mb-0 small">Expiradas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Filtros -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" placeholder="🔍 Pesquisar equipamento...">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option value="">Tipo de contrato</option>
+                                    <option>Manutenção preventiva</option>
+                                    <option>Manutenção corretiva</option>
+                                    <option>Manutenção total</option>
+                                    <option>Sem contrato</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option value="">Estado da garantia</option>
+                                    <option>Ativa</option>
+                                    <option>A expirar (30 dias)</option>
+                                    <option>Expirada</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select">
+                                    <option value="">Periodicidade</option>
+                                    <option>Mensal</option>
+                                    <option>Trimestral</option>
+                                    <option>Semestral</option>
+                                    <option>Anual</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela -->
                 <div class="card">
                     <div class="card-body p-0">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Código</th>
-                                    <th>Designação</th>
-                                    <th>Marca</th>
-                                    <th>Categoria</th>
-                                    <th>Serviço</th>
+                                    <th>Equipamento</th>
+                                    <th>Início garantia</th>
+                                    <th>Fim garantia</th>
                                     <th>Estado</th>
-                                    <th>Criticidade</th>
+                                    <th>Tipo contrato</th>
+                                    <th>Entidade responsável</th>
+                                    <th>Periodicidade</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>EQ001</td>
-                                    <td>Monitor IntelliVue MP5</td>
-                                    <td>Philips</td>
-                                    <td>Monitorização</td>
-                                    <td>UCI</td>
-                                    <td><span class="badge bg-success">Ativo</span></td>
-                                    <td><span class="badge bg-danger">Suporte de vida</span></td>
                                     <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
+                                        <strong>EQ001</strong><br>
+                                        <small class="text-muted">Monitor IntelliVue MP5</small>
+                                    </td>
+                                    <td>15/03/2022</td>
+                                    <td>15/03/2027</td>
+                                    <td><span class="badge bg-success">Ativa</span></td>
+                                    <td>Manutenção preventiva</td>
+                                    <td>Philips Healthcare</td>
+                                    <td>Anual</td>
+                                    <td style="white-space: nowrap;">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" title="Ver detalhes"
+                                            data-bs-toggle="modal" data-bs-target="#modalDetalhes">
                                             <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-warning" title="Editar"
+                                            data-bs-toggle="modal" data-bs-target="#modalEditarGarantia">
                                             <i class="fas fa-pen"></i>
-                                        </a>
-                                        <!-- botao eliminar modal --> 
+                                        </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                             data-bs-toggle="modal" data-bs-target="#modalEliminar">
                                             <i class="fas fa-trash"></i>
@@ -180,22 +221,25 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>EQ002</td>
-                                    <td>Ventilador Evita V500</td>
-                                    <td>Dräger</td>
-                                    <td>Suporte de vida</td>
-                                    <td>UCI</td>
-                                    <td><span class="badge bg-success">Ativo</span></td>
-                                    <td><span class="badge bg-danger">Suporte de vida</span></td>
                                     <td>
-                                        <a href="detalhes-garantias.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
+                                        <strong>EQ002</strong><br>
+                                        <small class="text-muted">Ventilador Evita V500</small>
+                                    </td>
+                                    <td>01/06/2021</td>
+                                    <td>01/06/2026</td>
+                                    <td><span class="badge bg-warning text-dark">Expira em 11 dias</span></td>
+                                    <td>Manutenção total</td>
+                                    <td>Dräger Portugal</td>
+                                    <td>Semestral</td>
+                                    <td style="white-space: nowrap;">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" title="Ver detalhes"
+                                            data-bs-toggle="modal" data-bs-target="#modalDetalhes">
                                             <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-warning" title="Editar"
+                                            data-bs-toggle="modal" data-bs-target="#modalEditarGarantia">
                                             <i class="fas fa-pen"></i>
-                                        </a>
-                                        <!-- botao eliminar modal --> 
+                                        </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                             data-bs-toggle="modal" data-bs-target="#modalEliminar">
                                             <i class="fas fa-trash"></i>
@@ -203,22 +247,25 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>EQ003</td>
-                                    <td>Desfibrilhador R Series</td>
-                                    <td>Zoll</td>
-                                    <td>Suporte de vida</td>
-                                    <td>Urgência</td>
-                                    <td><span class="badge bg-warning text-dark">Em manutenção</span></td>
-                                    <td><span class="badge bg-danger">Alta</span></td>
                                     <td>
-                                        <a href="detalhes.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
+                                        <strong>EQ003</strong><br>
+                                        <small class="text-muted">Desfibrilhador R Series</small>
+                                    </td>
+                                    <td>20/06/2019</td>
+                                    <td>20/06/2024</td>
+                                    <td><span class="badge bg-danger">Expirada</span></td>
+                                    <td>Manutenção corretiva</td>
+                                    <td>Zoll Medical</td>
+                                    <td>Anual</td>
+                                    <td style="white-space: nowrap;">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" title="Ver detalhes"
+                                            data-bs-toggle="modal" data-bs-target="#modalDetalhes">
                                             <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-warning" title="Editar"
+                                            data-bs-toggle="modal" data-bs-target="#modalEditarGarantia">
                                             <i class="fas fa-pen"></i>
-                                        </a>
-                                        <!-- botao eliminar modal --> 
+                                        </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                             data-bs-toggle="modal" data-bs-target="#modalEliminar">
                                             <i class="fas fa-trash"></i>
@@ -226,21 +273,25 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>EQ004</td>
-                                    <td>Bomba de infusão Infusomat</td>
-                                    <td>B. Braun</td>
-                                    <td>Terapia</td>
-                                    <td>Medicina</td>
-                                    <td><span class="badge bg-success">Ativo</span></td>
-                                    <td><span class="badge bg-warning text-dark">Média</span></td>
                                     <td>
-                                        <a href="detalhes-garantias.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
+                                        <strong>EQ004</strong><br>
+                                        <small class="text-muted">Bomba de infusão Infusomat</small>
+                                    </td>
+                                    <td>05/09/2020</td>
+                                    <td>05/09/2025</td>
+                                    <td><span class="badge bg-danger">Expirada</span></td>
+                                    <td>Sem contrato</td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td style="white-space: nowrap;">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" title="Ver detalhes"
+                                            data-bs-toggle="modal" data-bs-target="#modalDetalhes">
                                             <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-warning" title="Editar"
+                                            data-bs-toggle="modal" data-bs-target="#modalEditarGarantia">
                                             <i class="fas fa-pen"></i>
-                                        </a>
+                                        </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                             data-bs-toggle="modal" data-bs-target="#modalEliminar">
                                             <i class="fas fa-trash"></i>
@@ -248,22 +299,25 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>EQ005</td>
-                                    <td>Ecógrafo Venue</td>
+                                    <td>
+                                        <strong>EQ005</strong><br>
+                                        <small class="text-muted">Ecógrafo Venue</small>
+                                    </td>
+                                    <td>10/11/2023</td>
+                                    <td>10/11/2028</td>
+                                    <td><span class="badge bg-success">Ativa</span></td>
+                                    <td>Manutenção preventiva</td>
                                     <td>GE Healthcare</td>
-                                    <td>Diagnóstico</td>
-                                    <td>Bloco Operatório</td>
-                                    <td><span class="badge bg-secondary">Inativo</span></td>
-                                    <td><span class="badge bg-warning text-dark">Alta</span></td>
-                                    <td>
-                                        <a href="detalhes-garantias.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
+                                    <td>Anual</td>
+                                    <td style="white-space: nowrap;">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" title="Ver detalhes"
+                                            data-bs-toggle="modal" data-bs-target="#modalDetalhes">
                                             <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-warning" title="Editar"
+                                            data-bs-toggle="modal" data-bs-target="#modalEditarGarantia">
                                             <i class="fas fa-pen"></i>
-                                        </a>
-                                        <!-- botao eliminar modal --> 
+                                        </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                             data-bs-toggle="modal" data-bs-target="#modalEliminar">
                                             <i class="fas fa-trash"></i>
@@ -274,42 +328,285 @@
                         </table>
                     </div>
                 </div>
+
             </main>
         </div>
     </div>
-    <!-- Modal de confirmação -->
-    <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
-        <div class="modal-dialog">
+
+    <!-- Modal Ver Detalhes -->
+    <div class="modal fade" id="modalDetalhes" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalEliminarLabel">
-                        <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
+                    <h5 class="modal-title">
+                        <i class="fas fa-file-contract me-2"></i>Detalhes da garantia
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
                 <div class="modal-body">
-                    <p>Tem a certeza que pretende eliminar o seguinte equipamento?</p>
-                    <div>
-                        <strong>EQ001 — Monitor IntelliVue MP5</strong><br>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Equipamento</label>
+                            <p class="form-control-plaintext">EQ001 — Monitor IntelliVue MP5</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Estado</label>
+                            <p class="form-control-plaintext">
+                                <span class="badge bg-success">Ativa</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Início de garantia</label>
+                            <p class="form-control-plaintext">15/03/2022</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Fim de garantia</label>
+                            <p class="form-control-plaintext">15/03/2027</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Tipo de contrato</label>
+                            <p class="form-control-plaintext">Manutenção preventiva</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Entidade responsável</label>
+                            <p class="form-control-plaintext">Philips Healthcare Portugal</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Periodicidade</label>
+                            <p class="form-control-plaintext">Anual</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Observações</label>
+                        <p class="form-control-plaintext">Contrato renovado em janeiro de 2026. Inclui manutenção preventiva anual e suporte técnico remoto.</p>
                     </div>
                 </div>
-
                 <div class="modal-footer">
-                    <!-- Cancela e fecha o modal -->
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-arrow-left me-1"></i>Cancelar
-                    </button>\
-                    <!-- Confirma a eliminação -->
-                    <a href="../equipamentos/equipamentos.html" class="btn btn-outline-secondary">
-                        <i class="fas fa-trash me-1"></i>Eliminar equipamento
-                    </a>
+                        <i class="fas fa-arrow-left me-1"></i>Fechar
+                    </button>
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal"
+                        data-bs-toggle="modal" data-bs-target="#modalEditarGarantia">
+                        <i class="fas fa-pen me-1"></i>Editar
+                    </button>
                 </div>
-
             </div>
         </div>
     </div>
+
+    <!-- Modal Nova Garantia -->
+    <div class="modal fade" id="modalNovaGarantia" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-plus me-2"></i>Nova garantia / contrato
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNovaGarantia">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Equipamento <span class="text-danger">*</span></label>
+                            <select class="form-select" name="equipamento" required>
+                                <option value="">Selecione o equipamento...</option>
+                                <option>EQ001 — Monitor IntelliVue MP5</option>
+                                <option>EQ002 — Ventilador Evita V500</option>
+                                <option>EQ003 — Desfibrilhador R Series</option>
+                                <option>EQ004 — Bomba de infusão Infusomat</option>
+                                <option>EQ005 — Ecógrafo Venue</option>
+                            </select>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Início de garantia <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="inicio_garantia" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Fim de garantia <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="fim_garantia" required>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Existe contrato de manutenção?</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tem_contrato" id="simContrato" value="sim">
+                                    <label class="form-check-label" for="simContrato">Sim</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tem_contrato" id="naoContrato" value="nao" checked>
+                                    <label class="form-check-label" for="naoContrato">Não</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Tipo de contrato</label>
+                                <select class="form-select" name="tipo_contrato">
+                                    <option value="">Selecione...</option>
+                                    <option>Manutenção preventiva</option>
+                                    <option>Manutenção corretiva</option>
+                                    <option>Manutenção total</option>
+                                    <option>Sem contrato</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Entidade responsável</label>
+                                <input type="text" class="form-control" name="entidade" placeholder="Ex: Philips Healthcare">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Periodicidade</label>
+                                <select class="form-select" name="periodicidade">
+                                    <option value="">Selecione...</option>
+                                    <option>Mensal</option>
+                                    <option>Trimestral</option>
+                                    <option>Semestral</option>
+                                    <option>Anual</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Observações</label>
+                            <textarea class="form-control" name="observacoes" rows="3"
+                                placeholder="Informações adicionais sobre a garantia ou contrato..."></textarea>
+                        </div>
+                        <p class="text-muted small mb-0">
+                            <span class="text-danger">*</span> Campos obrigatórios
+                        </p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-arrow-left me-1"></i>Cancelar
+                    </button>
+                    <button type="submit" form="formNovaGarantia" class="btn btn-primary">
+                        <i class="fas fa-floppy-disk me-1"></i>Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Garantia -->
+    <div class="modal fade" id="modalEditarGarantia" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-pen me-2"></i>Editar garantia / contrato
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarGarantia">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Equipamento</label>
+                            <input type="text" class="form-control" value="EQ001 — Monitor IntelliVue MP5" disabled>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Início de garantia <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="inicio_garantia" value="2022-03-15" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Fim de garantia <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="fim_garantia" value="2027-03-15" required>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Existe contrato de manutenção?</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tem_contrato_edit" id="simContratoEdit" value="sim" checked>
+                                    <label class="form-check-label" for="simContratoEdit">Sim</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tem_contrato_edit" id="naoContratoEdit" value="nao">
+                                    <label class="form-check-label" for="naoContratoEdit">Não</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Tipo de contrato</label>
+                                <select class="form-select" name="tipo_contrato">
+                                    <option value="">Selecione...</option>
+                                    <option selected>Manutenção preventiva</option>
+                                    <option>Manutenção corretiva</option>
+                                    <option>Manutenção total</option>
+                                    <option>Sem contrato</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Entidade responsável</label>
+                                <input type="text" class="form-control" name="entidade" value="Philips Healthcare Portugal">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Periodicidade</label>
+                                <select class="form-select" name="periodicidade">
+                                    <option value="">Selecione...</option>
+                                    <option>Mensal</option>
+                                    <option>Trimestral</option>
+                                    <option>Semestral</option>
+                                    <option selected>Anual</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Observações</label>
+                            <textarea class="form-control" name="observacoes" rows="3">Contrato renovado em janeiro de 2026. Inclui manutenção preventiva anual e suporte técnico remoto.</textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-arrow-left me-1"></i>Cancelar
+                    </button>
+                    <button type="submit" form="formEditarGarantia" class="btn btn-primary">
+                        <i class="fas fa-floppy-disk me-1"></i>Guardar alterações
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Eliminar -->
+    <div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem a certeza que pretende eliminar este registo de garantia?</p>
+                    <div class="alert alert-light border">
+                        <strong>EQ001 — Monitor IntelliVue MP5</strong><br>
+                        <small class="text-muted">Esta ação não pode ser revertida.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-arrow-left me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary">
+                        <i class="fas fa-trash me-1"></i>Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
