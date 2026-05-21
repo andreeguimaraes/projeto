@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Garantia - MEDINV</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="../../../assets/img/favicon.png" type="image/png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../assets/admin1240722.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <header class="navbar-admin">
+        <div class="row align-items-center w-100 m-0">
+            <div class="col-6 d-flex align-items-center p-3">
+                <button class="btn btn-outline-light me-3" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#sidebarOffcanvas">
+
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="../../index-admin.html" class="text-decoration-none">
+                    <span class="navbar-brand-title">MEDINV</span>
+                    <span class="navbar-brand-sub">Área de Gestão</span>
+                </a>
+            </div>
+            <div class="col-6 text-end p-3">
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fa-regular fa-user me-2"></i>Administrador
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">
+                                <i class="fa-solid fa-key me-2"></i>Alterar password
+                            </a></li>
+                        <li><a class="dropdown-item" href="../../../public/index.html">
+                                <i class="fa-solid fa-globe me-2"></i>Ver site público
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="../../../login/login.html">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
+                            </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Offcanvas Sidebar -->
+            <div class="offcanvas offcanvas-start sidebar-admin" tabindex="-1" id="sidebarOffcanvas">
+
+                <div class="offcanvas-header border-bottom">
+
+                    <h5 class="offcanvas-title">
+                        MEDINV
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas">
+                    </button>
+
+                </div>
+
+                <div class="offcanvas-body">
+
+                    <h6 class="sidebar-title">GESTÃO</h6>
+
+                    <nav class="d-flex flex-column">
+
+                        <a href="../../index-admin.html" class="nav-link sidebar-link">
+                            <i class="fas fa-house me-2"></i>Início
+                        </a>
+
+                        <a href="../dashboard.html" class="nav-link sidebar-link">
+                            <i class="fas fa-chart-line me-2"></i>Dashboard
+                        </a>
+
+                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link">
+                            <i class="fas fa-stethoscope me-2"></i>Equipamentos
+                        </a>
+
+                        <a href="fornecedor.html" class="nav-link sidebar-link active">
+                            <i class="fas fa-truck-medical me-2"></i>Fornecedores
+                        </a>
+
+                        <a href="../localizacoes/localizacoes.html" class="nav-link sidebar-link">
+                            <i class="fas fa-location-dot me-2"></i>Localizações
+                        </a>
+
+                        <a href="../documentacao/documentacao.html" class="nav-link sidebar-link">
+                            <i class="fas fa-folder-open me-2"></i>Documentação
+                        </a>
+
+                        <a href="../garantias/garantias.html" class="nav-link sidebar-link">
+                            <i class="fas fa-file-contract me-2"></i>
+                            Garantias e Contratos
+                        </a>
+
+                        <hr>
+
+                        <h6 class="sidebar-title">
+                            ÁREA PÚBLICA
+                        </h6>
+
+                        <a href="../conteudos/conteudos.html" class="nav-link sidebar-link">
+                            <i class="fas fa-pen-to-square me-2"></i>
+                            Gerir Conteúdos
+                        </a>
+
+                    </nav>
+
+                </div>
+            </div>
+
+            <!-- Conteúdo Principal -->
+            <main class="col-12 p-4">
+            
+                <!-- Cabeçalho -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+            
+                    <div>
+            
+                        <h2 class="mb-0">
+                            Nova garantia
+                        </h2>
+            
+                        <p class="text-muted mb-0">
+                            Registo de garantia e contrato de manutenção
+                        </p>
+            
+                    </div>
+            
+                    <a href="garantias.html" class="btn btn-outline-secondary">
+            
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Voltar
+            
+                    </a>
+            
+                </div>
+
+                <!-- Formulário -->
+                <div class="card shadow rounded">
+
+                    <div class="card-body">
+
+                        <form>
+
+                            <!-- EQUIPAMENTO -->
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-stethoscope me-2"></i>
+                                Equipamento
+                            </h5>
+
+                            <div class="row mb-4">
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label">
+                                        Equipamento
+                                    </label>
+
+                                    <select class="form-select">
+
+                                        <option selected disabled>
+                                            Selecionar equipamento
+                                        </option>
+
+                                        <option>
+                                            EQ001 — Monitor IntelliVue MP5
+                                        </option>
+
+                                        <option>
+                                            EQ002 — Ventilador Evita V500
+                                        </option>
+
+                                        <option>
+                                            EQ003 — Desfibrilhador Zoll
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label">
+                                        Tipo de equipamento
+                                    </label>
+
+                                    <input type="text"
+                                           class="form-control"
+                                           placeholder="Ex.: Monitor multiparamétrico">
+
+                                </div>
+
+                            </div>
+
+                            <hr>
+
+                            <!-- GARANTIA -->
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-shield-halved me-2"></i>
+                                Garantia
+                            </h5>
+
+                            <div class="row mb-4">
+
+                                <div class="col-md-3">
+
+                                    <label class="form-label">
+                                        Data de início
+                                    </label>
+
+                                    <input type="date"
+                                           class="form-control">
+
+                                </div>
+
+                                <div class="col-md-3">
+
+                                    <label class="form-label">
+                                        Data de fim
+                                    </label>
+
+                                    <input type="date"
+                                           class="form-control">
+
+                                </div>
+
+                                <div class="col-md-3">
+
+                                    <label class="form-label">
+                                        Duração
+                                    </label>
+
+                                    <input type="text"
+                                           class="form-control"
+                                           placeholder="Ex.: 5 anos">
+
+                                </div>
+
+                                <div class="col-md-3">
+
+                                    <label class="form-label">
+                                        Estado
+                                    </label>
+
+                                    <select class="form-select">
+
+                                        <option>
+                                            Ativa
+                                        </option>
+
+                                        <option>
+                                            Expirada
+                                        </option>
+
+                                        <option>
+                                            Suspensa
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <hr>
+
+                            <!-- CONTRATO -->
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-file-contract me-2"></i>
+                                Contrato de manutenção
+                            </h5>
+
+                            <div class="row mb-4">
+
+                                <div class="col-md-3">
+
+                                    <label class="form-label">
+                                        Tem contrato?
+                                    </label>
+
+                                    <select class="form-select">
+
+                                        <option>
+                                            Sim
+                                        </option>
+
+                                        <option>
+                                            Não
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-3">
+
+                                    <label class="form-label">
+                                        Tipo de contrato
+                                    </label>
+
+                                    <select class="form-select">
+
+                                        <option>
+                                            Manutenção preventiva
+                                        </option>
+
+                                        <option>
+                                            Manutenção corretiva
+                                        </option>
+
+                                        <option>
+                                            Completo
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-3">
+
+                                    <label class="form-label">
+                                        Entidade responsável
+                                    </label>
+
+                                    <select class="form-select">
+
+                                        <option selected disabled>
+                                            Selecionar fornecedor
+                                        </option>
+
+                                        <option>
+                                            Philips Healthcare Portugal
+                                        </option>
+
+                                        <option>
+                                            Dräger Portugal
+                                        </option>
+
+                                        <option>
+                                            Siemens Healthineers
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-3">
+
+                                    <label class="form-label">
+                                        Periodicidade
+                                    </label>
+
+                                    <select class="form-select">
+
+                                        <option>
+                                            Mensal
+                                        </option>
+
+                                        <option>
+                                            Trimestral
+                                        </option>
+
+                                        <option>
+                                            Semestral
+                                        </option>
+
+                                        <option>
+                                            Anual
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <hr>
+
+                            <!-- DOCUMENTAÇÃO -->
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-folder-open me-2"></i>
+                                Documentação associada
+                            </h5>
+
+                            <div class="row mb-4">
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label">
+                                        Documento associado
+                                    </label>
+
+                                    <select class="form-select">
+
+                                        <option selected disabled>
+                                            Selecionar documento
+                                        </option>
+
+                                        <option>
+                                            Contrato de manutenção 2026
+                                        </option>
+
+                                        <option>
+                                            Certificado de calibração
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label">
+                                        Observações
+                                    </label>
+
+                                    <textarea class="form-control"
+                                              rows="3"
+                                              placeholder="Observações adicionais..."></textarea>
+
+                                </div>
+
+                            </div>
+
+                            <hr>
+
+                            <!-- Botões -->
+                            <div class="d-flex justify-content-between">
+
+                                <a href="garantias.html"
+                                   class="btn btn-outline-secondary">
+
+                                    <i class="fas fa-arrow-left me-1"></i>
+                                    Cancelar
+
+                                </a>
+
+                                <button type="submit"
+                                        class="btn btn-primary">
+
+                                    <i class="fas fa-floppy-disk me-1"></i>
+                                    Guardar garantia
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+    <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
