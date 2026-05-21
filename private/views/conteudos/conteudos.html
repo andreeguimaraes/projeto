@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Conteúdos - MEDINV</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../assets/admin1240722.css">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../../../assets/img/favicon.png" type="image/png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <header class="navbar-admin">
+
+        <div class="row align-items-center w-100 m-0">
+
+            <div class="col-6 d-flex align-items-center p-3">
+
+                <button class="btn btn-outline-light me-3"
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#sidebarOffcanvas">
+
+                    <i class="fas fa-bars"></i>
+
+                </button>
+
+                <a href="../../index-admin.html" class="text-decoration-none">
+
+                    <span class="navbar-brand-title">
+                        MEDINV
+                    </span>
+
+                    <span class="navbar-brand-sub">
+                        Área de Gestão
+                    </span>
+
+                </a>
+
+            </div>
+
+            <div class="col-6 text-end p-3">
+
+                <div class="dropdown">
+
+                    <button class="btn btn-outline-light dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown">
+
+                        <i class="fa-regular fa-user me-2"></i>
+                        Administrador
+
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+
+                        <li>
+                            <a class="dropdown-item" href="#">
+                                <i class="fa-solid fa-key me-2"></i>
+                                Alterar password
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="../../../public/index.html">
+                                <i class="fa-solid fa-globe me-2"></i>
+                                Ver site público
+                            </a>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item text-danger"
+                               href="../../../login/login.html">
+
+                                <i class="fa-solid fa-right-from-bracket me-2"></i>
+                                Sair
+
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <div class="container-fluid">
+
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="offcanvas offcanvas-start sidebar-admin"
+                 tabindex="-1"
+                 id="sidebarOffcanvas">
+
+                <div class="offcanvas-header border-bottom">
+
+                    <h5 class="offcanvas-title">
+                        MEDINV
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="offcanvas">
+                    </button>
+
+                </div>
+
+                <div class="offcanvas-body">
+
+                    <h6 class="sidebar-title">
+                        GESTÃO
+                    </h6>
+
+                    <nav class="d-flex flex-column">
+
+                        <a href="../../index-admin.html"
+                           class="nav-link sidebar-link">
+
+                            <i class="fas fa-house me-2"></i>
+                            Início
+
+                        </a>
+
+                        <a href="../dashboard.html"
+                           class="nav-link sidebar-link">
+
+                            <i class="fas fa-chart-line me-2"></i>
+                            Dashboard
+
+                        </a>
+
+                        <a href="../equipamentos/equipamentos.html"
+                           class="nav-link sidebar-link">
+
+                            <i class="fas fa-stethoscope me-2"></i>
+                            Equipamentos
+
+                        </a>
+
+                        <a href="../fornecedores/fornecedor.html"
+                           class="nav-link sidebar-link">
+
+                            <i class="fas fa-truck-medical me-2"></i>
+                            Fornecedores
+
+                        </a>
+
+                        <a href="../localizacoes/localizacoes.html"
+                           class="nav-link sidebar-link">
+
+                            <i class="fas fa-location-dot me-2"></i>
+                            Localizações
+
+                        </a>
+
+                        <a href="../documentacao/documentacao.html"
+                           class="nav-link sidebar-link">
+
+                            <i class="fas fa-folder-open me-2"></i>
+                            Documentação
+
+                        </a>
+
+                        <a href="../garantias/garantias.html"
+                           class="nav-link sidebar-link">
+
+                            <i class="fas fa-file-contract me-2"></i>
+                            Garantias e Contratos
+
+                        </a>
+
+                        <hr>
+
+                        <h6 class="sidebar-title">
+                            ÁREA PÚBLICA
+                        </h6>
+
+                        <a href="conteudos.html"
+                           class="nav-link sidebar-link active">
+
+                            <i class="fas fa-pen-to-square me-2"></i>
+                            Gerir Conteúdos
+
+                        </a>
+
+                    </nav>
+
+                </div>
+
+            </div>
+
+            <!-- Conteúdo principal -->
+            <main class="col-12 p-4">
+
+                <!-- Cabeçalho -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+                    <div>
+
+                        <h2 class="mb-0">
+                            Gestão de conteúdos
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Atualize os conteúdos apresentados na área pública
+                        </p>
+
+                    </div>
+
+                    <button class="btn btn-primary">
+
+                        <i class="fas fa-floppy-disk me-2"></i>
+                        Guardar alterações
+
+                    </button>
+
+                </div>
+
+                <!-- Conteúdo principal -->
+                <div class="row g-4">
+
+                    <!-- Conteúdo institucional -->
+                    <div class="col-lg-6">
+
+                        <div class="card shadow-sm h-100">
+
+                            <div class="card-header">
+
+                                <h5 class="mb-0">
+
+                                    <i class="fas fa-circle-info me-2"></i>
+                                    Informações institucionais
+
+                                </h5>
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-bold">
+                                        Título principal
+                                    </label>
+
+                                    <input type="text"
+                                           class="form-control"
+                                           value="Sistema de Gestão MEDINV">
+
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-bold">
+                                        Descrição
+                                    </label>
+
+                                    <textarea class="form-control"
+                                              rows="6">Sistema de gestão de equipamentos médicos, fornecedores, documentação técnica e contratos hospitalares.</textarea>
+
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-bold">
+                                        Missão / Objetivo
+                                    </label>
+
+                                    <textarea class="form-control"
+                                              rows="4">Garantir uma gestão eficiente, segura e organizada do parque tecnológico hospitalar.</textarea>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Contactos -->
+                    <div class="col-lg-6">
+
+                        <div class="card shadow-sm h-100">
+
+                            <div class="card-header">
+
+                                <h5 class="mb-0">
+
+                                    <i class="fas fa-address-book me-2"></i>
+                                    Contactos
+
+                                </h5>
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-bold">
+                                        Telefone
+                                    </label>
+
+                                    <input type="text"
+                                           class="form-control"
+                                           value="222 333 444">
+
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-bold">
+                                        Email
+                                    </label>
+
+                                    <input type="email"
+                                           class="form-control"
+                                           value="geral@medinv.pt">
+
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-bold">
+                                        Morada
+                                    </label>
+
+                                    <textarea class="form-control"
+                                              rows="3">Rua da Tecnologia Médica, Porto</textarea>
+
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-bold">
+                                        Horário de atendimento
+                                    </label>
+
+                                    <input type="text"
+                                           class="form-control"
+                                           value="Segunda a Sexta • 09h00 às 18h00">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Banner / Destaques -->
+                    <div class="col-12">
+
+                        <div class="card shadow-sm">
+
+                            <div class="card-header">
+
+                                <h5 class="mb-0">
+
+                                    <i class="fas fa-bullhorn me-2"></i>
+                                    Destaques e avisos
+
+                                </h5>
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-bold">
+                                        Aviso principal
+                                    </label>
+
+                                    <input type="text"
+                                           class="form-control"
+                                           value="Nova atualização do sistema disponível.">
+
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-bold">
+                                        Texto do banner
+                                    </label>
+
+                                    <textarea class="form-control"
+                                              rows="4">A plataforma MEDINV permite centralizar toda a documentação técnica, contratos, garantias e localização dos equipamentos médicos.</textarea>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Informações adicionais -->
+                    <div class="col-12">
+
+                        <div class="card shadow-sm">
+
+                            <div class="card-header">
+
+                                <h5 class="mb-0">
+
+                                    <i class="fas fa-newspaper me-2"></i>
+                                    Conteúdos informativos
+
+                                </h5>
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-bold">
+                                        Notícias / Informações
+                                    </label>
+
+                                    <textarea class="form-control"
+                                              rows="6">• Atualização do inventário concluída.
+• Novos contratos de manutenção adicionados.
+• Formação interna sobre gestão documental disponível em setembro.</textarea>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+    <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
