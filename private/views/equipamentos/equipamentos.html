@@ -139,141 +139,261 @@
                         <i class="fas fa-plus me-2"></i>Novo equipamento
                     </a>
                 </div>
-                <!-- Tabela de equipamentos -->
-                <div class="card">
-                    <div class="card-body p-0">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Designação</th>
-                                    <th>Marca</th>
-                                    <th>Categoria</th>
-                                    <th>Serviço</th>
-                                    <th>Estado</th>
-                                    <th>Criticidade</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>EQ001</td>
-                                    <td>Monitor IntelliVue MP5</td>
-                                    <td>Philips</td>
-                                    <td>Monitorização</td>
-                                    <td>UCI</td>
-                                    <td><span class="badge bg-success">Ativo</span></td>
-                                    <td><span class="badge bg-danger">Suporte de vida</span></td>
-                                    <td>
-                                        <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning" title="Editar">
-                                            <i class="fas fa-pen"></i>
-                                        </a>
-                                        <!-- botao eliminar modal --> 
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                            data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>EQ002</td>
-                                    <td>Ventilador Evita V500</td>
-                                    <td>Dräger</td>
-                                    <td>Suporte de vida</td>
-                                    <td>UCI</td>
-                                    <td><span class="badge bg-success">Ativo</span></td>
-                                    <td><span class="badge bg-danger">Suporte de vida</span></td>
-                                    <td>
-                                        <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning" title="Editar">
-                                            <i class="fas fa-pen"></i>
-                                        </a>
-                                        <!-- botao eliminar modal --> 
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                            data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>EQ003</td>
-                                    <td>Desfibrilhador R Series</td>
-                                    <td>Zoll</td>
-                                    <td>Suporte de vida</td>
-                                    <td>Urgência</td>
-                                    <td><span class="badge bg-warning text-dark">Em manutenção</span></td>
-                                    <td><span class="badge bg-danger">Alta</span></td>
-                                    <td>
-                                        <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning" title="Editar">
-                                            <i class="fas fa-pen"></i>
-                                        </a>
-                                        <!-- botao eliminar modal --> 
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                            data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>EQ004</td>
-                                    <td>Bomba de infusão Infusomat</td>
-                                    <td>B. Braun</td>
-                                    <td>Terapia</td>
-                                    <td>Medicina</td>
-                                    <td><span class="badge bg-success">Ativo</span></td>
-                                    <td><span class="badge bg-warning text-dark">Média</span></td>
-                                    <td>
-                                        <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning" title="Editar">
-                                            <i class="fas fa-pen"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                            data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>EQ005</td>
-                                    <td>Ecógrafo Venue</td>
-                                    <td>GE Healthcare</td>
-                                    <td>Diagnóstico</td>
-                                    <td>Bloco Operatório</td>
-                                    <td><span class="badge bg-secondary">Inativo</span></td>
-                                    <td><span class="badge bg-warning text-dark">Alta</span></td>
-                                    <td>
-                                        <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning" title="Editar">
-                                            <i class="fas fa-pen"></i>
-                                        </a>
-                                        <!-- botao eliminar modal --> 
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                            data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <!-- Filtros -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row g-2">
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" placeholder="🔍 Código, designação, nº série...">
+                            </div>
+                            <div class="col-md-auto">
+                                <button class="btn btn-primary" onclick="filtrar()">
+                                    <i class="fas fa-search me-1"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select">
+                                    <option value="">Categoria</option>
+                                    <option>Monitorização</option>
+                                    <option>Suporte de vida</option>
+                                    <option>Terapia</option>
+                                    <option>Diagnóstico</option>
+                                    <option>Laboratório</option>
+                                    <option>Esterilização</option>
+                                    <option>Reabilitação</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select">
+                                    <option value="">Estado</option>
+                                    <option>Ativo</option>
+                                    <option>Em manutenção</option>
+                                    <option>Inativo</option>
+                                    <option>Em calibração</option>
+                                    <option>Em quarentena</option>
+                                    <option>Abatido</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select">
+                                    <option value="">Criticidade</option>
+                                    <option>Baixa</option>
+                                    <option>Média</option>
+                                    <option>Alta</option>
+                                    <option>Suporte de vida</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select">
+                                    <option value="">Serviço</option>
+                                    <option>UCI</option>
+                                    <option>Urgência</option>
+                                    <option>Bloco Operatório</option>
+                                    <option>Medicina</option>
+                                    <option>Pediatria</option>
+                                    <option>Ortopedia</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-2 mt-1">
+                            <div class="col-md-2">
+                                <select class="form-select">
+                                    <option value="">Marca</option>
+                                    <option>Philips</option>
+                                    <option>Dräger</option>
+                                    <option>Zoll</option>
+                                    <option>B. Braun</option>
+                                    <option>GE Healthcare</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select">
+                                    <option value="">Fornecedor</option>
+                                    <option>Philips Healthcare</option>
+                                    <option>Dräger Portugal</option>
+                                    <option>Zoll Medical</option>
+                                    <option>B. Braun</option>
+                                </select>
+                            </div>
+                            <div class="col-md-auto">
+                                <button class="btn btn-outline-secondary w-100" title="Limpar filtros">
+                                    <i class="fas fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Barra de resultados e toggle de vista -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted small">5 resultados encontrados</span>
+                    <div class="d-flex gap-2">
+                        <select class="form-select form-select-sm" style="width: auto;">
+                            <option>Ordenar: Código ↑</option>
+                            <option>Ordenar: Código ↓</option>
+                            <option>Ordenar: Designação ↑</option>
+                            <option>Ordenar: Estado</option>
+                            <option>Ordenar: Criticidade</option>
+                        </select>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-primary" id="btn-tabela" title="Vista tabela">
+                                <i class="fas fa-table"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" id="btn-cards" title="Vista cards">
+                                <i class="fas fa-grip"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vista tabela -->
+                <div id="vista-tabela">
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Designação</th>
+                                        <th>Marca</th>
+                                        <th>Categoria</th>
+                                        <th>Serviço</th>
+                                        <th>Estado</th>
+                                        <th>Criticidade</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>EQ001</td>
+                                        <td>Monitor IntelliVue MP5</td>
+                                        <td>Philips</td>
+                                        <td>Monitorização</td>
+                                        <td>UCI</td>
+                                        <td><span class="badge bg-success">Ativo</span></td>
+                                        <td><span class="badge bg-danger">Suporte de vida</span></td>
+                                        <td style="white-space: nowrap;">
+                                            <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                            <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>EQ002</td>
+                                        <td>Ventilador Evita V500</td>
+                                        <td>Dräger</td>
+                                        <td>Suporte de vida</td>
+                                        <td>UCI</td>
+                                        <td><span class="badge bg-success">Ativo</span></td>
+                                        <td><span class="badge bg-danger">Suporte de vida</span></td>
+                                        <td style="white-space: nowrap;">
+                                            <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                            <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>EQ003</td>
+                                        <td>Desfibrilhador R Series</td>
+                                        <td>Zoll</td>
+                                        <td>Suporte de vida</td>
+                                        <td>Urgência</td>
+                                        <td><span class="badge bg-warning text-dark">Em manutenção</span></td>
+                                        <td><span class="badge bg-danger">Alta</span></td>
+                                        <td style="white-space: nowrap;">
+                                            <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                            <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vista cards -->
+                <div id="vista-cards" class="row g-3" style="display: none;">
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-bold">EQ001</span>
+                                    <span class="badge bg-success">Ativo</span>
+                                </div>
+                                <h6>Monitor IntelliVue MP5</h6>
+                                <p class="text-muted small mb-1"><i class="fas fa-tag me-1"></i>Philips — Monitorização</p>
+                                <p class="text-muted small mb-1"><i class="fas fa-location-dot me-1"></i>UCI — Sala 201</p>
+                                <p class="text-muted small mb-2"><span class="badge bg-danger">Suporte de vida</span></p>
+                                <div class="d-flex gap-1">
+                                    <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-bold">EQ002</span>
+                                    <span class="badge bg-success">Ativo</span>
+                                </div>
+                                <h6>Ventilador Evita V500</h6>
+                                <p class="text-muted small mb-1"><i class="fas fa-tag me-1"></i>Dräger — Suporte de vida</p>
+                                <p class="text-muted small mb-1"><i class="fas fa-location-dot me-1"></i>UCI — Sala 201</p>
+                                <p class="text-muted small mb-2"><span class="badge bg-danger">Suporte de vida</span></p>
+                                <div class="d-flex gap-1">
+                                    <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-bold">EQ003</span>
+                                    <span class="badge bg-warning text-dark">Em manutenção</span>
+                                </div>
+                                <h6>Desfibrilhador R Series</h6>
+                                <p class="text-muted small mb-1"><i class="fas fa-tag me-1"></i>Zoll — Suporte de vida</p>
+                                <p class="text-muted small mb-1"><i class="fas fa-location-dot me-1"></i>Urgência — Sala 101</p>
+                                <p class="text-muted small mb-2"><span class="badge bg-danger">Alta</span></p>
+                                <div class="d-flex gap-1">
+                                    <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JavaScript toggle de vista -->
+                <script>
+                    const btnTabela = document.getElementById('btn-tabela');
+                    const btnCards = document.getElementById('btn-cards');
+                    const vistaTabela = document.getElementById('vista-tabela');
+                    const vistaCards = document.getElementById('vista-cards');
+
+                    btnTabela.addEventListener('click', function () {
+                        vistaTabela.style.display = 'block';
+                        vistaCards.style.display = 'none';
+                        btnTabela.classList.replace('btn-outline-secondary', 'btn-primary');
+                        btnCards.classList.replace('btn-primary', 'btn-outline-secondary');
+                    });
+
+                    btnCards.addEventListener('click', function () {
+                        vistaTabela.style.display = 'none';
+                        vistaCards.style.display = 'flex';
+                        btnCards.classList.replace('btn-outline-secondary', 'btn-primary');
+                        btnTabela.classList.replace('btn-primary', 'btn-outline-secondary');
+                    });
+                </script> 
             </main>
         </div>
     </div>

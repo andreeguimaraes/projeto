@@ -159,12 +159,9 @@
 
                             <!-- TAB 1 — Informação geral -->
                             <div class="tab-pane fade show active" id="tab-geral">
-                                <h5 class="text-muted mb-3">
-                                    <i class="fas fa-info-circle me-2"></i>Informação geral
-                                </h5>
                                 <div class="row mb-3">
                                     <div class="col-md-4">
-                                        <label class="form-label fw-bold">Código interno</label>
+                                        <label class="form-label fw-bold">Código</label>
                                         <p class="form-control-plaintext">EQ001</p>
                                     </div>
                                     <div class="col-md-4">
@@ -235,82 +232,51 @@
 
                             <!-- TAB 2 — Localização -->
                             <div class="tab-pane fade" id="tab-localizacao">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="text-muted mb-0">
-                                        <i class="fas fa-location-dot me-2"></i>Localização atual
-                                    </h5>
-                                    <a href="../localizacoes/detalhes-localizacoes.html" class="btn btn-sm class="btn btn-sm btn-primary"">
-                                        <i class="fas fa-eye me-1"></i>Ver localização
-                                    </a>
-                                </div>
                                 <div class="row mb-4">
-
                                     <div class="col-md-3">
-
                                         <label class="form-label fw-bold">
                                             Código
                                         </label>
-
                                         <p class="form-control-plaintext">
                                             LOC001
                                         </p>
-
                                     </div>
-
                                     <div class="col-md-3">
-
                                         <label class="form-label fw-bold">
                                             Edifício
                                         </label>
-
                                         <p class="form-control-plaintext">
                                             Edifício Principal
                                         </p>
-
                                     </div>
-
                                     <div class="col-md-2">
-
                                         <label class="form-label fw-bold">
                                             Piso
                                         </label>
-
                                         <p class="form-control-plaintext">
                                             Piso 2
                                         </p>
-
                                     </div>
-
                                     <div class="col-md-2">
-
                                         <label class="form-label fw-bold">
                                             Sala
                                         </label>
-
                                         <p class="form-control-plaintext">
                                             Sala 201
                                         </p>
-
                                     </div>
-
                                     <div class="col-md-2">
-
                                         <label class="form-label fw-bold">
                                             Estado
                                         </label>
-
                                         <p class="form-control-plaintext">
                                             <span class="badge bg-success">
                                                 Ativa
                                             </span>
                                         </p>
-
                                     </div>
-
                                 </div>
-
                                 <hr>
-
                                 <!-- Serviço -->
                                 <h5 class="text-muted mb-3">
 
@@ -346,18 +312,15 @@
                                     </div>
 
                                 </div>
+                                <!-- Botões -->
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        Ver localização
+                                    </button>
+                                </div>
                             </div>  
                             <!-- TAB 3 — Fornecedor -->
-                            <div class="tab-pane fade" id="tab-fornecedor">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="text-muted mb-0">
-                                    <i class="fas fa-info-circle me-2"></i>Informação geral
-                                    </h5>
-                                    <a href="../fornecedores/detalhes-fornecedor.html" class="btn btn-sm class="btn btn-sm btn-primary"">
-                                        <i class="fas fa-eye me-1"></i>Ver fornecedor
-                                    </a>
-                                </div>
-                                
+                            <div class="tab-pane fade" id="tab-fornecedor">                               
                                 <!-- INFORMAÇÃO GERAL -->
                                 <div class="row mb-3">
                                     <div class="col-md-4">
@@ -426,18 +389,16 @@
                                         </p>
                                     </div>
                                 </div>
+                                <!-- Botões -->
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        Ver Fornecedor
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- TAB 4 — Garantia -->
                             <div class="tab-pane fade" id="tab-garantia">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="text-muted mb-0">
-                                        <i class="fas fa-file-contract me-2"></i>Garantia e contrato
-                                    </h5>
-                                    <a href="../garantias/detalhes-garantia.html" class="btn btn-sm btn-primary">
-                                        <i class="fas fa-eye me-1"></i>Ver garantia
-                                    </a>
-                                </div>
                                 <div class="row mb-3">
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Início de garantia</label>
@@ -467,13 +428,16 @@
                                         <div class="progress-bar bg-success" style="width: 62%"></div>
                                     </div>
                                 </div>
+                                <!-- Botões -->
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        Ver Garantia
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- TAB 5 — Documentação -->
                             <div class="tab-pane fade" id="tab-documentacao">
-                                <h5 class="text-muted mb-3">
-                                    <i class="fas fa-folder-open me-2"></i>Documentação associada
-                                </h5>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <span><i class="fas fa-file-pdf me-2 text-danger"></i>Manual de utilizador</span>
@@ -492,12 +456,14 @@
                                         <span class="badge bg-light text-dark">PDF</span>
                                     </li>
                                 </ul>
+                                <!-- Botões -->
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    Ver Documentação
+                                </button>
                             </div>
-
                         </div>
                         <!-- fim tab-content -->
-
-
                     </div>
                 </div>
             </main>
