@@ -44,9 +44,7 @@
                         <li><a class="dropdown-item" href="#">
                                 <i class="fa-solid fa-key me-2"></i>Alterar password
                             </a></li>
-                        <li><a class="dropdown-item" href="../../../public/index.html">
-                                <i class="fa-solid fa-globe me-2"></i>Ver site público
-                            </a></li>
+
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -139,6 +137,7 @@
                         <i class="fas fa-plus me-2"></i>Novo fornecedor
                     </a>
                 </div>
+                <!-- Filtros de pesquisa -->
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="row g-2">
@@ -150,33 +149,55 @@
                                     <i class="fas fa-search me-1"></i>
                                 </button>
                             </div>
-                            <div class="col-md-3">
-                                <select class="form-select">
-                                    <option value="">Tipo de fornecedor</option>
-                                    <option>Fabricante</option>
-                                    <option>Distribuidor / Fornecedor comercial</option>
-                                    <option>Assistência técnica</option>
-                                    <option>Fornecedor de consumíveis</option>
-                                </select>
+                            <div class="col-md-3 ms-auto">
+                                <div class="d-flex gap-2">
+                                    
+                                    <select class="form-select">
+                                        <option value="">Tipo de fornecedor</option>
+                                        <option>Fabricante</option>
+                                        <option>Distribuidor / Fornecedor comercial</option>
+                                        <option>Assistência técnica</option>
+                                        <option>Fornecedor de consumíveis</option>
+                                    </select>
+
+                                    <button class="btn btn-outline-secondary" title="Limpar filtros">
+                                        <i class="fas fa-xmark"></i>
+                                    </button>
+
+                                </div>
                             </div>
-                            <div class="col-md-1">
-                                <button class="btn btn-outline-secondary w-100" title="Limpar filtros">
-                                    <i class="fas fa-xmark"></i>
-                                </button>
-                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted small">4 resultados encontrados</span>
+                    <div class="d-flex gap-2">
+                        <select class="form-select form-select-sm" style="width: auto;">
+                            <option>Ordenar: Código ↑</option>
+                            <option>Ordenar: Código ↓</option>
+                            <option>Ordenar: Nome ↑</option>
+                            <option>Ordenar: Nome ↓</option>
+                        </select>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-primary" id="btn-tabela-forn" title="Vista tabela">
+                                <i class="fas fa-table"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" id="btn-cards-forn" title="Vista cards">
+                                <i class="fas fa-grip"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Tabela de fornecedores -->
-                <div class="card">
+                <div id="vista-tabela-forn" class="card">
                     <div class="card-body p-0">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
                                     <th>Código</th>
                                     <th>Empresa</th>
-                                    <th>NIF</th>
+                                    <th>Tipo</th>
                                     <th>Contacto</th>
                                     <th>Email</th>
                                     <th>Equipamentos associados</th>
@@ -188,7 +209,7 @@
                                 <tr>
                                     <td>FOR001</td>
                                     <td>MedTech Portugal</td>
-                                    <td>509876321</td>
+                                    <td>Assistência técnica</td>
                                     <td>225 456 700</td>
                                     <td>geral@medtech.pt</td> 
                                     <td>12</td>
@@ -221,7 +242,7 @@
                                 <tr>
                                     <td>FOR002</td>
                                     <td>BioEquip Solutions</td>
-                                    <td>514223987</td>
+                                    <td>Distribuidor</td>
                                     <td>229 887 654</td>
                                     <td>contacto@bioequip.pt</td>
                                     <td>8</td>
@@ -249,7 +270,7 @@
                                 <tr>
                                     <td>FOR003</td>
                                     <td>Hospital Devices Europe</td>
-                                    <td>501998776</td>
+                                    <td>Fabricante</td>
                                     <td>226 345 222</td>
                                     <td>support@hde.pt</td>
                                     <td>15</td>
@@ -277,6 +298,48 @@
                         </table>
                     </div>
                 </div>
+                <!-- Vista cards fornecedores -->
+                <div id="vista-cards-forn" class="row g-3" style="display: none;">
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <h6 class="mb-0">Philips Healthcare</h6>
+                                    <span class="badge bg-primary">Fabricante</span>
+                                </div>
+                                <p class="text-muted small mb-1"><i class="fas fa-phone me-1"></i>+351 210 000 000</p>
+                                <p class="text-muted small mb-1"><i class="fas fa-envelope me-1"></i>geral@philips.pt</p>
+                                <p class="text-muted small mb-2"><i class="fas fa-stethoscope me-1"></i>3 equipamentos</p>
+                                <div class="d-flex gap-1">
+                                    <a href="detalhes-fornecedor.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="editar-fornecedor.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    const btnTabelaForn = document.getElementById('btn-tabela-forn');
+                    const btnCardsForn = document.getElementById('btn-cards-forn');
+                    const vistaTabelaForn = document.getElementById('vista-tabela-forn');
+                    const vistaCardsForn = document.getElementById('vista-cards-forn');
+
+                    btnTabelaForn.addEventListener('click', function () {
+                        vistaTabelaForn.style.display = 'block';
+                        vistaCardsForn.style.display = 'none';
+                        btnTabelaForn.classList.replace('btn-outline-secondary', 'btn-primary');
+                        btnCardsForn.classList.replace('btn-primary', 'btn-outline-secondary');
+                    });
+
+                    btnCardsForn.addEventListener('click', function () {
+                        vistaTabelaForn.style.display = 'none';
+                        vistaCardsForn.style.display = 'flex';
+                        btnCardsForn.classList.replace('btn-outline-secondary', 'btn-primary');
+                        btnTabelaForn.classList.replace('btn-primary', 'btn-outline-secondary');
+                    });
+                </script>
             </main>
         </div>
         <!-- Modal de confirmação -->

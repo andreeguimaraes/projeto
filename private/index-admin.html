@@ -17,38 +17,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="../assets/fontawesome/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 
 <body> 
     <header class="navbar-admin">
         <div class="row align-items-center w-100 m-0">
             <div class="col-6 d-flex align-items-center p-3">
-                <!-- logo e nome MEDINV -->
-                <a href="index-admin.html" class="text-decoration-none d-flex align-items-center gap-3">
-                    <div>
-                        <span class="navbar-brand-title">MEDINV</span>
-                        <span class="navbar-brand-sub">Área de Gestão</span>
-                    </div>
+                <a href="../../index-admin.html" class="text-decoration-none">
+                    <span class="navbar-brand-title">MEDINV</span>
+                    <span class="navbar-brand-sub">Área de Gestão</span>
                 </a>
-            </div>        
+            </div>
             <div class="col-6 text-end p-3">
                 <div class="dropdown">
-                    <!-- botão administrador-->
-                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         <i class="fa-regular fa-user me-2"></i>Administrador
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="#">
-                            <i class="fa-solid fa-key me-2"></i>Alterar password
-                        </a></li>
-                        <!-- voltar ao site público -->
-                        <li><a class="dropdown-item" href="../public/index.html">
-                            <i class="fa-solid fa-globe me-2"></i>Ver site público
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
+                                <i class="fa-solid fa-key me-2"></i>Alterar password
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li><a class="dropdown-item text-danger" href="../login/login.html">
-                            <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
-                        </a></li>
+                                <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
+                            </a></li>
                     </ul>
                 </div>
             </div>
@@ -168,26 +165,26 @@
                 <div class="alert alert-danger d-flex align-items-center gap-2">
                     <i class="fas fa-triangle-exclamation"></i>
                     <span>4 equipamentos com garantia expirada — 
-                        <a href="views/garantias/lista.html" class="alert-link">ver lista</a>
+                        <a href="views/equipamentos/equipamentos.html" class="alert-link">ver lista</a>
                     </span>
                 </div>
                 <div class="alert alert-warning d-flex align-items-center gap-2">
                     <i class="fas fa-clock"></i>
                     <span>3 garantias a expirar nos próximos 30 dias — 
-                        <a href="views/garantias/lista.html" class="alert-link">ver lista</a>
+                        <a href="views/garantias/garantias.html" class="alert-link">ver lista</a>
                     </span>
                 </div>
                 <div class="alert alert-info d-flex align-items-center gap-2">
                     <i class="fas fa-file-circle-exclamation"></i>
                     <span>2 equipamentos sem documentação associada — 
-                        <a href="views/documentacao/lista.html" class="alert-link">ver lista</a>
+                        <a href="views/documentacao/documentacao.html" class="alert-link">ver lista</a>
                     </span>
                 </div>
               </main>
         </div> 
     </div>
 
-    <script src="assets/bootstrap/bootstrap.bundle.min.js"></script> 
+    <script src="../assets/bootstrap/bootstrap.bundle.min.js"></script> 
 
 </body>
 </html>
