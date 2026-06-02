@@ -141,82 +141,95 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="row g-2">
-                            <div class="col-md-3">
-                                <input type="text" class="form-control" placeholder="🔍 Código, designação, nº série...">
+    
+                           <!-- Pesquisa -->
+                            <div class="col">
+                                <div class="input-group">
+                                    <div style="position: relative; flex: 1;">
+                                        <input
+                                            type="text"
+                                            id="pesquisaEquipamento"
+                                            class="form-control pe-5"
+                                            placeholder="Pesquisar equipamento..."
+                                        >
+
+                                        <button
+                                            type="button"
+                                            onclick="document.getElementById('pesquisaEquipamento').value='';"
+                                            title="Limpar pesquisa"
+                                            class="btn-limpar-pesquisa"
+                                        >
+                                            <i class="fas fa-xmark"></i>
+                                        </button>
+                                    </div>
+
+                                    <button
+                                        class="btn btn-primary"
+                                        type="button"
+                                        onclick="filtrar()"
+                                    >
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col-md-auto">
-                                <button class="btn btn-primary" onclick="filtrar()">
-                                    <i class="fas fa-search me-1"></i>
-                                </button>
-                            </div>
-                            <div class="col-md-2">
-                                <select class="form-select">
-                                    <option value="">Categoria</option>
-                                    <option>Monitorização</option>
-                                    <option>Suporte de vida</option>
-                                    <option>Terapia</option>
-                                    <option>Diagnóstico</option>
-                                    <option>Laboratório</option>
-                                    <option>Esterilização</option>
-                                    <option>Reabilitação</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <select class="form-select">
-                                    <option value="">Estado</option>
-                                    <option>Ativo</option>
-                                    <option>Em manutenção</option>
-                                    <option>Inativo</option>
-                                    <option>Em calibração</option>
-                                    <option>Em quarentena</option>
-                                    <option>Abatido</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <select class="form-select">
-                                    <option value="">Criticidade</option>
-                                    <option>Baixa</option>
-                                    <option>Média</option>
-                                    <option>Alta</option>
-                                    <option>Suporte de vida</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <select class="form-select">
-                                    <option value="">Serviço</option>
-                                    <option>UCI</option>
-                                    <option>Urgência</option>
-                                    <option>Bloco Operatório</option>
-                                    <option>Medicina</option>
-                                    <option>Pediatria</option>
-                                    <option>Ortopedia</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row g-2 mt-1">
-                            <div class="col-md-2">
-                                <select class="form-select">
-                                    <option value="">Marca</option>
-                                    <option>Philips</option>
-                                    <option>Dräger</option>
-                                    <option>Zoll</option>
-                                    <option>B. Braun</option>
-                                    <option>GE Healthcare</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <select class="form-select">
-                                    <option value="">Fornecedor</option>
-                                    <option>Philips Healthcare</option>
-                                    <option>Dräger Portugal</option>
-                                    <option>Zoll Medical</option>
-                                    <option>B. Braun</option>
-                                </select>
-                            </div>
-                            <div class="col-md-auto">
-                                <button class="btn btn-outline-secondary w-100" title="Limpar filtros">
-                                    <i class="fas fa-xmark"></i>
-                                </button>
+                            <div class="row g-2">
+                                <div class="col-md-2">
+                                    <select class="form-select">
+                                        <option value="">Categoria</option>
+                                        <option>Monitorização</option>
+                                        <option>Suporte de vida</option>
+                                        <option>Terapia</option>
+                                        <option>Diagnóstico</option>
+                                        <option>Laboratório</option>
+                                        <option>Esterilização</option>
+                                        <option>Reabilitação</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select">
+                                        <option value="">Estado</option>
+                                        <option>Ativo</option>
+                                        <option>Em manutenção</option>
+                                        <option>Inativo</option>
+                                        <option>Em calibração</option>
+                                        <option>Em quarentena</option>
+                                        <option>Abatido</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select">
+                                        <option value="">Criticidade</option>
+                                        <option>Baixa</option>
+                                        <option>Média</option>
+                                        <option>Alta</option>
+                                        <option>Suporte de vida</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select">
+                                        <option value="">Serviço</option>
+                                        <option>UCI</option>
+                                        <option>Urgência</option>
+                                        <option>Bloco Operatório</option>
+                                        <option>Medicina</option>
+                                        <option>Pediatria</option>
+                                        <option>Ortopedia</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select">
+                                        <option value="">Fornecedor</option>
+                                        <option>Philips Healthcare</option>
+                                        <option>Dräger Portugal</option>
+                                        <option>Zoll Medical</option>
+                                        <option>B. Braun</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button class="btn btn-outline-secondary w-100" title="Limpar filtros">
+                                        <i class="fas fa-xmark"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -224,7 +237,10 @@
 
                 <!-- Barra de resultados e toggle de vista -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-muted small">5 resultados encontrados</span>
+                    <div class="alert alert-info d-inline-block" role="alert">
+                        <i class="fas fa-circle-info me-2"></i>
+                        <strong>5 resultados encontrados</strong>
+                    </div>                    
                     <div class="d-flex gap-2">
                         <select class="form-select form-select-sm" style="width: auto;">
                             <option>Ordenar: Código ↑</option>
@@ -247,9 +263,9 @@
                 <!-- Vista tabela -->
                 <div id="vista-tabela">
                     <div class="card">
-                        <div class="card-body p-0">
+                        <div class="card-body">
                             <table class="table table-hover mb-0">
-                                <thead class="table-light">
+                                <thead style="background:#f8f9fa;">
                                     <tr>
                                         <th>Código</th>
                                         <th>Designação</th>
@@ -268,12 +284,35 @@
                                         <td>Philips</td>
                                         <td>Monitorização</td>
                                         <td>UCI</td>
-                                        <td><span class="badge bg-success">Ativo</span></td>
+                                        <td><span>Ativo</span></td>
                                         <td><span class="badge bg-danger">Suporte de vida</span></td>
-                                        <td style="white-space: nowrap;">
-                                            <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                            <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"><i class="fas fa-trash"></i></button>
+                                        <td>
+                                            <div style="white-space: nowrap;">
+
+                                                <a href="detalhes-equipamentos.html"
+                                                    class="btn btn-sm btn-primary"
+                                                    title="Ver detalhes">
+
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+
+                                                <a href="editar-equipamentos.html"
+                                                    class="btn btn-sm btn-warning"
+                                                    title="Editar">
+
+                                                    <i class="fas fa-pen"></i>
+                                                </a>
+
+                                                <button
+                                                    class="btn btn-sm btn-danger"
+                                                    title="Eliminar"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalEliminar">
+
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -282,12 +321,35 @@
                                         <td>Dräger</td>
                                         <td>Suporte de vida</td>
                                         <td>UCI</td>
-                                        <td><span class="badge bg-success">Ativo</span></td>
+                                        <td><span>Ativo</span></td>
                                         <td><span class="badge bg-danger">Suporte de vida</span></td>
-                                        <td style="white-space: nowrap;">
-                                            <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                            <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"><i class="fas fa-trash"></i></button>
+                                        <td>
+                                            <div style="white-space: nowrap;">
+
+                                                <a href="detalhes-equipamentos.html"
+                                                    class="btn btn-sm btn-primary"
+                                                    title="Ver detalhes">
+
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+
+                                                <a href="editar-equipamentos.html"
+                                                    class="btn btn-sm btn-warning"
+                                                    title="Editar">
+
+                                                    <i class="fas fa-pen"></i>
+                                                </a>
+
+                                                <button
+                                                    class="btn btn-sm btn-danger"
+                                                    title="Eliminar"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalEliminar">
+
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -296,12 +358,35 @@
                                         <td>Zoll</td>
                                         <td>Suporte de vida</td>
                                         <td>Urgência</td>
-                                        <td><span class="badge bg-warning text-dark">Em manutenção</span></td>
+                                        <td><span>Em manutenção</span></td>
                                         <td><span class="badge bg-danger">Alta</span></td>
-                                        <td style="white-space: nowrap;">
-                                            <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                            <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar"><i class="fas fa-trash"></i></button>
+                                        <td>
+                                            <div style="white-space: nowrap;">
+
+                                                <a href="detalhes-equipamentos.html"
+                                                    class="btn btn-sm btn-primary"
+                                                    title="Ver detalhes">
+
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+
+                                                <a href="editar-equipamentos.html"
+                                                    class="btn btn-sm btn-warning"
+                                                    title="Editar">
+
+                                                    <i class="fas fa-pen"></i>
+                                                </a>
+
+                                                <button
+                                                    class="btn btn-sm btn-danger"
+                                                    title="Eliminar"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalEliminar">
+
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
