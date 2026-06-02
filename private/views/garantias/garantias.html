@@ -128,12 +128,9 @@
                         <h2 class="mb-0">Garantias e Contratos</h2>
                         <p class="text-muted mb-0">Gestão de garantias e contratos de manutenção dos equipamentos</p>
                     </div>
-                    <a href="novo-garantias.html" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Nova garantia
-                    </a>
                 </div>
 
-                <!-- Alertas
+                <!-- Alertas -->
                 <div class="alert alert-danger d-flex align-items-center gap-2 mb-3">
                     <i class="fas fa-triangle-exclamation"></i>
                     <span>4 garantias expiradas — revisão necessária</span>
@@ -176,44 +173,92 @@
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div> 
 
                 <!-- Filtros -->
-                <div class="card mb-4">
+                <div class="card mb-3">
                     <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" placeholder="🔍 Pesquisar equipamento...">
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select">
-                                    <option value="">Tipo de contrato</option>
-                                    <option>Manutenção preventiva</option>
-                                    <option>Manutenção corretiva</option>
-                                    <option>Manutenção total</option>
-                                    <option>Sem contrato</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select">
-                                    <option value="">Estado da garantia</option>
-                                    <option>Ativa</option>
-                                    <option>A expirar (30 dias)</option>
-                                    <option>Expirada</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <select class="form-select">
-                                    <option value="">Periodicidade</option>
-                                    <option>Mensal</option>
-                                    <option>Trimestral</option>
-                                    <option>Semestral</option>
-                                    <option>Anual</option>
-                                </select>
+                        <div class="row g-2">
+                            <!-- Pesquisa -->
+                            <div class="col">
+                                <div class="input-group">
+                                    <div style="position: relative; flex: 1;">
+                                        <input
+                                            type="text"
+                                            id="pesquisaEquipamento"
+                                            class="form-control pe-5"
+                                            placeholder="Pesquisar equipamento..."
+                                        >
+
+                                        <button
+                                            type="button"
+                                            onclick="document.getElementById('pesquisaEquipamento').value='';"
+                                            title="Limpar pesquisa"
+                                            class="btn-limpar-pesquisa"
+                                        >
+                                            <i class="fas fa-xmark"></i>
+                                        </button>
+                                    </div>
+
+                                    <button
+                                        class="btn btn-primary"
+                                        type="button"
+                                        onclick="filtrar()"
+                                    >
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>     
+                            <div class="row g-2">                 
+                                <div class="col-md-3">
+                                    <select class="form-select">
+                                        <option value="">Tipo de contrato</option>
+                                        <option>Manutenção preventiva</option>
+                                        <option>Manutenção corretiva</option>
+                                        <option>Manutenção total</option>
+                                        <option>Sem contrato</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select">
+                                        <option value="">Estado da garantia</option>
+                                        <option>Ativa</option>
+                                        <option>A expirar (30 dias)</option>
+                                        <option>Expirada</option>
+                                    </select>
+                                </div>                               
+                                <div class="col-md-3">
+                                    <select class="form-select">
+                                        <option value="">Entidade responsável</option>
+                                        <option>Philips Healthcare</option>
+                                        <option>Dräger Portugal</option>
+                                        <option>Zoll Medical</option>
+                                        <option>GE Healthcare</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select">
+                                        <option value="">Periodicidade</option>
+                                        <option>Mensal</option>
+                                        <option>Trimestral</option>
+                                        <option>Semestral</option>
+                                        <option>Anual</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-secondary"
+                                        title="Limpar filtros">
+
+                                        <i class="fas fa-filter-circle-xmark"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
                 <!-- Tabela -->
                 <div class="card">
@@ -222,6 +267,7 @@
                             <table class="table table-hover mb-0">
                                 <thead class="table-light">
                                     <tr>
+                                        <th>Código</th>
                                         <th>Equipamento</th>
                                         <th>Início garantia</th>
                                         <th>Fim garantia</th>
@@ -234,10 +280,8 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>
-                                            <strong>EQ001</strong><br>
-                                            <small class="text-muted">Monitor IntelliVue MP5</small>
-                                        </td>
+                                        <td>GAR001</td>
+                                        <td>Monitor IntelliVue MP5</td>
                                         <td>15/03/2022</td>
                                         <td>15/03/2027</td>
                                         <td><span class="badge bg-success">Ativa</span></td>
@@ -248,9 +292,12 @@
                                             <a href="detalhes-garantia.html" class="btn btn-sm btn-outline-primary" title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-garantias.html"
+                                                class="btn btn-sm btn-outline-warning"
+                                                title="Editar">
+
                                                 <i class="fas fa-pen"></i>
-                                            </a>
+                                            </a> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">
                                                 <i class="fas fa-trash"></i>
@@ -258,13 +305,11 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
-                                            <strong>EQ002</strong><br>
-                                            <small class="text-muted">Ventilador Evita V500</small>
-                                        </td>
-                                        <td>01/06/2021</td>
-                                        <td>01/06/2026</td>
-                                        <td><span class="badge bg-warning text-dark">Expira em 11 dias</span></td>
+                                        <td>GAR002</td>
+                                        <td>Monitor IntelliVue MP5</td>
+                                        <td>20/06/2019</td>
+                                        <td>20/06/2024</td>
+                                        <td><span class="badge bg-danger">Expirada</span></td>
                                         <td>Manutenção total</td>
                                         <td>Dräger Portugal</td>
                                         <td>Semestral</td>
@@ -273,21 +318,22 @@
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-garantias.html"
+                                                class="btn btn-sm btn-outline-warning"
+                                                title="Editar">
+
                                                 <i class="fas fa-pen"></i>
-                                            </a>
+                                            </a> 
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </td>
-                                    </tr>
+                                    </tr> 
                                     <tr>
-                                        <td>
-                                            <strong>EQ003</strong><br>
-                                            <small class="text-muted">Desfibrilhador R Series</small>
-                                        </td>
+                                        <td>GAR003</td>
+                                        <td>Monitor IntelliVue MP5</td>
                                         <td>20/06/2019</td>
                                         <td>20/06/2024</td>
                                         <td><span class="badge bg-danger">Expirada</span></td>
@@ -299,9 +345,12 @@
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-garantias.html"
+                                                class="btn btn-sm btn-outline-warning"
+                                                title="Editar">
+
                                                 <i class="fas fa-pen"></i>
-                                            </a>
+                                            </a> 
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">
@@ -310,10 +359,8 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
-                                            <strong>EQ004</strong><br>
-                                            <small class="text-muted">Bomba de infusão Infusomat</small>
-                                        </td>
+                                        <td>GAR004</td>
+                                        <td>Monitor IntelliVue MP5</td>
                                         <td>05/09/2020</td>
                                         <td>05/09/2025</td>
                                         <td><span class="badge bg-danger">Expirada</span></td>
@@ -325,9 +372,12 @@
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-garantias.html"
+                                                class="btn btn-sm btn-outline-warning"
+                                                title="Editar">
+
                                                 <i class="fas fa-pen"></i>
-                                            </a>
+                                            </a> 
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">
@@ -336,10 +386,8 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
-                                            <strong>EQ005</strong><br>
-                                            <small class="text-muted">Ecógrafo Venue</small>
-                                        </td>
+                                        <td>GAR005</td>
+                                        <td>Monitor IntelliVue MP5</td>
                                         <td>10/11/2023</td>
                                         <td>10/11/2028</td>
                                         <td><span class="badge bg-success">Ativa</span></td>
@@ -351,9 +399,12 @@
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-garantias.html"
+                                                class="btn btn-sm btn-outline-warning"
+                                                title="Editar">
+
                                                 <i class="fas fa-pen"></i>
-                                            </a>
+                                            </a> 
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">
@@ -384,7 +435,7 @@
                 <div class="modal-body">
                     <p>Tem a certeza que pretende eliminar este registo de garantia?</p>
                     <div class="alert alert-light border">
-                        <strong>EQ001 — Monitor IntelliVue MP5</strong><br>
+                        <strong>GAR001 — Monitor IntelliVue MP5</strong><br>
                         <small class="text-muted">Esta ação não pode ser revertida.</small>
                     </div>
                 </div>
@@ -392,7 +443,7 @@
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-arrow-left me-1"></i>Cancelar
                     </button>
-                    <button type="button" class="btn btn-outline-secondary">
+                    <button type="button" class="btn btn-danger">
                         <i class="fas fa-trash me-1"></i>Eliminar
                     </button>
                 </div>

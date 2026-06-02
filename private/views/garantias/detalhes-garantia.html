@@ -81,7 +81,7 @@
                             <i class="fas fa-chart-line me-2"></i>Dashboard
                         </a>
 
-                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link active">
+                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link">
                             <i class="fas fa-stethoscope me-2"></i>Equipamentos
                         </a>
 
@@ -97,7 +97,7 @@
                             <i class="fas fa-folder-open me-2"></i>Documentação
                         </a>
 
-                        <a href="../garantias/garantias.html" class="nav-link sidebar-link">
+                        <a href="garantias.html" class="nav-link sidebar-link active">
                             <i class="fas fa-file-contract me-2"></i>
                             Garantias e Contratos
                         </a>
@@ -125,7 +125,6 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h2 class="mb-0">Detalhes da garantia</h2>
-                        <p class="text-muted mb-0">EQ001 — Monitor IntelliVue MP5</p>
                     </div>
                     <a href="garantias.html" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Voltar
@@ -138,19 +137,12 @@
                         <!-- Cabeçalho da ficha -->
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div class="d-flex align-items-center gap-3">
-                                <div class="avatar-circle">
-                                    <i class="fas fa-file-contract fa-2x"></i>
-                                </div>
                                 <div>
-                                    <h4 class="mb-0">Monitor IntelliVue MP5</h4>
-                                    <div class="d-flex gap-2 mt-1">
-                                        <span class="badge bg-success">Garantia ativa</span>
-                                        <span class="badge bg-danger">Suporte de vida</span>
-                                    </div>
+                                    <h4 class="mb-0">GAR001</h4>
                                 </div>
                             </div>
                             <div class="d-flex gap-2">
-                                <a href="editar.html" class="btn btn-warning">
+                                <a href="editar-garantia.html" class="btn btn-warning">
                                     <i class="fas fa-pen me-1"></i>Editar
                                 </a>
                                 <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalEliminar">
@@ -292,15 +284,9 @@
                                 <i class="fas fa-arrow-left me-1"></i>Voltar
                             </a>
                             <div class="d-flex gap-2">
-                                <a href="../equipamentos/detalhes.html" class="btn btn-outline-primary">
+                                <a href="../equipamentos/detalhes-equipamentos.html" class="btn btn-outline-primary">
                                     <i class="fas fa-stethoscope me-1"></i>Ver equipamento
                                 </a>
-                                <a href="editar.html" class="btn btn-warning">
-                                    <i class="fas fa-pen me-1"></i>Editar
-                                </a>
-                                <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                                    <i class="fas fa-trash me-1"></i>Eliminar
-                                </button>
                             </div>
                         </div>
 
@@ -324,7 +310,7 @@
                 <div class="modal-body">
                     <p>Tem a certeza que pretende eliminar este registo de garantia?</p>
                     <div class="alert alert-light border">
-                        <strong>EQ001 — Monitor IntelliVue MP5</strong><br>
+                        <strong>GAR001 — Monitor IntelliVue MP5</strong><br>
                         <small class="text-muted">Esta ação não pode ser revertida.</small>
                     </div>
                 </div>
@@ -332,7 +318,7 @@
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-arrow-left me-1"></i>Cancelar
                     </button>
-                    <a href="garantias.html" class="btn btn-outline-secondary">
+                    <a href="garantias.html" class="btn btn-danger">
                         <i class="fas fa-trash me-1"></i>Eliminar
                     </a>
                 </div>

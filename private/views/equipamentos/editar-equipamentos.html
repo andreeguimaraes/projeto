@@ -297,38 +297,64 @@
                             <hr> 
                             <!-- GARANTIA -->
                             <h5 class="text-muted mb-3">
-                                <i class="fas fa-file-contract me-2"></i>Garantia e contrato
+                                <i class="fas fa-file-contract me-2"></i>Garantias e contratos
                             </h5>
-                            <div class="row mb-4">
+
+                            <div class="row mb-3">
                                 <div class="col-md-3">
-                                    <label class="form-label fw-bold">Início de garantia</label>
-                                    <input type="date" class="form-control" name="inicio_garantia">
+                                    <label class="form-label fw-bold">Código</label>
+                                    <input type="text" class="form-control" value="GAR001" readonly>
                                 </div>
+
                                 <div class="col-md-3">
-                                    <label class="form-label fw-bold">Fim de garantia</label>
-                                    <input type="date" class="form-control" name="fim_garantia">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold">Tipo de contrato</label>
-                                    <select class="form-select" name="tipo_contrato">
-                                        <option value="">Selecione...</option>
-                                        <option>Manutenção preventiva</option>
-                                        <option>Manutenção corretiva</option>
-                                        <option>Manutenção total</option>
-                                        <option>Sem contrato</option>
+                                    <label class="form-label fw-bold">Tipo</label>
+                                    <select class="form-select">
+                                        <option selected>Garantia fabricante</option>
+                                        <option>Contrato de manutenção</option>
+                                        <option>Garantia estendida</option>
                                     </select>
                                 </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Data de início</label>
+                                    <input type="date" class="form-control" value="2022-03-15">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Data de fim</label>
+                                    <input type="date" class="form-control" value="2027-03-15">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Entidade responsável</label>
+                                    <select class="form-select">
+                                        <option selected>Philips Healthcare Portugal</option>
+                                        <option>Dräger Portugal</option>
+                                        <option>B. Braun</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Estado</label>
+                                    <select class="form-select">
+                                        <option selected>Ativa</option>
+                                        <option>Expirada</option>
+                                        <option>Cancelada</option>
+                                    </select>
+                                </div>
+
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold">Periodicidade</label>
-                                    <select class="form-select" name="periodicidade">
-                                        <option value="">Selecione...</option>
-                                        <option>Mensal</option>
-                                        <option>Trimestral</option>
+                                    <select class="form-select">
+                                        <option selected>Anual</option>
                                         <option>Semestral</option>
-                                        <option>Anual</option>
+                                        <option>Trimestral</option>
+                                        <option>Mensal</option>
                                     </select>
                                 </div>
                             </div>
+
                             <hr>
                             <!-- DOCUMENTAÇÃO -->
                             <h5 class="text-muted mb-3">
