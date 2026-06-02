@@ -128,7 +128,7 @@
                     </a>
                 </div>
 
-                <form action="" method="post">
+                <form action="" method="post" enctype="multipart/form-data">
                     <div class="card shadow rounded">
                         <div class="card-body">
 
@@ -227,10 +227,14 @@
                             </h5>
                             <div class="row mb-3">
                                 <div class="col-md-3">
+                                    <label class="form-label fw-bold">Código da localização</label>
+                                    <input type="text" class="form-control" name="codigo_localizacao" value="LOC001">
+                                </div>
+                                <div class="col-md-3">
                                     <label class="form-label fw-bold">Estado atual</label>
                                     <select class="form-select" name="estado" required>
                                         <option value="">Selecione...</option>
-                                        <option selected>Ativo</option>
+                                        <option>Ativo</option>
                                         <option>Em manutenção</option>
                                         <option>Inativo</option>
                                         <option>Em calibração</option>
@@ -240,12 +244,26 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold">Edifício</label>
-                                    <input type="text" class="form-control" name="edificio" value="Principal">
+                                    <select class="form-select" name="Edifício" required>
+                                        <option value="">Selecione...</option>    
+                                        <option>A</option>
+                                        <option>B</option>
+                                        <option>C</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold">Piso</label>
-                                    <input type="text" class="form-control" name="piso" value="2">
-                                </div>
+                                    <select class="form-select" name="Piso" required>
+                                        <option value="">Selecione...</option>    
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                </div> 
+                                
+                            </div>
+                            
+                            <div class="row mb-4">
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold">Serviço</label>
                                     <select class="form-select" name="servico">
@@ -258,8 +276,6 @@
                                         <option>Ortopedia</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row mb-4">
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold">Sala</label>
                                     <input type="text" class="form-control" name="sala" value="201">
@@ -267,6 +283,207 @@
                             </div>
                             <hr>
 
+                            <!-- FORNECEDOR -->
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-truck-medical me-2"></i>Forncedor
+                            </h5>
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <select class="form-select" name="fornecedor_id">
+                                        <option value="1" selected>Philips Healthcare Portugal</option>
+                                        <option value="2">Dräger Portugal</option>
+                                        <option value="3">Zoll Medical</option>
+                                        <option value="4">B. Braun</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr> 
+                            <!-- GARANTIA -->
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-file-contract me-2"></i>Garantia e contrato
+                            </h5>
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Início de garantia</label>
+                                    <input type="date" class="form-control" name="inicio_garantia">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Fim de garantia</label>
+                                    <input type="date" class="form-control" name="fim_garantia">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Tipo de contrato</label>
+                                    <select class="form-select" name="tipo_contrato">
+                                        <option value="">Selecione...</option>
+                                        <option>Manutenção preventiva</option>
+                                        <option>Manutenção corretiva</option>
+                                        <option>Manutenção total</option>
+                                        <option>Sem contrato</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Periodicidade</label>
+                                    <select class="form-select" name="periodicidade">
+                                        <option value="">Selecione...</option>
+                                        <option>Mensal</option>
+                                        <option>Trimestral</option>
+                                        <option>Semestral</option>
+                                        <option>Anual</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr>
+                            <!-- DOCUMENTAÇÃO -->
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-folder-open me-2"></i>Documentação
+                            </h5>
+
+                            <div class="table-responsive">
+
+                                <table class="table align-middle">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo de documento</th>
+                                            <th>Nome do documento</th>
+                                            <th>Data</th>
+                                            <th>Validade</th>
+                                            <th>Caminho / Link</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td>
+                                                <select class="form-select" name="tipo_documento_1">
+                                                    <option value="">Selecione...</option>
+                                                    <option>Manual de utilizador</option>
+                                                    <option>Manual de serviço</option>
+                                                    <option>Certificado de calibração</option>
+                                                    <option>Contrato de manutenção</option>
+                                                    <option>Fatura de aquisição</option>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="nome_documento_1"
+                                                    placeholder="Manual MP5">
+                                            </td>
+
+                                            <td>
+                                                <input
+                                                    type="date"
+                                                    class="form-control"
+                                                    name="data_documento_1">
+                                            </td>
+
+                                            <td>
+                                                <input
+                                                    type="date"
+                                                    class="form-control"
+                                                    name="validade_documento_1">
+                                            </td>
+
+                                            <td>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="caminho_documento_1"
+                                                    placeholder="docs/manual_mp5.pdf">
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <select class="form-select" name="tipo_documento_2">
+                                                    <option value="">Selecione...</option>
+                                                    <option>Manual de utilizador</option>
+                                                    <option>Manual de serviço</option>
+                                                    <option>Certificado de calibração</option>
+                                                    <option>Contrato de manutenção</option>
+                                                    <option>Fatura de aquisição</option>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="nome_documento_2">
+                                            </td>
+
+                                            <td>
+                                                <input
+                                                    type="date"
+                                                    class="form-control"
+                                                    name="data_documento_2">
+                                            </td>
+
+                                            <td>
+                                                <input
+                                                    type="date"
+                                                    class="form-control"
+                                                    name="validade_documento_2">
+                                            </td>
+
+                                            <td>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="caminho_documento_2">
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <select class="form-select" name="tipo_documento_3">
+                                                    <option value="">Selecione...</option>
+                                                    <option>Manual de utilizador</option>
+                                                    <option>Manual de serviço</option>
+                                                    <option>Certificado de calibração</option>
+                                                    <option>Contrato de manutenção</option>
+                                                    <option>Fatura de aquisição</option>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="nome_documento_3">
+                                            </td>
+
+                                            <td>
+                                                <input
+                                                    type="date"
+                                                    class="form-control"
+                                                    name="data_documento_3">
+                                            </td>
+
+                                            <td>
+                                                <input
+                                                    type="date"
+                                                    class="form-control"
+                                                    name="validade_documento_3">
+                                            </td>
+
+                                            <td>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="caminho_documento_3">
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
                             <!-- OBSERVAÇÕES -->
                             <h5 class="text-muted mb-3">
                                 <i class="fas fa-note-sticky me-2"></i>Observações

@@ -314,7 +314,7 @@
                                 </div>
                                 <!-- Botões -->
                                 <div class="d-flex justify-content-end gap-2 mt-4">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="button" class="btn btn-primary">
                                         Ver localização
                                     </button>
                                 </div>
@@ -391,7 +391,7 @@
                                 </div>
                                 <!-- Botões -->
                                 <div class="d-flex justify-content-end gap-2 mt-4">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="button" class="btn btn-primary">
                                         Ver Fornecedor
                                     </button>
                                 </div>
@@ -417,20 +417,9 @@
                                         <p class="form-control-plaintext">Anual</p>
                                     </div>
                                 </div>
-                                <!-- Barra de progresso -->
-                                <div class="mb-3">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <small class="text-muted">15/03/2022</small>
-                                        <small class="text-muted">62% decorrido</small>
-                                        <small class="text-muted">15/03/2027</small>
-                                    </div>
-                                    <div class="progress" style="height: 10px;">
-                                        <div class="progress-bar bg-success" style="width: 62%"></div>
-                                    </div>
-                                </div>
                                 <!-- Botões -->
                                 <div class="d-flex justify-content-end gap-2 mt-4">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="button" class="btn btn-primary">
                                         Ver Garantia
                                     </button>
                                 </div>
@@ -438,27 +427,51 @@
 
                             <!-- TAB 5 — Documentação -->
                             <div class="tab-pane fade" id="tab-documentacao">
-                                <ul class="list-group list-group-flush">
+                                <ul class="list-group">
+
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <span><i class="fas fa-file-pdf me-2 text-danger"></i>Manual de utilizador</span>
-                                        <span class="badge bg-light text-dark">PDF</span>
+                                        <div>
+                                            <i class="fas fa-file-pdf text-danger me-2"></i>
+                                            Manual de utilizador
+                                        </div>
+
+                                        <a href="../../../docs/manual_mp5.pdf"
+                                        target="_blank"
+                                        class="btn btn-sm btn-outline-primary">
+                                            Ver
+                                        </a>
                                     </li>
+
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <span><i class="fas fa-file-pdf me-2 text-danger"></i>Certificado de calibração</span>
-                                        <span class="badge bg-light text-dark">PDF</span>
+                                        <div>
+                                            <i class="fas fa-file-pdf text-danger me-2"></i>
+                                            Certificado de calibração
+                                        </div>
+
+                                        <a href="../../../docs/certificado.pdf"
+                                        target="_blank"
+                                        class="btn btn-sm btn-outline-primary">
+                                            Ver
+                                        </a>
                                     </li>
+
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <span><i class="fas fa-file-pdf me-2 text-danger"></i>Contrato de manutenção</span>
-                                        <span class="badge bg-light text-dark">PDF</span>
+                                        <div>
+                                            <i class="fas fa-file-pdf text-danger me-2"></i>
+                                            Contrato de manutenção
+                                        </div>
+
+                                        <a href="../../../docs/contrato.pdf"
+                                        target="_blank"
+                                        class="btn btn-sm btn-outline-primary">
+                                            Ver
+                                        </a>
                                     </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <span><i class="fas fa-file-pdf me-2 text-danger"></i>Fatura de aquisição</span>
-                                        <span class="badge bg-light text-dark">PDF</span>
-                                    </li>
+
                                 </ul>
                                 <!-- Botões -->
                                 <div class="d-flex justify-content-end gap-2 mt-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="button" class="btn btn-primary">
                                     Ver Documentação
                                 </button>
                             </div>
@@ -491,7 +504,7 @@
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-arrow-left me-1"></i>Cancelar
                     </button>
-                    <a href="equipamentos.html" class="btn btn-outline-secondary">
+                    <a href="equipamentos.html" class="btn btn-danger">
                         <i class="fas fa-trash me-1"></i>Eliminar equipamento
                     </a>
                 </div>

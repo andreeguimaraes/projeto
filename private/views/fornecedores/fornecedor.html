@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS & custom CSS -->
     <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
     <!-- favicon  -->
-    <link rel="shortcut icon" href="../../../assets/img/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="" type="image/png">
     <!-- folha de estilos CSS -->
     <link rel="stylesheet" href="../../assets/admin1240722.css">
     <!-- Google Fonts -->
@@ -21,7 +21,7 @@
 </head>
 
 <body>
-    <!-- Navbar -->
+    <!-- Navbar --> 
     <header class="navbar-admin">
         <div class="row align-items-center w-100 m-0">
             <div class="col-6 d-flex align-items-center p-3">
@@ -331,16 +331,43 @@
                         <div class="card h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between mb-2">
-                                    <h6 class="mb-0">Philips Healthcare</h6>
-                                    <span class="badge bg-primary">Fabricante</span>
+                                    <h6 class="mb-0">MedTech Portugal</h6>
+                                    <span class="badge bg-info text-dark">
+                                        Assistência técnica
+                                    </span>
                                 </div>
-                                <p class="text-muted small mb-1"><i class="fas fa-phone me-1"></i>+351 210 000 000</p>
-                                <p class="text-muted small mb-1"><i class="fas fa-envelope me-1"></i>geral@philips.pt</p>
-                                <p class="text-muted small mb-2"><i class="fas fa-stethoscope me-1"></i>3 equipamentos</p>
+
+                                <p class="text-muted small mb-1">
+                                    <i class="fas fa-barcode me-1"></i>FOR001
+                                </p>
+
+                                <p class="text-muted small mb-1">
+                                    <i class="fas fa-phone me-1"></i>225 456 700
+                                </p>
+
+                                <p class="text-muted small mb-1">
+                                    <i class="fas fa-envelope me-1"></i>geral@medtech.pt
+                                </p>
+
+                                <p class="text-muted small mb-2">
+                                    <i class="fas fa-stethoscope me-1"></i>12 equipamentos associados
+                                </p>
+
                                 <div class="d-flex gap-1">
-                                    <a href="detalhes-fornecedor.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                    <a href="editar-fornecedor.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                    <a href="detalhes-fornecedor.html" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+
+                                    <a href="editar-fornecedor.html" class="btn btn-sm btn-outline-warning">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+
+                                    <button
+                                        class="btn btn-sm btn-outline-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -393,7 +420,7 @@
                             <i class="fas fa-arrow-left me-1"></i>Cancelar
                         </button>
                         <!-- Confirma a eliminação -->
-                        <a href="fornecedores.html" class="btn btn-outline-secondary">
+                        <a href="fornecedor.html" class="btn btn-danger">
                             <i class="fas fa-trash me-1"></i>Eliminar fornecedor
                         </a>
                     </div>

@@ -90,11 +90,11 @@
                             <i class="fas fa-chart-line me-2"></i>Dashboard
                         </a>
 
-                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link active">
+                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link">
                             <i class="fas fa-stethoscope me-2"></i>Equipamentos
                         </a>
 
-                        <a href="../fornecedores/fornecedor.html" class="nav-link sidebar-link">
+                        <a href="../fornecedores/fornecedor.html" class="nav-link sidebar-link active">
                             <i class="fas fa-truck-medical me-2"></i>Fornecedores
                         </a>
 
@@ -151,13 +151,22 @@
                             </h5>
                             <div class="row mb-3">
                                 <div class="col-md-4">
+                                    <label class="form-label fw-bold">Código</label>
+                                    <input type="text"
+                                        class="form-control"
+                                        value="FOR001"
+                                        readonly>
+                                </div>
+                                <div class="col-md-4">
                                     <label class="form-label fw-bold">Nome da empresa <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="nome" value="Philips Healthcare Portugal" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">NIF <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="nif" value="500 123 456" required>
-                                </div>
+                                </div>                                
+                            </div>
+                            <div class="row mb-4">
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Tipo de fornecedor <span class="text-danger">*</span></label>
                                     <select class="form-select" name="tipo" required>
@@ -168,13 +177,11 @@
                                         <option>Fornecedor de consumíveis</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row mb-4">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label class="form-label fw-bold">Morada</label>
                                     <input type="text" class="form-control" name="morada" value="Av. da Liberdade, 110, Lisboa">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label class="form-label fw-bold">Website</label>
                                     <input type="url" class="form-control" name="website" value="https://www.philips.pt">
                                 </div>
@@ -232,11 +239,11 @@
 
                             <!-- Botões -->
                             <div class="d-flex justify-content-between">
-                                <a href="fornecedores.html" class="btn btn-outline-secondary">
+                                <a href="fornecedor.html" class="btn btn-outline-secondary">
                                     <i class="fas fa-arrow-left me-1"></i>Cancelar
                                 </a>
                                 <div class="d-flex gap-2">
-                                    <a href="detalhes.html" class="btn btn-outline-primary">
+                                    <a href="detalhes-fornecedor.html" class="btn btn-outline-primary">
                                         <i class="fas fa-eye me-1"></i>Ver detalhes
                                     </a>
                                     <button type="submit" class="btn btn-primary">

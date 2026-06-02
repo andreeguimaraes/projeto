@@ -90,11 +90,11 @@
                             <i class="fas fa-chart-line me-2"></i>Dashboard
                         </a>
 
-                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link active">
+                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link">
                             <i class="fas fa-stethoscope me-2"></i>Equipamentos
                         </a>
 
-                        <a href="../fornecedores/fornecedor.html" class="nav-link sidebar-link">
+                        <a href="../fornecedores/fornecedor.html" class="nav-link sidebar-link active">
                             <i class="fas fa-truck-medical me-2"></i>Fornecedores
                         </a>
 
@@ -159,6 +159,10 @@
                         </h5>
                         <div class="row mb-3">
                             <div class="col-md-4">
+                                <label class="form-label fw-bold">Código</label>
+                                <p class="form-control-plaintext">FOR001</p>
+                            </div>
+                            <div class="col-md-4">
                                 <label class="form-label fw-bold">Nome da empresa</label>
                                 <p class="form-control-plaintext">Philips Healthcare Portugal</p>
                             </div>
@@ -166,14 +170,19 @@
                                 <label class="form-label fw-bold">NIF</label>
                                 <p class="form-control-plaintext">500 123 456</p>
                             </div>
+                            
+                        </div>
+                        <div class="row mb-4">
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Tipo de fornecedor</label>
                                 <p class="form-control-plaintext">
                                     <span class="badge bg-primary">Fabricante</span>
                                 </p>
+                            </div>                            
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Morada</label>
+                                <p class="form-control-plaintext">Av. da Liberdade, 110, Lisboa</p>
                             </div>
-                        </div>
-                        <div class="row mb-4">
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Website</label>
                                 <p class="form-control-plaintext">
@@ -181,10 +190,6 @@
                                         <i class="fas fa-external-link-alt ms-1 small"></i>
                                     </a>
                                 </p>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold">Morada</label>
-                                <p class="form-control-plaintext">Av. da Liberdade, 110, Lisboa</p>
                             </div>
                         </div>
                         <hr>
@@ -229,7 +234,8 @@
 
                         <!-- EQUIPAMENTOS ASSOCIADOS -->
                         <h5 class="text-muted mb-3">
-                            <i class="fas fa-stethoscope me-2"></i>Equipamentos associados
+                            <i class="fas fa-stethoscope me-2"></i>
+                            Equipamentos associados (3)
                         </h5>
                         <div class="mb-4">
                             <table class="table table-hover table-sm">
@@ -319,7 +325,7 @@
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-arrow-left me-1"></i>Cancelar
                     </button>
-                    <a href="fornecedores.html" class="btn btn-outline-secondary">
+                    <a href="fornecedor.html" class="btn btn-outline-secondary">
                         <i class="fas fa-trash me-1"></i>Eliminar fornecedor
                     </a>
                 </div>
