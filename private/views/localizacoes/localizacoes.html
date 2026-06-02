@@ -200,6 +200,15 @@
                                         <option>Ortopedia</option>
                                     </select>
                                 </div>
+                                <div class="col-md-auto">
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-secondary"
+                                        title="Limpar filtros">
+
+                                        <i class="fas fa-filter-circle-xmark"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -217,17 +226,18 @@
                             <option>Ordenar: Nome ↓</option>
                         </select>
                         <div class="btn-group">
-                            <button class="btn btn-sm btn-primary" id="btn-tabela-forn" title="Vista tabela">
+                            <button class="btn btn-sm btn-primary" id="btn-tabela-loc" title="Vista tabela">
                                 <i class="fas fa-table"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-secondary" id="btn-cards-forn" title="Vista cards">
+
+                            <button class="btn btn-sm btn-outline-secondary" id="btn-cards-loc" title="Vista cards">
                                 <i class="fas fa-grip"></i>
                             </button>
                         </div>
                     </div>
                 </div>
                 <!-- Tabela de localizações -->
-                <div class="card">
+                <div id="vista-tabela-loc" class="card">
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
@@ -358,7 +368,73 @@
                         </div>
                     </div>
                 </div>
+                <!-- Vista cards localizações -->
+                <div id="vista-cards-loc" class="row g-3" style="display: none;">
 
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <h6 class="mb-0">UCI - Sala 201</h6>
+                                    <span class="badge bg-primary">LOC001</span>
+                                </div>
+
+                                <p class="text-muted small mb-1">
+                                    <i class="fas fa-building me-1"></i>Edifício A
+                                </p>
+
+                                <p class="text-muted small mb-1">
+                                    <i class="fas fa-layer-group me-1"></i>Piso 2
+                                </p>
+
+                                <p class="text-muted small mb-1">
+                                    <i class="fas fa-hospital me-1"></i>Unidade de Cuidados Intensivos
+                                </p>
+
+                                <p class="text-muted small mb-2">
+                                    <i class="fas fa-stethoscope me-1"></i>12 equipamentos associados
+                                </p>
+
+                                <div class="d-flex gap-1">
+                                    <a href="detalhes-localizacoes.html" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+
+                                    <a href="editar-localizacoes.html" class="btn btn-sm btn-outline-warning">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+
+                                    <button
+                                        class="btn btn-sm btn-outline-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    const btnTabelaLoc = document.getElementById('btn-tabela-loc');
+                    const btnCardsLoc = document.getElementById('btn-cards-loc');
+                    const vistaTabelaLoc = document.getElementById('vista-tabela-loc');
+                    const vistaCardsLoc = document.getElementById('vista-cards-loc');
+
+                    btnTabelaLoc.addEventListener('click', function () {
+                        vistaTabelaLoc.style.display = 'block';
+                        vistaCardsLoc.style.display = 'none';
+                        btnTabelaLoc.classList.replace('btn-outline-secondary', 'btn-primary');
+                        btnCardsLoc.classList.replace('btn-primary', 'btn-outline-secondary');
+                    });
+
+                    btnCardsLoc.addEventListener('click', function () {
+                        vistaTabelaLoc.style.display = 'none';
+                        vistaCardsLoc.style.display = 'flex';
+                        btnCardsLoc.classList.replace('btn-outline-secondary', 'btn-primary');
+                        btnTabelaLoc.classList.replace('btn-primary', 'btn-outline-secondary');
+                    });
+                </script>
             </main>
         </div>
     </div>
@@ -376,7 +452,7 @@
                 <div class="modal-body">
                     <p>Tem a certeza que pretende eliminar a seguinte localização?</p>
                     <div>
-                        <strong>EQ001 — Monitor IntelliVue MP5</strong><br>
+                        <strong>LOC001 — Edifício A, Piso 2, Sala 201</strong>
                     </div>
                 </div>
 
@@ -386,8 +462,8 @@
                         <i class="fas fa-arrow-left me-1"></i>Cancelar
                     </button>
                     <!-- Confirma a eliminação -->
-                    <a href="equipamentos.html" class="btn btn-outline-secondary">
-                        <i class="fas fa-trash me-1"></i>Eliminar equipamento
+                    <a href="localizacoes.html" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i>Eliminar localização
                     </a>
                 </div> 
 

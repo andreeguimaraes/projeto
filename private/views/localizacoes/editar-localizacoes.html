@@ -392,49 +392,75 @@
 
                             <hr>
 
-                            <!-- EQUIPAMENTOS -->
+                            <!-- EQUIPAMENTOS ASSOCIADOS
                             <h5 class="text-muted mb-3">
-
                                 <i class="fas fa-stethoscope me-2"></i>
                                 Equipamentos associados
-
                             </h5>
 
-                            <div class="row mb-4">
-
-                                <div class="col-md-12">
-
-                                    <label class="form-label">
-                                        Equipamentos
-                                    </label>
-
-                                    <select class="form-select">
-
-                                        <option selected>
-                                            EQ001 — Monitor IntelliVue MP5
-                                        </option>
-
-                                        <option>
-                                            EQ002 — Ventilador Evita V500
-                                        </option>
-
-                                        <option>
-                                            EQ003 — Desfibrilhador Zoll
-                                        </option>
-
-                                        <option>
-                                            EQ004 — Bomba de infusão
-                                        </option>
-
+                            <div class="row mb-3">
+                                <div class="col-md-9">
+                                    <select class="form-select" name="novo_equipamento">
+                                        <option value="">Selecione um equipamento para associar...</option>
+                                        <option>EQ004 — Desfibrilhador Zoll</option>
+                                        <option>EQ005 — Bomba de infusão</option>
+                                        <option>EQ006 — Monitor IntelliVue MX450</option>
                                     </select>
+                                </div>
 
-                                    <small class="text-muted">
-                                        Equipamentos atualmente associados a esta localização.
-                                    </small>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary w-100">
+                                        <i class="fas fa-plus me-1"></i>
+                                        Associar
+                                    </button>
+                                </div>
+                            </div>
 
+                            <div class="list-group mb-4">
+
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>EQ001 — Monitor IntelliVue MP5</span>
+
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalRemoverEquipamento">
+                                        <i class="fas fa-trash me-1"></i>
+                                        Remover
+                                    </button>
+                                </div>
+
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>EQ002 — Ventilador Evita V500</span>
+
+
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalRemoverEquipamento">
+                                        <i class="fas fa-trash me-1"></i>
+                                        Remover
+                                    </button>
+                                </div>
+
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>EQ003 — Bomba de Infusão Space</span>
+
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalRemoverEquipamento">
+                                        <i class="fas fa-trash me-1"></i>
+                                        Remover
+                                    </button>
                                 </div>
 
                             </div>
+
+                            <small class="text-muted">
+                                Ao associar um equipamento a esta localização, a localização atual desse equipamento será atualizada.
+                            </small>
+                            -->
 
                             <hr>
 
@@ -479,6 +505,51 @@
         </div>
 
     </div>
+    <!-- Modal remover equipamento associado
+    <div class="modal fade" id="modalRemoverEquipamento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-triangle-exclamation me-2"></i>
+                        Remover equipamento da localização
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>
+                        Tem a certeza que pretende remover este equipamento desta localização?
+                    </p>
+
+                    <div class="alert alert-light border">
+                        <strong>EQ001 — Monitor IntelliVue MP5</strong><br>
+                        <small class="text-muted">
+                            O equipamento deixará de estar associado à localização LOC001 — UCI Sala 201.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">
+                        <i class="fas fa-arrow-left me-1"></i>
+                        Cancelar
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i>
+                        Remover associação
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div> -->
 
     <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
 
