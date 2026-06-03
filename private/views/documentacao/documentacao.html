@@ -88,7 +88,7 @@
                             <i class="fas fa-chart-line me-2"></i>Dashboard
                         </a>
 
-                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link active">
+                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link">
                             <i class="fas fa-stethoscope me-2"></i>Equipamentos
                         </a>
 
@@ -100,7 +100,7 @@
                             <i class="fas fa-location-dot me-2"></i>Localizações
                         </a>
 
-                        <a href="../documentacao/documentacao.html" class="nav-link sidebar-link">
+                        <a href="../documentacao/documentacao.html" class="nav-link sidebar-link active">
                             <i class="fas fa-folder-open me-2"></i>Documentação
                         </a>
 
@@ -134,45 +134,72 @@
                         <h2 class="mb-0">Documentação</h2>
                         <p class="text-muted mb-0">Gestão de documentos associados a equipamentos e fornecedores</p>
                     </div>
-                    <a href="nova-documentacao.html" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Nova documentação
-                    </a>
                 </div>
                 <!-- Filtros -->
-                <div class="card mb-4">
+                <div class="card mb-3">
                     <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" placeholder="🔍 Pesquisar documento...">
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select">
-                                    <option value="">Tipo de documento</option>
-                                    <option>Manual de utilizador</option>
-                                    <option>Manual de serviço</option>
-                                    <option>Certificado de calibração</option>
-                                    <option>Contrato de manutenção</option>
-                                    <option>Fatura de aquisição</option>
-                                    <option>Declaração de conformidade</option>
-                                    <option>Relatório técnico</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select">
-                                    <option value="">Equipamento</option>
-                                    <option>EQ001 — Monitor IntelliVue MP5</option>
-                                    <option>EQ002 — Ventilador Evita V500</option>
-                                    <option>EQ003 — Desfibrilhador R Series</option>
-                                    <option>EQ004 — Bomba de infusão</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <select class="form-select">
-                                    <option value="">Validade</option>
-                                    <option>Válidos</option>
-                                    <option>Expirados</option>
-                                    <option>A expirar (30 dias)</option>
-                                </select>
+                        <div class="row g-2">
+                            <!-- Pesquisa -->
+                            <div class="col">
+                                <div class="input-group">
+                                    <div style="position: relative; flex: 1;">
+                                        <input
+                                            type="text"
+                                            id="pesquisaDocumentacao"
+                                            class="form-control pe-5"
+                                            placeholder="Pesquisar documento..."
+                                        >
+
+                                        <button
+                                            type="button"
+                                            onclick="document.getElementById('pesquisaDocumentacao').value='';"
+                                            title="Limpar pesquisa"
+                                            class="btn-limpar-pesquisa"
+                                        >
+                                            <i class="fas fa-xmark"></i>
+                                        </button>
+                                    </div>
+
+                                    <button
+                                        class="btn btn-primary"
+                                        type="button"
+                                        onclick="filtrar()"
+                                    >
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>     
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <select class="form-select">
+                                        <option value="">Tipo de documento</option>
+                                        <option>Manual de utilizador</option>
+                                        <option>Manual de serviço</option>
+                                        <option>Certificado de calibração</option>
+                                        <option>Contrato de manutenção</option>
+                                        <option>Fatura de aquisição</option>
+                                        <option>Declaração de conformidade</option>
+                                        <option>Relatório técnico</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select">
+                                        <option value="">Equipamento</option>
+                                        <option>EQ001 — Monitor IntelliVue MP5</option>
+                                        <option>EQ002 — Ventilador Evita V500</option>
+                                        <option>EQ003 — Desfibrilhador R Series</option>
+                                        <option>EQ004 — Bomba de infusão</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-secondary"
+                                        title="Limpar filtros">
+
+                                        <i class="fas fa-filter-circle-xmark"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -186,10 +213,8 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>Código</th>
-                                        <th>Nome do documento</th>
+                                        <th>Documento</th>
                                         <th>Equipamento</th>
-                                        <th>Fornecedor</th>
-                                        <th>Validade</th>
                                         <th>Tipo</th>                                    
                                         <th>Ações</th>
                                     </tr>
@@ -199,8 +224,6 @@
                                         <td>DOC001</td>
                                         <td>Manual IntelliVue MP5</td>
                                         <td>EQ001 — Monitor MP5</td>
-                                        <td>Philips Healthcare</td>
-                                        <td><span class="badge bg-success">Válido</span></td>
                                         <td><span class="badge bg-secondary">Manual utilizador</span></td>
                                         <td>                               
                                             <a href="detalhes-documentacao.html" class="btn btn-sm btn-outline-primary"
@@ -217,13 +240,10 @@
                                             </button>
                                         </td>
                                     </tr>
-                                    </tr>
                                     <tr>
                                         <td>DOC002</td>
                                         <td>Calibração Monitor MP5 2026</td>
                                         <td>EQ001 — Monitor MP5</td>
-                                        <td>—</td>
-                                        <td><span class="badge bg-warning text-dark">Expira em 30 dias</span></td>
                                         <td><span class="badge bg-secondary">Cert. calibração</span></td>                                 
                                         <td>
                                             <a href="detalhes-documentacao.html" class="btn btn-sm btn-outline-primary"
@@ -240,13 +260,10 @@
                                             </button>
                                         </td>
                                     </tr>   
-                                    </tr>
                                     <tr>
                                         <td>DOC003</td>
                                         <td>Contrato Philips 2026</td>
                                         <td>EQ002 — Ventilador V500</td>
-                                        <td>Philips Healthcare</td>
-                                        <td><span class="badge bg-success">Válido</span></td>
                                         <td><span class="badge bg-secondary">Contrato manutenção</span></td>
                                         <td>
                                             <a href="detalhes-documentacao.html" class="btn btn-sm btn-outline-primary"
@@ -263,13 +280,10 @@
                                             </button>
                                         </td>
                                     </tr>
-                                    </tr>
                                     <tr>
                                         <td>DOC004</td>
                                         <td>CE Mark Desfibrilhador Zoll</td>
                                         <td>EQ003 — Desfibrilhador</td>
-                                        <td>Zoll Medical</td>
-                                        <td><span class="badge bg-success">Válido</span></td>
                                         <td><span class="badge bg-secondary">Declaração conformidade</span></td>
                                         <td>
                                             <a href="detalhes-documentacao.html" class="btn btn-sm btn-outline-primary"
@@ -286,13 +300,10 @@
                                             </button>
                                         </td>
                                     </tr>
-                                    </tr>
                                     <tr>
                                         <td>DOC005</td>
                                         <td>Fatura Bomba Infusão B.Braun</td>
                                         <td>EQ004 — Bomba de infusão</td>
-                                        <td>B. Braun</td>
-                                        <td><span class="badge bg-light text-dark">Sem validade</span></td>
                                         <td><span class="badge bg-secondary">Fatura aquisição</span></td>                                 
                                         <td>
                                             <a href="detalhes-documentacao.html" class="btn btn-sm btn-outline-primary"
@@ -308,7 +319,6 @@
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </td>
-                                    </tr>
                                     </tr>
                                 </tbody>
                             </table>
@@ -340,7 +350,7 @@
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-arrow-left me-1"></i>Cancelar
                     </button>
-                    <button type="button" class="btn btn-outline-secondary">
+                    <button type="button" class="btn btn-danger">
                         <i class="fas fa-trash me-1"></i>Eliminar
                     </button>
                 </div>

@@ -170,129 +170,130 @@
                 </div>
 
                 <!-- Cartão -->
-                <div class="card">
-
+                <div class="card shadow rounded">
                     <div class="card-body">
-
-                        <div class="row g-4">
-
-                            <div class="col-md-6">
-
-                                <h6 class="text-muted">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">
                                     Código
-                                </h6>
+                                </label>
 
-                                <p class="fw-semibold">
+                                <p class="form-control-plaintext">
                                     DOC001
                                 </p>
-
                             </div>
 
-                            <div class="col-md-6">
-
-                                <h6 class="text-muted">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">
                                     Tipo de documento
-                                </h6>
+                                </label>
 
-                                <span class="badge bg-secondary">
-                                    Manual de utilizador
-                                </span>
-
+                                <p class="form-control-plaintext">
+                                    <span class="badge bg-secondary">
+                                        Manual de utilizador
+                                    </span>
+                                </p>
                             </div>
 
-                            <div class="col-md-6">
-
-                                <h6 class="text-muted">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">
                                     Nome do documento
-                                </h6>
+                                </label>
 
-                                <p class="fw-semibold">
+                                <p class="form-control-plaintext">
                                     Manual IntelliVue MP5
                                 </p>
-
                             </div>
 
-                            <div class="col-md-6">
-
-                                <h6 class="text-muted">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">
                                     Estado da validade
-                                </h6>
+                                </label>
 
-                                <span class="badge bg-success">
-                                    Válido
-                                </span>
-
+                                <p class="form-control-plaintext">
+                                    <span class="badge bg-success">
+                                        Não aplicável
+                                    </span>
+                                </p>
                             </div>
 
-                            <div class="col-md-6">
+                        </div>
 
-                                <h6 class="text-muted">
+                        <div class="row mb-4">
+
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">
                                     Data do documento
-                                </h6>
+                                </label>
 
-                                <p>
+                                <p class="form-control-plaintext">
                                     15/01/2025
                                 </p>
-
                             </div>
 
-                            <div class="col-md-6">
-
-                                <h6 class="text-muted">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">
                                     Data de validade
-                                </h6>
+                                </label>
 
-                                <p>
-                                    15/01/2027
+                                <p class="form-control-plaintext">
+                                    Não aplicável
                                 </p>
-
                             </div>
 
-                            <div class="col-md-6">
-
-                                <h6 class="text-muted">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">
                                     Equipamento associado
-                                </h6>
+                                </label>
 
-                                <p>
+                                <p class="form-control-plaintext">
                                     EQ001 — Monitor IntelliVue MP5
                                 </p>
-
                             </div>
 
-                            <div class="col-md-6">
-
-                                <h6 class="text-muted">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">
                                     Fornecedor associado
-                                </h6>
+                                </label>
 
-                                <p>
+                                <p class="form-control-plaintext">
                                     Philips Healthcare
                                 </p>
-
                             </div>
 
+                        </div>
+                        <div class="row mb-4">
                             <div class="col-md-12">
 
-                                <h6 class="text-muted">
-                                    Nome do ficheiro / localização
-                                </h6>
+                                <label class="form-label fw-bold">
+                                    Ficheiro associado
+                                </label>
 
-                                <div class="border rounded p-3 bg-light">
+                                <div class="border rounded p-3 bg-light d-flex align-items-center">
 
-                                    <i class="fas fa-file-pdf text-danger me-2"></i>
+                                    <i class="fas fa-file-pdf text-danger fs-3 me-3"></i>
 
-                                    manual_intellivue_mp5.pdf
+                                    <div>
+                                        <div class="fw-semibold">
+                                            manual_intellivue_mp5.pdf
+                                        </div>
+
+                                        <small class="text-muted">
+                                            PDF
+                                        </small>
+                                    </div>
 
                                 </div>
 
                             </div>
+                        </div> <!-- ESTE FALTAVA -->
 
+                        <div class="row mb-4">
                             <div class="col-md-12">
 
-                                <h6 class="text-muted">
+                                <label class="form-label fw-bold">
                                     Observações
-                                </h6>
+                                </label>
 
                                 <div class="border rounded p-3 bg-light">
 
@@ -303,12 +304,13 @@
                                 </div>
 
                             </div>
-
                         </div>
 
                         <!-- Botões -->
                         <div class="d-flex justify-content-end gap-2 mt-4">
-
+                            <a href="editar-documentacao.html" class="btn btn-warning">
+                                <i class="fas fa-pen me-2"></i>Editar
+                            </a>
                             <button type="button"
                                     class="btn btn-primary">
 

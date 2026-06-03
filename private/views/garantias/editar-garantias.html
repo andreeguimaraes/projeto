@@ -81,7 +81,7 @@
                             <i class="fas fa-chart-line me-2"></i>Dashboard
                         </a>
 
-                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link active">
+                        <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link">
                             <i class="fas fa-stethoscope me-2"></i>Equipamentos
                         </a>
 
@@ -97,7 +97,7 @@
                             <i class="fas fa-folder-open me-2"></i>Documentação
                         </a>
 
-                        <a href="../garantias/garantias.html" class="nav-link sidebar-link">
+                        <a href="../garantias/garantias.html" class="nav-link sidebar-link active">
                             <i class="fas fa-file-contract me-2"></i>
                             Garantias e Contratos
                         </a>
@@ -125,7 +125,6 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h2 class="mb-0">Editar garantia / contrato</h2>
-                        <p class="text-muted mb-0">EQ001 — Monitor IntelliVue MP5</p>
                     </div>
                     <a href="garantias.html" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Voltar
@@ -143,20 +142,8 @@
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Equipamento associado</label>
-                                    <input type="text" class="form-control" value="EQ001 — Monitor IntelliVue MP5" disabled>
+                                    <input type="text" class="form-control" value="EQ001 — Monitor IntelliVue MP5" readonly>
                                     <small class="text-muted">O equipamento não pode ser alterado</small>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold">Estado atual</label>
-                                    <p class="form-control-plaintext">
-                                        <span class="badge bg-success fs-6">Ativa</span>
-                                    </p>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold">Criticidade</label>
-                                    <p class="form-control-plaintext">
-                                        <span class="badge bg-danger fs-6">Suporte de vida</span>
-                                    </p>
                                 </div>
                             </div>
                             <hr>
@@ -166,17 +153,32 @@
                                 <i class="fas fa-shield-halved me-2"></i>Garantia
                             </h5>
                             <div class="row mb-4">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Código</label>
+                                    <input type="text" class="form-control" value="GAR001" readonly>
+                                </div>
+                                <div class="col-md-3">
                                     <label class="form-label fw-bold">Início de garantia <span class="text-danger">*</span></label>
                                     <input type="date" class="form-control" name="inicio_garantia" value="2022-03-15" required>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label class="form-label fw-bold">Fim de garantia <span class="text-danger">*</span></label>
                                     <input type="date" class="form-control" name="fim_garantia" value="2027-03-15" required>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label class="form-label fw-bold">Duração</label>
                                     <input type="text" class="form-control" value="5 anos" disabled>
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Estado</label>
+                                    <select class="form-select" name="estado">
+                                        <option selected>Ativa</option>
+                                        <option>A expirar</option>
+                                        <option>Expirada</option>
+                                        <option>Cancelada</option>
+                                    </select>
                                 </div>
                             </div>
                             <hr>
