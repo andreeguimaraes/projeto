@@ -22,7 +22,7 @@
                             Atualize as informações do documento
                         </p>
                     </div>
-                    <a href="documentacao.html" class="btn btn-outline-secondary">
+                    <a href="documentacao.php" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Voltar
                     </a>
                 </div>
@@ -157,7 +157,7 @@
                             <!-- Botões -->
                             <div class="d-flex justify-content-end gap-2 mt-4">
 
-                                <a href="documentacao.html" class="btn btn-outline-secondary">
+                                <a href="documentacao.php" class="btn btn-outline-secondary">
 
                                     <i class="fas fa-xmark me-2"></i>Cancelar
 

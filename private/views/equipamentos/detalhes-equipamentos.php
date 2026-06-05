@@ -18,7 +18,7 @@
                         <h2 class="mb-0">Ficha do equipamento</h2>
                         <p class="text-muted mb-0">EQ001 — Monitor IntelliVue MP5</p>
                     </div>
-                    <a href="equipamentos.html" class="btn btn-outline-secondary">
+                    <a href="equipamentos.php" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Voltar
                     </a>
                 </div>
@@ -33,7 +33,7 @@
                                 <span class="badge bg-danger fs-6">Suporte de vida</span>
                             </div>
                             <div class="d-flex gap-2">
-                                <a href="editar-equipamentos.html" class="btn btn-warning btn-sm">
+                                <a href="editar-equipamentos.php" class="btn btn-warning btn-sm">
                                     <i class="fas fa-pen me-1"></i>Editar
                                 </a>
                                 <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar">
@@ -448,7 +448,7 @@
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-arrow-left me-1"></i>Cancelar
                     </button>
-                    <a href="equipamentos.html" class="btn btn-danger">
+                    <a href="equipamentos.php" class="btn btn-danger">
                         <i class="fas fa-trash me-1"></i>Eliminar equipamento
                     </a>
                 </div>

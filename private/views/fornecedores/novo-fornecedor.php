@@ -16,7 +16,7 @@
                         <h2 class="mb-0">Novo fornecedor</h2>
                         <p class="text-muted mb-0">Preencha os campos para registar um novo fornecedor</p>
                     </div>
-                    <a href="fornecedor.html" class="btn btn-outline-secondary">
+                    <a href="fornecedor.php" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Voltar
                     </a>
                 </div>
@@ -122,7 +122,7 @@
 
                             <!-- Botões -->
                             <div class="d-flex justify-content-between">
-                                <a href="fornecedor.html" class="btn btn-outline-secondary">
+                                <a href="fornecedor.php" class="btn btn-outline-secondary">
                                     <i class="fas fa-arrow-left me-1"></i>Cancelar
                                 </a>
                                 <button type="submit" class="btn btn-primary">

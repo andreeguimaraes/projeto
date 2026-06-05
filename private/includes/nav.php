@@ -6,8 +6,8 @@
                     data-bs-target="#sidebarOffcanvas">
                     <i class="fas fa-bars"></i>
                 </button>
-                <a href="../../index-admin.html" class="text-decoration-none">
-                    <img src="../../../assets/img/logo_medinv.svg" alt="Logo da empresa">
+                <a href="/MEDINV/private/index-admin.php" class="text-decoration-none">
+                    <img src="/MEDINV/assets/img/logo_medinv.svg" alt="Logo da empresa">
                 </a>
             </div>
             <div class="col-6 text-end p-3">
@@ -20,7 +20,7 @@
                             <i class="fa-solid fa-key me-2"></i>Alterar password
                         </a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="../../../login/login.html">
+                        <li><a class="dropdown-item text-danger" href="/MEDINV/login/login.php">
                             <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
                         </a></li>
                     </ul>

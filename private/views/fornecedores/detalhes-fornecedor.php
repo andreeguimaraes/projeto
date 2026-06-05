@@ -17,7 +17,7 @@
                     <div>
                         <h2 class="mb-0">Ficha do Fornecedor</h2>
                     </div>
-                    <a href="fornecedor.html" class="btn btn-outline-secondary">
+                    <a href="fornecedor.php" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Voltar
                     </a>
                 </div>
@@ -137,7 +137,7 @@
                                         <td><span class="badge bg-primary">Fabricante</span></td>
                                         <td><span class="badge bg-success">Ativo</span></td>
                                         <td>
-                                            <a href="../equipamentos/detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary">
+                                            <a href="../equipamentos/detalhes-equipamentos.php" class="btn btn-sm btn-outline-primary">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                         </td>
@@ -148,7 +148,7 @@
                                         <td><span class="badge bg-primary">Fabricante</span></td>
                                         <td><span class="badge bg-success">Ativo</span></td>
                                         <td>
-                                            <a href="../equipamentos/detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary">
+                                            <a href="../equipamentos/detalhes-equipamentos.php" class="btn btn-sm btn-outline-primary">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                         </td>
@@ -159,7 +159,7 @@
                                         <td><span class="badge bg-primary">Fabricante</span></td>
                                         <td><span class="badge bg-warning text-dark">Em manutenção</span></td>
                                         <td>
-                                            <a href="../equipamentos/detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary">
+                                            <a href="../equipamentos/detalhes-equipamentos.php" class="btn btn-sm btn-outline-primary">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                         </td>
@@ -207,7 +207,7 @@
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-arrow-left me-1"></i>Cancelar
                     </button>
-                    <a href="fornecedor.html" class="btn btn-outline-secondary">
+                    <a href="fornecedor.php" class="btn btn-outline-secondary">
                         <i class="fas fa-trash me-1"></i>Eliminar fornecedor
                     </a>
                 </div>

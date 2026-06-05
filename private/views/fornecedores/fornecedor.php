@@ -16,7 +16,7 @@
                         <h2 class="mb-0">Fornecedores</h2>
                         <p class="text-muted mb-0">Gere o inventário de fornecedores</p>
                     </div>
-                    <a href="novo-fornecedor.html" class="btn btn-primary">
+                    <a href="novo-fornecedor.php" class="btn btn-primary">
                         <i class="fas fa-plus me-2"></i>Novo fornecedor
                     </a>
                 </div>
@@ -127,14 +127,14 @@
                                         <td>geral@medtech.pt</td> 
                                         <td>12</td>
                                         <td>
-                                            <a href="detalhes-fornecedor.html"
+                                            <a href="detalhes-fornecedor.php"
                                             class="btn btn-sm btn-outline-primary"
                                             title="Ver detalhes">
 
                                                 <i class="fas fa-eye"></i>
                                             </a>
 
-                                            <a href="editar-fornecedor.html"
+                                            <a href="editar-fornecedor.php"
                                             class="btn btn-sm btn-outline-warning"
                                             title="Editar">
 
@@ -160,12 +160,12 @@
                                         <td>contacto@bioequip.pt</td>
                                         <td>8</td>
                                         <td>
-                                            <a href="detalhes-fornecedor.html"
+                                            <a href="detalhes-fornecedor.php"
                                             class="btn btn-sm btn-outline-primary">
                                                 <i class="fas fa-eye"></i>
                                             </a>
 
-                                            <a href="editar-fornecedor.html"
+                                            <a href="editar-fornecedor.php"
                                             class="btn btn-sm btn-outline-warning">
                                                 <i class="fas fa-pen"></i>
                                             </a>
@@ -188,12 +188,12 @@
                                         <td>support@hde.pt</td>
                                         <td>15</td>
                                         <td>
-                                            <a href="detalhes-fornecedor.html"
+                                            <a href="detalhes-fornecedor.php"
                                             class="btn btn-sm btn-outline-primary">
                                                 <i class="fas fa-eye"></i>
                                             </a>
 
-                                            <a href="editar-fornecedor.html"
+                                            <a href="editar-fornecedor.php"
                                             class="btn btn-sm btn-outline-warning">
                                                 <i class="fas fa-pen"></i>
                                             </a>
@@ -241,11 +241,11 @@
                                 </p>
 
                                 <div class="d-flex gap-1">
-                                    <a href="detalhes-fornecedor.html" class="btn btn-sm btn-outline-primary">
+                                    <a href="detalhes-fornecedor.php" class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-eye"></i>
                                     </a>
 
-                                    <a href="editar-fornecedor.html" class="btn btn-sm btn-outline-warning">
+                                    <a href="editar-fornecedor.php" class="btn btn-sm btn-outline-warning">
                                         <i class="fas fa-pen"></i>
                                     </a>
 
@@ -307,7 +307,7 @@
                             <i class="fas fa-arrow-left me-1"></i>Cancelar
                         </button>
                         <!-- Confirma a eliminação -->
-                        <a href="fornecedor.html" class="btn btn-danger">
+                        <a href="fornecedor.php" class="btn btn-danger">
                             <i class="fas fa-trash me-1"></i>Eliminar fornecedor
                         </a>
                     </div>

@@ -1,4 +1,4 @@
-<?php include '../../includes/nav.php'; ?>
+<?php include '../../includes/header.php'; ?>
     <!-- Navbar -->
     <?php include '../../includes/nav.php'; ?>
 
@@ -15,7 +15,7 @@
                         <h2 class="mb-0">Equipamentos médicos</h2>
                         <p class="text-muted mb-0">Gere o inventário de dispositivos médicos</p>
                     </div>
-                    <a href="novo-equipamentos.html" class="btn btn-primary">
+                    <a href="novo-equipamentos.php" class="btn btn-primary">
                         <i class="fas fa-plus me-2"></i>Novo equipamento
                     </a>
                 </div>
@@ -176,14 +176,14 @@
                                             <td>
                                                 <div style="white-space: nowrap;">
 
-                                                    <a href="detalhes-equipamentos.html"
+                                                    <a href="detalhes-equipamentos.php"
                                                         class="btn btn-sm btn-primary"
                                                         title="Ver detalhes">
 
                                                         <i class="fas fa-eye"></i>
                                                     </a>
 
-                                                    <a href="editar-equipamentos.html"
+                                                    <a href="editar-equipamentos.php"
                                                         class="btn btn-sm btn-warning"
                                                         title="Editar">
 
@@ -213,14 +213,14 @@
                                             <td>
                                                 <div style="white-space: nowrap;">
 
-                                                    <a href="detalhes-equipamentos.html"
+                                                    <a href="detalhes-equipamentos.php"
                                                         class="btn btn-sm btn-primary"
                                                         title="Ver detalhes">
 
                                                         <i class="fas fa-eye"></i>
                                                     </a>
 
-                                                    <a href="editar-equipamentos.html"
+                                                    <a href="editar-equipamentos.php"
                                                         class="btn btn-sm btn-warning"
                                                         title="Editar">
 
@@ -250,14 +250,14 @@
                                             <td>
                                                 <div style="white-space: nowrap;">
 
-                                                    <a href="detalhes-equipamentos.html"
+                                                    <a href="detalhes-equipamentos.php"
                                                         class="btn btn-sm btn-primary"
                                                         title="Ver detalhes">
 
                                                         <i class="fas fa-eye"></i>
                                                     </a>
 
-                                                    <a href="editar-equipamentos.html"
+                                                    <a href="editar-equipamentos.php"
                                                         class="btn btn-sm btn-warning"
                                                         title="Editar">
 
@@ -297,8 +297,8 @@
                                 <p class="text-muted small mb-1"><i class="fas fa-location-dot me-1"></i>UCI — Sala 201</p>
                                 <p class="text-muted small mb-2"><span class="badge bg-danger">Suporte de vida</span></p>
                                 <div class="d-flex gap-1">
-                                    <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                    <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    <a href="detalhes-equipamentos.php" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="editar-equipamentos.php" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
                                     <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
@@ -316,8 +316,8 @@
                                 <p class="text-muted small mb-1"><i class="fas fa-location-dot me-1"></i>UCI — Sala 201</p>
                                 <p class="text-muted small mb-2"><span class="badge bg-danger">Suporte de vida</span></p>
                                 <div class="d-flex gap-1">
-                                    <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                    <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    <a href="detalhes-equipamentos.php" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="editar-equipamentos.php" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
                                     <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
@@ -335,8 +335,8 @@
                                 <p class="text-muted small mb-1"><i class="fas fa-location-dot me-1"></i>Urgência — Sala 101</p>
                                 <p class="text-muted small mb-2"><span class="badge bg-danger">Alta</span></p>
                                 <div class="d-flex gap-1">
-                                    <a href="detalhes-equipamentos.html" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                    <a href="editar-equipamentos.html" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    <a href="detalhes-equipamentos.php" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="editar-equipamentos.php" class="btn btn-sm btn-outline-warning"><i class="fas fa-pen"></i></a>
                                     <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
@@ -392,7 +392,7 @@
                         <i class="fas fa-arrow-left me-1"></i>Cancelar
                     </button>
                     <!-- Confirma a eliminação -->
-                    <a href="equipamentos.html" class="btn btn-danger">
+                    <a href="equipamentos.php" class="btn btn-danger">
                         <i class="fas fa-trash me-1"></i>Eliminar equipamento
                     </a>
                 </div>
@@ -402,3 +402,4 @@
     </div>
 <!-- rodape -->
 <?php include '../../includes/footer.php'; ?>
+

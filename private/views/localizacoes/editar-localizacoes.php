@@ -28,7 +28,7 @@
 
                     </div>
 
-                    <a href="localizacoes.html"
+                    <a href="localizacoes.php"
                        class="btn btn-outline-secondary">
 
                         <i class="fas fa-arrow-left me-2"></i>

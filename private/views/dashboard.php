@@ -1,13 +1,13 @@
 <?php
-require_once '../../includes/header.php';?>
+require_once '../includes/header.php';?>
     <!-- Navbar -->
-    <?php include '../../includes/nav.php'; ?>
+    <?php include '../includes/nav.php'; ?>
 
     <div class="container-fluid">
         <div class="row">
 
             <!-- Offcanvas Sidebar -->
-            <?php include '../../includes/sidebar.php'; ?>
+            <?php include '../includes/sidebar.php'; ?>
 
             <!-- Conteúdo Principal -->
             <main class="col-12 p-4">
@@ -327,4 +327,4 @@ require_once '../../includes/header.php';?>
     </script>
 
 <!-- rodapé -->
-<?php include '../../includes/footer.php'; ?>
+<?php include '../includes/footer.php'; ?>

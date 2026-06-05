@@ -16,7 +16,7 @@ require_once '../../includes/header.php';  ?>
                     <div>
                         <h2 class="mb-0">Detalhes da garantia</h2>
                     </div>
-                    <a href="garantias.html" class="btn btn-outline-secondary">
+                    <a href="garantias.php" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Voltar
                     </a>
                 </div>
@@ -32,7 +32,7 @@ require_once '../../includes/header.php';  ?>
                                 </div>
                             </div>
                             <div class="d-flex gap-2">
-                                <a href="editar-garantia.html" class="btn btn-warning">
+                                <a href="editar-garantia.php" class="btn btn-warning">
                                     <i class="fas fa-pen me-1"></i>Editar
                                 </a>
                                 <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalEliminar">
@@ -176,11 +176,11 @@ require_once '../../includes/header.php';  ?>
 
                         <!-- Botões -->
                         <div class="d-flex justify-content-between">
-                            <a href="garantias.html" class="btn btn-outline-secondary">
+                            <a href="garantias.php" class="btn btn-outline-secondary">
                                 <i class="fas fa-arrow-left me-1"></i>Voltar
                             </a>
                             <div class="d-flex gap-2">
-                                <a href="../equipamentos/detalhes-equipamentos.html" class="btn btn-outline-primary">
+                                <a href="../equipamentos/detalhes-equipamentos.php" class="btn btn-outline-primary">
                                     <i class="fas fa-stethoscope me-1"></i>Ver equipamento
                                 </a>
                             </div>
@@ -214,7 +214,7 @@ require_once '../../includes/header.php';  ?>
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-arrow-left me-1"></i>Cancelar
                     </button>
-                    <a href="garantias.html" class="btn btn-danger">
+                    <a href="garantias.php" class="btn btn-danger">
                         <i class="fas fa-trash me-1"></i>Eliminar
                     </a>
                 </div>

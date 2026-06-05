@@ -19,31 +19,31 @@
 
         <nav class="d-flex flex-column">
 
-            <a href="../../index-admin.html" class="nav-link sidebar-link">
+            <a href="/MEDINV/private/index-admin.php" class="nav-link sidebar-link">
                 <i class="fas fa-house me-2"></i>Início
             </a>
 
-            <a href="../dashboard.html" class="nav-link sidebar-link">
+            <a href="/MEDINV/private/views/dashboard.php" class="nav-link sidebar-link">
                 <i class="fas fa-chart-line me-2"></i>Dashboard
             </a>
 
-            <a href="../equipamentos/equipamentos.html" class="nav-link sidebar-link">
+            <a href="/MEDINV/private/views/equipamentos/equipamentos.php" class="nav-link sidebar-link">
                 <i class="fas fa-stethoscope me-2"></i>Equipamentos
             </a>
 
-            <a href="../fornecedores/fornecedor.html" class="nav-link sidebar-link">
+            <a href="/MEDINV/private/views/fornecedores/fornecedor.php" class="nav-link sidebar-link">
                 <i class="fas fa-truck-medical me-2"></i>Fornecedores
             </a>
 
-            <a href="../localizacoes/localizacoes.html" class="nav-link sidebar-link">
+            <a href="/MEDINV/private/views/localizacoes/localizacoes.php" class="nav-link sidebar-link">
                 <i class="fas fa-location-dot me-2"></i>Localizações
             </a>
 
-            <a href="../documentacao/documentacao.html" class="nav-link sidebar-link active">
+            <a href="/MEDINV/private/views/documentacao/documentacao.php" class="nav-link sidebar-link">
                 <i class="fas fa-folder-open me-2"></i>Documentação
             </a>
 
-            <a href="../garantias/garantias.html" class="nav-link sidebar-link">
+            <a href="/MEDINV/private/views/garantias/garantias.php" class="nav-link sidebar-link">
                 <i class="fas fa-file-contract me-2"></i>
                 Garantias e Contratos
             </a>
@@ -54,7 +54,7 @@
                 ÁREA PÚBLICA
             </h6>
 
-            <a href="../conteudos/conteudos.html" class="nav-link sidebar-link">
+            <a href="/MEDINV/private/views/conteudos/conteudos.php" class="nav-link sidebar-link">
                 <i class="fas fa-pen-to-square me-2"></i>
                 Gerir Conteúdos
             </a>

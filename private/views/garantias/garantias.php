@@ -1,5 +1,5 @@
-<?php
-require_once __DIR__ . '/../../config/config.php';?>
+<?php include '../../includes/header.php'; ?>
+
     <!-- Navbar -->
     <?php include '../../includes/nav.php'; ?>
 
@@ -180,10 +180,10 @@ require_once __DIR__ . '/../../config/config.php';?>
                                         <td>Philips Healthcare</td>
                                         <td>Anual</td>
                                         <td style="white-space: nowrap;">
-                                            <a href="detalhes-garantia.html" class="btn btn-sm btn-outline-primary" title="Ver detalhes">
+                                            <a href="detalhes-garantia.php" class="btn btn-sm btn-outline-primary" title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.html"
+                                            <a href="editar-garantias.php"
                                                 class="btn btn-sm btn-outline-warning"
                                                 title="Editar">
 
@@ -205,11 +205,11 @@ require_once __DIR__ . '/../../config/config.php';?>
                                         <td>Dräger Portugal</td>
                                         <td>Semestral</td>
                                         <td>
-                                            <a href="detalhes-garantia.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-garantia.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.html"
+                                            <a href="editar-garantias.php"
                                                 class="btn btn-sm btn-outline-warning"
                                                 title="Editar">
 
@@ -232,11 +232,11 @@ require_once __DIR__ . '/../../config/config.php';?>
                                         <td>Zoll Medical</td>
                                         <td>Anual</td>
                                         <td>
-                                            <a href="detalhes-garantia.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-garantia.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.html"
+                                            <a href="editar-garantias.php"
                                                 class="btn btn-sm btn-outline-warning"
                                                 title="Editar">
 
@@ -259,11 +259,11 @@ require_once __DIR__ . '/../../config/config.php';?>
                                         <td>—</td>
                                         <td>—</td>
                                         <td>
-                                            <a href="detalhes-garantia.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-garantia.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.html"
+                                            <a href="editar-garantias.php"
                                                 class="btn btn-sm btn-outline-warning"
                                                 title="Editar">
 
@@ -286,11 +286,11 @@ require_once __DIR__ . '/../../config/config.php';?>
                                         <td>GE Healthcare</td>
                                         <td>Anual</td>
                                         <td>
-                                            <a href="detalhes-garantia.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-garantia.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.html"
+                                            <a href="editar-garantias.php"
                                                 class="btn btn-sm btn-outline-warning"
                                                 title="Editar">
 

@@ -109,11 +109,11 @@
                                         <td>EQ001 — Monitor MP5</td>
                                         <td><span class="badge bg-secondary">Manual utilizador</span></td>
                                         <td>                               
-                                            <a href="detalhes-documentacao.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-documentacao.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-documentacao.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-documentacao.php" class="btn btn-sm btn-outline-warning" title="Editar">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                             <!-- botao eliminar modal --> 
@@ -129,11 +129,11 @@
                                         <td>EQ001 — Monitor MP5</td>
                                         <td><span class="badge bg-secondary">Cert. calibração</span></td>                                 
                                         <td>
-                                            <a href="detalhes-documentacao.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-documentacao.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-documentacao.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-documentacao.php" class="btn btn-sm btn-outline-warning" title="Editar">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                             <!-- botao eliminar modal --> 
@@ -149,11 +149,11 @@
                                         <td>EQ002 — Ventilador V500</td>
                                         <td><span class="badge bg-secondary">Contrato manutenção</span></td>
                                         <td>
-                                            <a href="detalhes-documentacao.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-documentacao.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-documentacao.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-documentacao.php" class="btn btn-sm btn-outline-warning" title="Editar">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                             <!-- botao eliminar modal --> 
@@ -169,11 +169,11 @@
                                         <td>EQ003 — Desfibrilhador</td>
                                         <td><span class="badge bg-secondary">Declaração conformidade</span></td>
                                         <td>
-                                            <a href="detalhes-documentacao.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-documentacao.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-documentacao.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-documentacao.php" class="btn btn-sm btn-outline-warning" title="Editar">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                             <!-- botao eliminar modal --> 
@@ -189,11 +189,11 @@
                                         <td>EQ004 — Bomba de infusão</td>
                                         <td><span class="badge bg-secondary">Fatura aquisição</span></td>                                 
                                         <td>
-                                            <a href="detalhes-documentacao.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-documentacao.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-documentacao.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-documentacao.php" class="btn btn-sm btn-outline-warning" title="Editar">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                             <!-- botao eliminar modal --> 

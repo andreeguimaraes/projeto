@@ -1,5 +1,4 @@
-<?php
-require_once '../../includes/header.php';?>
+<?php include '../../includes/header.php'; ?>
 
     <!-- Navbar -->
     <?php include '../../includes/nav.php'; ?>
@@ -28,7 +27,7 @@ require_once '../../includes/header.php';?>
             
                     </div>
             
-                    <a href="garantias.html" class="btn btn-outline-secondary">
+                    <a href="garantias.php" class="btn btn-outline-secondary">
             
                         <i class="fas fa-arrow-left me-2"></i>
                         Voltar
@@ -329,7 +328,7 @@ require_once '../../includes/header.php';?>
                             <!-- Botões -->
                             <div class="d-flex justify-content-between">
 
-                                <a href="garantias.html"
+                                <a href="garantias.php"
                                    class="btn btn-outline-secondary">
 
                                     <i class="fas fa-arrow-left me-1"></i>

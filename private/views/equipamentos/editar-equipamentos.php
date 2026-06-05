@@ -17,7 +17,7 @@
                         <h2 class="mb-0">Editar equipamento</h2>
                         <p class="text-muted mb-0">EQ001 — Monitor IntelliVue MP5</p>
                     </div>
-                    <a href="equipamentos.html" class="btn btn-outline-secondary">
+                    <a href="equipamentos.php" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Voltar
                     </a>
                 </div>
@@ -172,7 +172,7 @@
                                     <p class="text-muted small"><span class="text-danger">*</span> Campos obrigatórios
                                     </p>
                                     <div class="d-flex justify-content-between">
-                                        <a href="detalhe-equipamento.html" class="btn btn-outline-secondary">
+                                        <a href="detalhe-equipamento.php" class="btn btn-outline-secondary">
                                             <i class="fas fa-arrow-left me-1"></i>Cancelar
                                         </a>
                                         <button type="button" class="btn btn-primary"
@@ -498,7 +498,7 @@
                                             <i class="fas fa-arrow-left me-1"></i> Anterior
                                         </button>
                                         <div class="d-flex gap-2">
-                                            <a href="detalhe-equipamento.html" class="btn btn-outline-secondary">
+                                            <a href="detalhe-equipamento.php" class="btn btn-outline-secondary">
                                                 <i class="fas fa-arrow-left me-1"></i>Cancelar
                                             </a>
                                             <button type="submit" class="btn btn-warning">

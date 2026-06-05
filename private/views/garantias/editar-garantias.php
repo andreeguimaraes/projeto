@@ -16,7 +16,7 @@ require_once __DIR__ . '/../../includes/header.php'; ?>
                     <div>
                         <h2 class="mb-0">Editar garantia / contrato</h2>
                     </div>
-                    <a href="garantias.html" class="btn btn-outline-secondary">
+                    <a href="garantias.php" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Voltar
                     </a>
                 </div>
@@ -133,7 +133,7 @@ require_once __DIR__ . '/../../includes/header.php'; ?>
 
                             <!-- Botões -->
                             <div class="d-flex justify-content-between">
-                                <a href="garantias.html" class="btn btn-outline-secondary">
+                                <a href="garantias.php" class="btn btn-outline-secondary">
                                     <i class="fas fa-arrow-left me-1"></i>Cancelar
                                 </a>
                                 <button type="submit" class="btn btn-primary">

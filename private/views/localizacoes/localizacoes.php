@@ -17,7 +17,7 @@ require_once '../../includes/header.php';?>
                         <h2 class="mb-0">Localizações</h2>
                         <p class="text-muted mb-0">Gere a localização física dos equipamentos médicos</p>
                     </div>
-                    <a href="novo-localizacoes.html" class="btn btn-primary">
+                    <a href="novo-localizacoes.php" class="btn btn-primary">
                         <i class="fas fa-plus me-2"></i>Nova localização
                     </a>
                 </div>
@@ -145,11 +145,11 @@ require_once '../../includes/header.php';?>
                                         <td>201</td>
                                         <td><span>12 equipamentos</span></td>
                                         <td>
-                                            <a href="detalhes-localizacoes.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-localizacoes.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-localizacoes.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-localizacoes.php" class="btn btn-sm btn-outline-warning" title="Editar">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                             <!-- botao eliminar modal --> 
@@ -167,11 +167,11 @@ require_once '../../includes/header.php';?>
                                         <td>101</td>
                                         <td><span>10 equipamentos</span></td>
                                         <td>
-                                            <a href="detalhes-localizacoes.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-localizacoes.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-localizacoes.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-localizacoes.php" class="btn btn-sm btn-outline-warning" title="Editar">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                             <!-- botao eliminar modal --> 
@@ -189,11 +189,11 @@ require_once '../../includes/header.php';?>
                                         <td>301</td>
                                         <td><span>8 equipamentos</span></td>
                                         <td>
-                                            <a href="detalhes-localizacoes.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-localizacoes.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-localizacoes.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-localizacoes.php" class="btn btn-sm btn-outline-warning" title="Editar">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                             <!-- botao eliminar modal --> 
@@ -211,11 +211,11 @@ require_once '../../includes/header.php';?>
                                         <td>210</td>
                                         <td><span>7 equipamentos</span></td>
                                         <td>
-                                            <a href="detalhes-localizacoes.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-localizacoes.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-localizacoes.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-localizacoes.php" class="btn btn-sm btn-outline-warning" title="Editar">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                             <!-- botao eliminar modal --> 
@@ -233,11 +233,11 @@ require_once '../../includes/header.php';?>
                                         <td>105</td>
                                         <td><span>5 equipamentos</span></td>
                                         <td>
-                                            <a href="detalhes-localizacoes.html" class="btn btn-sm btn-outline-primary"
+                                            <a href="detalhes-localizacoes.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-localizacoes.html" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <a href="editar-localizacoes.php" class="btn btn-sm btn-outline-warning" title="Editar">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                             <!-- botao eliminar modal --> 
@@ -280,11 +280,11 @@ require_once '../../includes/header.php';?>
                                 </p>
 
                                 <div class="d-flex gap-1">
-                                    <a href="detalhes-localizacoes.html" class="btn btn-sm btn-outline-primary">
+                                    <a href="detalhes-localizacoes.php" class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-eye"></i>
                                     </a>
 
-                                    <a href="editar-localizacoes.html" class="btn btn-sm btn-outline-warning">
+                                    <a href="editar-localizacoes.php" class="btn btn-sm btn-outline-warning">
                                         <i class="fas fa-pen"></i>
                                     </a>
 
@@ -346,7 +346,7 @@ require_once '../../includes/header.php';?>
                         <i class="fas fa-arrow-left me-1"></i>Cancelar
                     </button>
                     <!-- Confirma a eliminação -->
-                    <a href="localizacoes.html" class="btn btn-danger">
+                    <a href="localizacoes.php" class="btn btn-danger">
                         <i class="fas fa-trash me-1"></i>Eliminar localização
                     </a>
                 </div> 

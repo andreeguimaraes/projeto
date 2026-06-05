@@ -23,7 +23,7 @@
                     </div>
 
                     <div class="d-flex gap-2">
-                        <a href="documentacao.html"
+                        <a href="documentacao.php"
                            class="btn btn-outline-secondary">
 
                             <i class="fas fa-arrow-left me-2"></i>Voltar
@@ -173,7 +173,7 @@
 
                         <!-- Botões -->
                         <div class="d-flex justify-content-end gap-2 mt-4">
-                            <a href="editar-documentacao.html" class="btn btn-warning">
+                            <a href="editar-documentacao.php" class="btn btn-warning">
                                 <i class="fas fa-pen me-2"></i>Editar
                             </a>
                             <button type="button"

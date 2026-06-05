@@ -11,7 +11,7 @@
 
 
             <!-- Conteúdo Principal -->
-            <main class="col-md-9 col-lg-10 p-4">
+            <main class="col-12 p-4">
 
                 <!-- Boas vindas -->
                 <div class="boas-vindas-card mb-4">

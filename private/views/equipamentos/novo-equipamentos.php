@@ -16,7 +16,7 @@ require_once '../../includes/header.php'; ?>
                         <h2 class="mb-0">Novo equipamento</h2>
                         <p class="text-muted mb-0">Preencha os campos para registar um novo dispositivo médico</p>
                     </div>
-                    <a href="equipamentos.html" class="btn btn-outline-secondary">
+                    <a href="equipamentos.php" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Voltar
                     </a>
                 </div>
@@ -439,7 +439,7 @@ require_once '../../includes/header.php'; ?>
                                             <i class="fas fa-arrow-left me-1"></i> Anterior
                                         </button>
                                         <div class="d-flex gap-2">
-                                            <a href="equipamentos.html" class="btn btn-outline-secondary">
+                                            <a href="equipamentos.php" class="btn btn-outline-secondary">
                                                 <i class="fas fa-arrow-left me-1"></i>Cancelar
                                             </a>
                                             <button type="submit" class="btn btn-primary">

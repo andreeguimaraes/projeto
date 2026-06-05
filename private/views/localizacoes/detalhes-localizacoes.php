@@ -29,7 +29,7 @@ require_once '../../includes/header.php';?>
 
                     </div>
 
-                    <a href="localizacoes.html"
+                    <a href="localizacoes.php"
                        class="btn btn-outline-secondary">
 
                         <i class="fas fa-arrow-left me-2"></i>
@@ -59,7 +59,7 @@ require_once '../../includes/header.php';?>
 
                             <div class="d-flex gap-2">
 
-                                <a href="editar-localizacoes.html"
+                                <a href="editar-localizacoes.php"
                                    class="btn btn-warning">
 
                                     <i class="fas fa-pen me-1"></i>
@@ -222,7 +222,7 @@ require_once '../../includes/header.php';?>
                                         </td>
 
                                         <td>
-                                            <a href="../equipamentos/detalhes-equipamentos.html"
+                                            <a href="../equipamentos/detalhes-equipamentos.php"
                                             class="btn btn-sm btn-outline-primary"
                                             title="Ver detalhes do equipamento">
                                                 <i class="fas fa-eye"></i>
@@ -247,7 +247,7 @@ require_once '../../includes/header.php';?>
 
                                         <td>
 
-                                            <a href="../equipamentos/detalhes-equipamentos.html"
+                                            <a href="../equipamentos/detalhes-equipamentos.php"
                                                class="btn btn-sm btn-outline-primary"
                                                title="Ver detalhes do equipamento">
 
@@ -275,7 +275,7 @@ require_once '../../includes/header.php';?>
 
                                         <td>
 
-                                            <a href="../equipamentos/detalhes-equipamentos.html"
+                                            <a href="../equipamentos/detalhes-equipamentos.php"
                                                class="btn btn-sm btn-outline-primary"
                                                title="Ver detalhes do equipamento">
                                                 <i class="fas fa-eye"></i>
@@ -379,7 +379,7 @@ require_once '../../includes/header.php';?>
 
                     </button>
 
-                    <a href="localizacoes.html"
+                    <a href="localizacoes.php"
                        class="btn btn-danger">
 
                         <i class="fas fa-trash me-1"></i>
