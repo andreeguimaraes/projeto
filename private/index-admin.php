@@ -1,88 +1,14 @@
-<!DOCTYPE html>
-<html lang="pt">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - MEDINV</title>
-    <!-- Bootstrap CSS & custom CSS -->
-    <link rel="stylesheet" href="../assets/bootstrap/bootstrap.min.css"> 
-    <!-- favicon  -->
-    <link rel="icon" type="image/svg+xml" href="../assets/img/logo_medinv_icon.svg">
-    <!-- folha de estilos CSS -->
-    <link rel="stylesheet" href="assets/admin1240722.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../assets/fontawesome/all.min.css">
-    <!-- Chart.js -->
-    <script src="../assets/chartjs/chart.js"></script>
-</head>
-
-
-<body> 
-    <header class="navbar-admin">
-        <div class="row align-items-center w-100 m-0">
-            <div class="col-6 d-flex align-items-center p-3">
-                <a href="index-admin.html" class="text-decoration-none">
-                    <img src="../assets/img/logo_medinv.svg" alt="Logo da empresa">
-                </a>
-            </div>
-            <div class="col-6 text-end p-3">
-                <div class="dropdown">
-                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fa-regular fa-user me-2"></i>Administrador
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">
-                                <i class="fa-solid fa-key me-2"></i>Alterar password
-                            </a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item text-danger" href="../login/login.html">
-                                <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
-                            </a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </header>
+<!-- cabeçalho -->
+<?php include 'includes/header.php'; ?> 
+    <!-- navbar -->
+    <?php include 'includes/nav.php'; ?> 
 
     <div class="container-fluid">
         <div class="row">
 
-            <!-- sidebar com módulos -->
-            <aside class="col-md-3 col-lg-2 sidebar-admin min-vh-100 p-3">
-                <nav>
-                    <a href="index-admin.html" class="nav-link sidebar-link">
-                        <i class="fas fa-house me-2"></i>Ínício
-                    </a>
-                    <!-- links para os módulos -->
-                    <a href="views/dashboard.html" class="nav-link sidebar-link">
-                        <i class="fas fa-chart-line me-2"></i>Dashboard
-                    </a> 
-                    <a href="views/equipamentos/equipamentos.html" class="nav-link sidebar-link">
-                        <i class="fas fa-stethoscope me-2"></i>Equipamentos
-                    </a>
-                    <a href="views/fornecedores/fornecedor.html" class="nav-link sidebar-link">
-                        <i class="fas fa-truck-medical me-2"></i>Fornecedores
-                    </a>
-                    <a href="views/localizacoes/localizacoes.html" class="nav-link sidebar-link">
-                        <i class="fas fa-location-dot me-2"></i>Localizações
-                    </a>
-                    <a href="views/documentacao/documentacao.html" class="nav-link sidebar-link">
-                        <i class="fas fa-folder-open me-2"></i>Documentação
-                    </a>
-                    <a href="views/garantias/garantias.html" class="nav-link sidebar-link">
-                        <i class="fas fa-file-contract me-2"></i>Garantias e Contratos
-                    </a>
+            <!-- sidebar -->
+            <?php include 'includes/sidebar.php'; ?> 
 
-                    <!-- separador para backoffice público -->
-                    <h6 class="sidebar-title mt-4">ÁREA PÚBLICA</h6>
-                    <a href="views/conteudos/conteudos.html" class="nav-link sidebar-link">
-                        <i class="fas fa-pen-to-square me-2"></i>Gerir Conteúdos
-                    </a>
-                </nav>
-            </aside>
 
             <!-- Conteúdo Principal -->
             <main class="col-md-9 col-lg-10 p-4">
@@ -175,11 +101,8 @@
                         <a href="views/documentacao/documentacao.html" class="alert-link">ver lista</a>
                     </span>
                 </div>
-              </main>
+            </main>
         </div> 
     </div>
-
-    <script src="../assets/bootstrap/bootstrap.bundle.min.js"></script> 
-
-</body>
-</html>
+<!-- rodapé -->
+<?php include 'includes/footer.php'; ?> 
