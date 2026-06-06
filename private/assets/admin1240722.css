@@ -209,4 +209,69 @@ table th:last-child {
 .btn-limpar-pesquisa:hover {
     color: #495057;
 }
+/*login*/
+.card {
+    border: none;             /* Remove a borda padrão do Bootstrap */
+    border-radius: 20px;      /* Arredonda os cantos do card */
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3); /* Adiciona sombra profunda para efeito de elevação */
+    overflow: hidden;         /* Evita que o header ultrapasse os cantos arredondados */
+    max-width: 450px;         /* Limita a largura máxima do card */
+    margin: 0 auto;           /* Centra o card horizontalmente */
+}
 
+.card-header-custom {
+    background: linear-gradient(135deg, #1b3a57 0%, #1d5c7f 100%); /* Fundo com gradiente azul igual ao body */
+    padding: 30px;            /* Espaçamento interno do header */
+    text-align: center;       /* Centra o conteúdo do header */
+    color: white;             /* Cor do texto do header */
+}
+
+.card-header-custom h2 {
+    font-size: 1.8rem;        /* Tamanho do título MEDINV */
+    font-weight: 700;         /* Título em negrito */
+    margin: 0;                /* Remove margem padrão do h2 */
+    letter-spacing: 1px;      /* Espaçamento entre letras para maior elegância */
+    color: white;             /* Cor branca para o título */
+}
+
+.card-header-custom span {
+    font-size: 0.9rem;        /* Tamanho menor para o subtítulo */
+    color: #dceaf7;           /* Azul muito claro para o subtítulo */
+}
+
+.card-body-custom {
+    background: white;        /* Fundo branco para o corpo do card */
+    padding: 35px;            /* Espaçamento interno generoso */
+}
+.btn-login {
+    background: linear-gradient(135deg, #1d5c7f 0%, #3f7fbf 100%); /* Fundo com gradiente azul */
+    border: none;             /* Remove a borda do botão */
+    border-radius: 999px;     /* Torna o botão completamente arredondado */
+    padding: 12px 40px;       /* Espaçamento interno do botão */
+    color: white;             /* Texto branco no botão */
+    font-size: 1rem;          /* Tamanho do texto do botão */
+    font-weight: 600;         /* Texto em semi-negrito */
+    width: 100%;              /* Botão ocupa toda a largura disponível */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Animação suave no hover */
+}
+
+.btn-login:hover {
+    transform: translateY(-2px); /* Eleva ligeiramente o botão ao passar o rato */
+    box-shadow: 0 8px 20px rgba(29, 92, 127, 0.35); /* Sombra mais intensa no hover */
+    background: linear-gradient(135deg, #1b3a57 0%, #2b628b 100%); /* Gradiente mais escuro no hover */
+    color: white;             /* Mantém o texto branco no hover */
+}
+
+.footer-text {
+    text-align: center;       /* Centra o link "Voltar ao site" */
+    margin-top: 20px;         /* Espaço acima do link */
+    font-size: 0.9rem;        /* Tamanho de letra ligeiramente menor */
+}
+body.login-page {
+    background: linear-gradient(135deg, #1b3a57 0%, #1d5c7f 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Titillium Web', Arial, sans-serif;
+}

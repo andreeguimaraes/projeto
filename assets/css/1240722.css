@@ -687,16 +687,6 @@ border-radius: 5px; /* Bordas arredondadas */
  }
 }
 
-/*  LOGIN */
-
-body.login-page {
-    background: linear-gradient(135deg, #1b3a57 0%, #1d5c7f 100%); /* Fundo com gradiente azul escuro para azul médio */
-    min-height: 100vh;        /* Garante que o fundo ocupa pelo menos a altura total do ecrã */
-    display: flex;            /* Ativa o layout flexível */
-    align-items: center;      /* Centra o conteúdo verticalmente */
-    font-family: 'Titillium Web', Arial, sans-serif; /* Define a fonte da página de login */
-}
-
 .card {
     border: none;             /* Remove a borda padrão do Bootstrap */
     border-radius: 20px;      /* Arredonda os cantos do card */
@@ -770,4 +760,12 @@ body.login-page {
     text-align: center;       /* Centra o link "Voltar ao site" */
     margin-top: 20px;         /* Espaço acima do link */
     font-size: 0.9rem;        /* Tamanho de letra ligeiramente menor */
+}
+body.login-page {
+    background: linear-gradient(135deg, #1b3a57 0%, #1d5c7f 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Titillium Web', Arial, sans-serif;
 }

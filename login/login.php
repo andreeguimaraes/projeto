@@ -1,39 +1,24 @@
-<!DOCTYPE html>
-<html lang="pt">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - MEDINV</title>
-    <!-- Bootstrap CSS & custom CSS -->
-    <link rel="stylesheet" href="../assets/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/css/1240722.css">
-    <!-- favicon -->
-    <link rel="icon" type="image/svg+xml" href="../assets/img/logo_medinv_icon.svg">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../assets/fontawesome/all.min.css">
-    <!-- Google Fonts --> 
-    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;700&display=swap" rel="stylesheet">
-</head>
-
-<body class="login-page">  
+<?php
+$bodyClass = 'login-page';
+include '../private/includes/header.php';
+?>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-5 col-md-6 col-sm-8 col-10">
 
                 <div class="card">
                     <div class="card-header-custom">
-                        <img src="../assets/img/logo_medinv.svg" alt="Logo da empresa">
+                        <!-- Imagem do ginásio + texto -->
+                        <img src="/MEDINV/assets/img/logo_medinv.svg" alt="Logo da empresa">
                     </div>
-
                     <div class="card-body-custom">
-                        <form action="../private/index-admin.html" method="post">
+                        <form action="../private/index-admin.php" method="post">
 
                             <div class="mb-3">
                                 <label for="email" class="form-label">
                                     <i class="fa-solid fa-envelope me-1"></i>Email
                                 </label>
-                                <input type="email" name="email" id="email" 
+                                <input type="email" name="text_username" id="email" 
                                        class="form-control" placeholder="email@medinv.pt" required>
                             </div>
 
@@ -41,7 +26,7 @@
                                 <label for="password" class="form-label">
                                     <i class="fa-solid fa-key me-1"></i>Password
                                 </label>
-                                <input type="password" name="password" id="password" 
+                                <input type="password" name="text_password" id="password" 
                                        class="form-control" placeholder="••••••••" required>
                             </div>
 
@@ -75,7 +60,5 @@
         </div>
     </div>
 
-    <!-- script no final do body  -->
-    <script src="../assets/bootstrap/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <!-- rodape  -->
+    <?php include '../private/includes/footer.php'; ?> 

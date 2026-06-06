@@ -22,4 +22,4 @@ require_once __DIR__ . '/../../config/config.php';
 </head>
 
 
-<body> 
+<body class="<?= $bodyClass ?? '' ?>">
