@@ -19,7 +19,7 @@
 
         <nav class="d-flex flex-column">
 
-            <a href="/MEDINV/private/index-admin.php" class="nav-link sidebar-link">
+            <a href="/MEDINV/private/home.php" class="nav-link sidebar-link">
                 <i class="fas fa-house me-2"></i>Início
             </a>
 

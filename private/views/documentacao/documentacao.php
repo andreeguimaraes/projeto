@@ -88,6 +88,19 @@
                     </div>
                 </div>
 
+                <!-- Barra de resultados e toggle de vista -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="alert alert-info d-inline-block" role="alert">
+                        <i class="fas fa-circle-info me-2"></i>
+                        <strong>5 resultados encontrados</strong>
+                    </div>                    
+                    <div class="d-flex gap-2">
+                        <select class="form-select form-select-sm" style="width: auto;">
+                            <option>Ordenar: Código ↑</option>
+                            <option>Ordenar: Código ↓</option>
+                        </select>
+                    </div>
+                </div>
                 <!-- Tabela de documentos -->
                 <div class="card">
                     <div class="card-body p-0">
@@ -113,9 +126,6 @@
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-documentacao.php" class="btn btn-sm btn-outline-warning" title="Editar">
-                                                <i class="fas fa-pen"></i>
-                                            </a>
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">
@@ -132,9 +142,6 @@
                                             <a href="detalhes-documentacao.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="editar-documentacao.php" class="btn btn-sm btn-outline-warning" title="Editar">
-                                                <i class="fas fa-pen"></i>
                                             </a>
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
@@ -153,9 +160,6 @@
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-documentacao.php" class="btn btn-sm btn-outline-warning" title="Editar">
-                                                <i class="fas fa-pen"></i>
-                                            </a>
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">
@@ -173,9 +177,6 @@
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-documentacao.php" class="btn btn-sm btn-outline-warning" title="Editar">
-                                                <i class="fas fa-pen"></i>
-                                            </a>
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">
@@ -192,9 +193,6 @@
                                             <a href="detalhes-documentacao.php" class="btn btn-sm btn-outline-primary"
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="editar-documentacao.php" class="btn btn-sm btn-outline-warning" title="Editar">
-                                                <i class="fas fa-pen"></i>
                                             </a>
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"

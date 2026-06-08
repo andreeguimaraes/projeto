@@ -96,9 +96,12 @@ require_once __DIR__ . '/../../includes/header.php'; ?>
                                     <select class="form-select" name="tipo_contrato">
                                         <option value="">Selecione...</option>
                                         <option selected>Manutenção preventiva</option>
-                                        <option>Manutenção corretiva</option>
-                                        <option>Manutenção total</option>
-                                        <option>Sem contrato</option>
+                                        <option>Garantia do fabricante</option>
+                                        <option>Garantia estendida</option>
+                                        <option>Contrato de manutenção preventiva</option>
+                                        <option>Contrato de manutenção corretiva</option>
+                                        <option>Contrato de manutenção total</option>
+                                        <option>Sem contrato</option>>
                                     </select>
                                 </div>
                                 <div class="col-md-4">

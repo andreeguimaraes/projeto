@@ -105,9 +105,9 @@
                                         <option value="">Tipo de garantia/contrato</option>
                                         <option>Garantia do fabricante</option>
                                         <option>Garantia estendida</option>
-                                        <option>Manutenção preventiva</option>
-                                        <option>Manutenção corretiva</option>
-                                        <option>Manutenção total</option>
+                                        <option>Contrato de manutenção preventiva</option>
+                                        <option>Contrato de manutenção corretiva</option>
+                                        <option>Contrato de manutenção total</option>
                                         <option>Sem contrato</option>
                                     </select>
                                 </div>
@@ -151,6 +151,19 @@
                     </div>
                 </div>
 
+                <!-- Barra de resultados e toggle de vista -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="alert alert-info d-inline-block" role="alert">
+                        <i class="fas fa-circle-info me-2"></i>
+                        <strong>5 resultados encontrados</strong>
+                    </div>                    
+                    <div class="d-flex gap-2">
+                        <select class="form-select form-select-sm" style="width: auto;">
+                            <option>Ordenar: Código ↑</option>
+                            <option>Ordenar: Código ↓</option>
+                        </select>
+                    </div>
+                </div>
                 <!-- Tabela -->
                 <div class="card">
                     <div class="card-body p-0">
@@ -183,12 +196,6 @@
                                             <a href="detalhes-garantia.php" class="btn btn-sm btn-outline-primary" title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.php"
-                                                class="btn btn-sm btn-outline-warning"
-                                                title="Editar">
-
-                                                <i class="fas fa-pen"></i>
-                                            </a> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">
                                                 <i class="fas fa-trash"></i>
@@ -209,12 +216,6 @@
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.php"
-                                                class="btn btn-sm btn-outline-warning"
-                                                title="Editar">
-
-                                                <i class="fas fa-pen"></i>
-                                            </a> 
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">
@@ -236,12 +237,6 @@
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.php"
-                                                class="btn btn-sm btn-outline-warning"
-                                                title="Editar">
-
-                                                <i class="fas fa-pen"></i>
-                                            </a> 
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">
@@ -263,12 +258,6 @@
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.php"
-                                                class="btn btn-sm btn-outline-warning"
-                                                title="Editar">
-
-                                                <i class="fas fa-pen"></i>
-                                            </a> 
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">
@@ -290,12 +279,27 @@
                                                 title="Ver detalhes">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="editar-garantias.php"
-                                                class="btn btn-sm btn-outline-warning"
-                                                title="Editar">
-
-                                                <i class="fas fa-pen"></i>
-                                            </a> 
+                                            <!-- botao eliminar modal --> 
+                                            <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
+                                                data-bs-toggle="modal" data-bs-target="#modalEliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>GAR005</td>
+                                        <td>Monitor IntelliVue MP5</td>
+                                        <td>10/11/2023</td>
+                                        <td>10/11/2028</td>
+                                        <td><span class="badge bg-success">Ativa</span></td>
+                                        <td>Manutenção preventiva</td>
+                                        <td>GE Healthcare</td>
+                                        <td>Anual</td>
+                                        <td>
+                                            <a href="detalhes-garantia.php" class="btn btn-sm btn-outline-primary"
+                                                title="Ver detalhes">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
                                             <!-- botao eliminar modal --> 
                                             <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar"
                                                 data-bs-toggle="modal" data-bs-target="#modalEliminar">

@@ -135,21 +135,13 @@
                             <option>Ordenar: Estado</option>
                             <option>Ordenar: Criticidade</option>
                         </select>
-                        <div class="btn-group">
-                            <button class="btn btn-sm btn-primary" id="btn-tabela" title="Vista tabela">
-                                <i class="fas fa-table"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary" id="btn-cards" title="Vista cards">
-                                <i class="fas fa-grip"></i>
-                            </button>
-                        </div>
                     </div>
                 </div>
 
                 <!-- Vista tabela -->
                 <div id="vista-tabela">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover mb-0">
                                     <thead style="background:#f8f9fa;">

@@ -109,15 +109,6 @@ require_once '../../includes/header.php';?>
                             <option>Ordenar: Nome ↑</option>
                             <option>Ordenar: Nome ↓</option>
                         </select>
-                        <div class="btn-group">
-                            <button class="btn btn-sm btn-primary" id="btn-tabela-loc" title="Vista tabela">
-                                <i class="fas fa-table"></i>
-                            </button>
-
-                            <button class="btn btn-sm btn-outline-secondary" id="btn-cards-loc" title="Vista cards">
-                                <i class="fas fa-grip"></i>
-                            </button>
-                        </div>
                     </div>
                 </div>
                 <!-- Tabela de localizações -->

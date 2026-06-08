@@ -328,8 +328,12 @@ require_once '../../includes/header.php'; ?>
                                             <label class="form-label fw-bold">Tipo</label>
                                             <select class="form-select">
                                                 <option selected>Garantia fabricante</option>
-                                                <option>Contrato de manutenção</option>
+                                                <option>Garantia do fabricante</option>
                                                 <option>Garantia estendida</option>
+                                                <option>Contrato de manutenção preventiva</option>
+                                                <option>Contrato de manutenção corretiva</option>
+                                                <option>Contrato de manutenção total</option>
+                                                <option>Sem contrato</option>
                                             </select>
                                         </div>
                                         <div class="col-md-3">

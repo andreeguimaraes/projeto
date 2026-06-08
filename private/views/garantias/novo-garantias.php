@@ -201,17 +201,12 @@
 
                                     <select class="form-select">
 
-                                        <option>
-                                            Manutenção preventiva
-                                        </option>
-
-                                        <option>
-                                            Manutenção corretiva
-                                        </option>
-
-                                        <option>
-                                            Completo
-                                        </option>
+                                        <option>Garantia do fabricante</option>
+                                        <option>Garantia estendida</option>
+                                        <option>Contrato de manutenção preventiva</option>
+                                        <option>Contrato de manutenção corretiva</option>
+                                        <option>Contrato de manutenção total</option>
+                                        <option>Sem contrato</option>
 
                                     </select>
 
