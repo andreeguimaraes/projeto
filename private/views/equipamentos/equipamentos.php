@@ -1,3 +1,13 @@
+
+<?php
+// --------------------------------------------------------------------
+// SEGURANÇA: Proteção de acesso à página de edição
+// Este ficheiro deve ser acedido apenas por utilizadores autenticados.
+// Caso não exista sessão iniciada, o utilizador será redirecionado para o login.
+// --------------------------------------------------------------------
+require_once __DIR__ . '/../../includes/funcoes.php';
+redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
+?>
 <?php include '../../includes/header.php'; ?>
     <!-- Navbar -->
     <?php include '../../includes/nav.php'; ?>
@@ -169,21 +179,21 @@
                                                 <div style="white-space: nowrap;">
 
                                                     <a href="detalhes-equipamentos.php"
-                                                        class="btn btn-sm btn-primary"
+                                                        class="btn btn-sm btn-outline-primary"
                                                         title="Ver detalhes">
 
                                                         <i class="fas fa-eye"></i>
                                                     </a>
 
                                                     <a href="editar-equipamentos.php"
-                                                        class="btn btn-sm btn-warning"
+                                                        class="btn btn-sm btn-outline-warning"
                                                         title="Editar">
 
                                                         <i class="fas fa-pen"></i>
                                                     </a>
 
                                                     <button
-                                                        class="btn btn-sm btn-danger"
+                                                        class="btn btn-sm btn-outline-danger"
                                                         title="Eliminar"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#modalEliminar">
@@ -206,21 +216,21 @@
                                                 <div style="white-space: nowrap;">
 
                                                     <a href="detalhes-equipamentos.php"
-                                                        class="btn btn-sm btn-primary"
+                                                        class="btn btn-sm btn-outline-primary"
                                                         title="Ver detalhes">
 
                                                         <i class="fas fa-eye"></i>
                                                     </a>
 
                                                     <a href="editar-equipamentos.php"
-                                                        class="btn btn-sm btn-warning"
+                                                        class="btn btn-sm btn-outline-warning"
                                                         title="Editar">
 
                                                         <i class="fas fa-pen"></i>
                                                     </a>
 
                                                     <button
-                                                        class="btn btn-sm btn-danger"
+                                                        class="btn btn-sm btn-outline-danger"
                                                         title="Eliminar"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#modalEliminar">
@@ -243,21 +253,21 @@
                                                 <div style="white-space: nowrap;">
 
                                                     <a href="detalhes-equipamentos.php"
-                                                        class="btn btn-sm btn-primary"
+                                                        class="btn btn-sm btn-outline-primary"
                                                         title="Ver detalhes">
 
                                                         <i class="fas fa-eye"></i>
                                                     </a>
 
                                                     <a href="editar-equipamentos.php"
-                                                        class="btn btn-sm btn-warning"
+                                                        class="btn btn-sm btn-outline-warning"
                                                         title="Editar">
 
                                                         <i class="fas fa-pen"></i>
                                                     </a>
 
                                                     <button
-                                                        class="btn btn-sm btn-danger"
+                                                        class="btn btn-sm btn-outline-danger"
                                                         title="Eliminar"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#modalEliminar">
@@ -275,7 +285,7 @@
                     </div>
                 </div>
 
-                <!-- Vista cards -->
+                <!-- Vista cards 
                 <div id="vista-cards" class="row g-3" style="display: none;">
                     <div class="col-md-4">
                         <div class="card h-100">
@@ -334,7 +344,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- JavaScript toggle de vista -->
                 <script>

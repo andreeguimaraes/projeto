@@ -192,18 +192,6 @@
 
                                 </div>
 
-                                <div class="col-md-6">
-
-                                    <label class="form-label">
-                                        Responsável pela área
-                                    </label>
-
-                                    <input type="text"
-                                           class="form-control"
-                                           placeholder="Ex.: Enfermeiro chefe ou coordenador">
-
-                                </div>
-
                             </div>
 
                             <hr>

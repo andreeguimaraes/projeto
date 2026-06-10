@@ -25,15 +25,15 @@
 
         <!-- Links da navegação -->
         <div class="container-navegacao">
-            <a href="../../index.html">INÍCIO</a>
-            <a href="../quem-somos/quem-somos.html">QUEM SOMOS</a>
-            <a href="../serviços/servicos.html">SERVIÇOS</a>
-            <a href="../contactos/contactos.html">CONTACTOS</a>
+            <a href="../../index.php">INÍCIO</a>
+            <a href="../quem-somos/quem-somos.php">QUEM SOMOS</a>
+            <a href="../servicos/servicos.php">SERVIÇOS</a>
+            <a href="../contactos/contactos.php">CONTACTOS</a>
         </div>
 
         <!-- Área Cliente -->
         <div class="nav-cliente">
-            <a href="../../../login/login.html" target="_blank">Área Restrita</a>
+            <a href="../../login.php" target="_blank">Área Restrita</a>
         </div>
     </nav>
 

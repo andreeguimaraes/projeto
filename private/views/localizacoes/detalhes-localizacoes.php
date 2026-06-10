@@ -164,19 +164,6 @@ require_once '../../includes/header.php';?>
                                 </p>
 
                             </div>
-
-                            <div class="col-md-6">
-
-                                <label class="form-label fw-bold">
-                                    Responsável
-                                </label>
-
-                                <p class="form-control-plaintext">
-                                    Dr. Ricardo Almeida
-                                </p>
-
-                            </div>
-
                         </div>
 
                         <hr>

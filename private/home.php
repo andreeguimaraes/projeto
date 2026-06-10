@@ -101,19 +101,19 @@ include 'includes/nav.php';
             <div class="alert alert-danger d-flex align-items-center gap-2">
                 <i class="fas fa-triangle-exclamation"></i>
                 <span>4 equipamentos com garantia expirada —
-                    <a href="views/equipamentos/equipamentos.html" class="alert-link">ver lista</a>
+                    <a href="views/equipamentos/equipamentos.php" class="alert-link">ver lista</a>
                 </span>
             </div>
             <div class="alert alert-warning d-flex align-items-center gap-2">
                 <i class="fas fa-clock"></i>
                 <span>3 garantias a expirar nos próximos 30 dias —
-                    <a href="views/garantias/garantias.html" class="alert-link">ver lista</a>
+                    <a href="views/garantias/garantias.php" class="alert-link">ver lista</a>
                 </span>
             </div>
             <div class="alert alert-info d-flex align-items-center gap-2">
                 <i class="fas fa-file-circle-exclamation"></i>
                 <span>2 equipamentos sem documentação associada —
-                    <a href="views/documentacao/documentacao.html" class="alert-link">ver lista</a>
+                    <a href="views/documentacao/documentacao.php" class="alert-link">ver lista</a>
                 </span>
             </div>
         </main>

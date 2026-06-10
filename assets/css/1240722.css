@@ -110,7 +110,6 @@ body {
      justify-content: center;
  }
 }
-
 /* Seção Hero/Banner com Foto */
 .hero-banner {
  position: relative;
@@ -309,6 +308,10 @@ body {
  .quem-somos-side-image {
      max-width: 100%;
  }
+ .quem-somos-left {
+ min-width: unset;
+ width: 100%;
+ }
 }
 
 .quem-somos-card {
@@ -361,7 +364,7 @@ body {
 section {
  padding: 100px 40px; /* Espaçamento interno nas secções (superior/inferior e laterais) */ 
  text-align: center; /* Centraliza todo o conteúdo textual por padrão */
- min-height: 100vh; /* Garante que cada secção tenha pelo menos a altura de uma janela inteira */
+ min-height: unset; /* Garante que cada secção tenha pelo menos a altura de uma janela inteira */
 } 
 #servicos {
  max-width: 1200px;
@@ -377,7 +380,8 @@ section {
 .servico {
  width: 300px; /* Define a largura de cada “cartão” de serviço */
  margin: 10px; /* Espaçamento entre os cartões */
- height: 200px; /* Altura fixa para uniformizar os cartões */
+ height: auto;
+ min-height: 200px; /* Altura fixa para uniformizar os cartões */
  padding: 28px 24px;
  background-color: #edf0f4; /* Fundo suave para maior contraste */
  border: 1px solid rgba(29, 92, 127, 0.08);

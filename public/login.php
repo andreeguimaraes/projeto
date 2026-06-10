@@ -86,7 +86,7 @@ include '../private/includes/header.php';
                     </form>
 
                     <div class="footer-text">
-                        <a href="../public/index.html" style="color: #1d5c7f; text-decoration: none;">
+                        <a href="index.php" style="color: #1d5c7f; text-decoration: none;">
                             <i class="fa-solid fa-arrow-left me-1"></i>Voltar ao site
                         </a>
                     </div>

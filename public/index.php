@@ -25,15 +25,15 @@
 
         <!-- Links da navegação -->
         <div class="container-navegacao">
-            <a href="index.html">INÍCIO</a>
-            <a href="views/quem-somos/quem-somos.html">QUEM SOMOS</a>
-            <a href="views/servicos/servicos.html">SERVIÇOS</a>
-            <a href="views/contactos/contactos.html">CONTACTOS</a>
+            <a href="index.php">INÍCIO</a>
+            <a href="views/quem-somos/quem-somos.php">QUEM SOMOS</a>
+            <a href="views/servicos/servicos.php">SERVIÇOS</a>
+            <a href="views/contactos/contactos.php">CONTACTOS</a>
         </div>
 
         <!-- Área Cliente -->
         <div class="nav-cliente">
-            <a href="../login/login.html" target="_blank">Área Restrita</a>
+            <a href="login.php" target="_blank">Área Restrita</a>
         </div>
     </nav>
 
@@ -97,7 +97,7 @@
                 <h3>Rastreabilidade total</h3>
                 <p>Controlo do ciclo de vida dos dispositivos médicos</p>
             </div>
-            <a href="views/serviços/servicos.html" class="button">Saber mais sobre os nossos serviços</a>
+            <a href="views/servicos/servicos.php" class="button">Saber mais sobre os nossos serviços</a>
         </div>
     </section>
  
@@ -105,7 +105,7 @@
     <section id="convite">
         <div>
             <h2>Quer modernizar a gestão do seu hospital?</h2>
-            <a href="views/contactos/contactos.html" class="button">Fale connosco →</a>
+            <a href="views/contactos/contactos.php" class="button">Fale connosco →</a>
         </div>
     </section>
 

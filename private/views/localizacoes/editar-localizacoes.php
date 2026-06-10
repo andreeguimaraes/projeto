@@ -180,19 +180,6 @@
                                     </select>
 
                                 </div>
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label">
-                                        Responsável pela área
-                                    </label>
-
-                                    <input type="text"
-                                           class="form-control"
-                                           value="Enf. Marta Silva">
-
-                                </div>
-
                             </div>
 
                             <hr>
@@ -267,7 +254,6 @@
                             </small>
                             -->
 
-                            <hr>
 
                             <!-- OBSERVAÇÕES -->
                             <h5 class="text-muted mb-3">
