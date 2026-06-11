@@ -17,7 +17,7 @@ redirect_if_not_logged();
 <?php $erro = '';
 $equipamentos = [];
 
- try {
+try {
     $ligacao = new PDO(
         "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
         MYSQL_USERNAME,
@@ -25,18 +25,111 @@ $equipamentos = [];
     );
     $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $equipamentos = $ligacao->query("
-        SELECT e.*, s.nome AS servico_nome
+    $pesquisa = $_GET['pesquisa'] ?? '';
+    $categoria = $_GET['categoria'] ?? '';
+    $estado = $_GET['estado'] ?? '';
+    $criticidade = $_GET['criticidade'] ?? '';
+    $servico = $_GET['servico'] ?? '';
+    $fornecedor = $_GET['fornecedor'] ?? '';
+    $ordenar = $_GET['ordenar'] ?? 'codigo_asc';
+
+    $sql = "
+        SELECT DISTINCT
+            e.*,
+            c.nome AS categoria_nome,
+            s.nome AS servico_nome
         FROM equipamentos e
+        LEFT JOIN categorias_equipamento c ON e.categoria_id = c.id
         LEFT JOIN localizacoes l ON e.localizacao_id = l.id
         LEFT JOIN servicos s ON l.servico_id = s.id
-    ")->fetchAll(PDO::FETCH_OBJ);
+        LEFT JOIN equipamento_fornecedor ef ON e.id = ef.equipamento_id
+        LEFT JOIN fornecedores f ON ef.fornecedor_id = f.id
+        WHERE 1 = 1
+    ";
+
+    $params = [];
+
+    /* Pesquisa geral */
+    if (!empty($pesquisa)) {
+        $sql .= " AND (
+            e.codigo LIKE :pesquisa OR
+            e.designacao LIKE :pesquisa OR
+            e.marca LIKE :pesquisa OR
+            e.modelo LIKE :pesquisa OR
+            e.numero_serie LIKE :pesquisa OR
+            c.nome LIKE :pesquisa OR
+            s.nome LIKE :pesquisa OR
+            f.nome LIKE :pesquisa
+        )";
+
+        $params[':pesquisa'] = '%' . $pesquisa . '%';
+    }
+
+    /* Filtro por categoria */
+    if (!empty($categoria)) {
+        $sql .= " AND e.categoria_id = :categoria";
+        $params[':categoria'] = $categoria;
+    }
+
+    /* Filtro por estado */
+    if (!empty($estado)) {
+        $sql .= " AND e.estado = :estado";
+        $params[':estado'] = $estado;
+    }
+
+    /* Filtro por criticidade */
+    if (!empty($criticidade)) {
+        $sql .= " AND e.criticidade = :criticidade";
+        $params[':criticidade'] = $criticidade;
+    }
+
+    /* Filtro por serviço */
+    if (!empty($servico)) {
+        $sql .= " AND s.id = :servico";
+        $params[':servico'] = $servico;
+    }
+
+    /* Filtro por fornecedor */
+    if (!empty($fornecedor)) {
+        $sql .= " AND f.id = :fornecedor";
+        $params[':fornecedor'] = $fornecedor;
+    }
+
+    /* Ordenação */
+    switch ($ordenar) {
+        case 'codigo_desc':
+            $sql .= " ORDER BY e.codigo DESC";
+            break;
+
+        case 'designacao_asc':
+            $sql .= " ORDER BY e.designacao ASC";
+            break;
+
+        case 'designacao_desc':
+            $sql .= " ORDER BY e.designacao DESC";
+            break;
+
+        case 'estado':
+            $sql .= " ORDER BY e.estado ASC";
+            break;
+
+        case 'criticidade':
+            $sql .= " ORDER BY e.criticidade ASC";
+            break;
+
+        case 'codigo_asc':
+        default:
+            $sql .= " ORDER BY e.codigo ASC";
+            break;
+    }
+
+    $stmt = $ligacao->prepare($sql);
+    $stmt->execute($params);
+    $equipamentos = $stmt->fetchAll(PDO::FETCH_OBJ);
 
     $erro = '';
-
-} catch (PDOException $err) {
-    $erro = "Aconteceu um erro na ligação: " . $err->getMessage();
-    $equipamentos = [];
+} catch (PDOException $e) {
+    echo "Aconteceu um erro na ligação.";
 }
 
 $ligacao = null;
@@ -62,112 +155,114 @@ $ligacao = null;
             <!-- Filtros -->
             <div class="card mb-3">
                 <div class="card-body">
-                    <div class="row g-2">
+
+                    <form method="GET" action="equipamentos.php">
 
                         <!-- Pesquisa -->
-                        <div class="col">
-                            <div class="input-group">
-                                <div style="position: relative; flex: 1;">
+                        <div class="row g-2 mb-3">
+                            <div class="col-12">
+                                <div class="input-group">
                                     <input
                                         type="text"
                                         id="pesquisaEquipamento"
-                                        class="form-control pe-5"
+                                        name="pesquisa"
+                                        value="<?= htmlspecialchars($pesquisa) ?>"
+                                        class="form-control"
                                         placeholder="Pesquisar equipamento...">
 
-                                    <button
-                                        type="button"
-                                        onclick="document.getElementById('pesquisaEquipamento').value='';"
-                                        title="Limpar pesquisa"
-                                        class="btn-limpar-pesquisa">
-                                        <i class="fas fa-xmark"></i>
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search"></i>
                                     </button>
+
+                                    <a href="equipamentos.php"
+                                        class="btn btn-outline-secondary"
+                                        title="Limpar filtros">
+                                        <i class="fas fa-filter-circle-xmark"></i>
+                                    </a>
                                 </div>
-
-                                <button
-                                    class="btn btn-primary"
-                                    type="button"
-                                    onclick="filtrar()">
-                                    <i class="fas fa-search"></i>
-                                </button>
                             </div>
                         </div>
-                        <div class="row g-2">
+
+                        <!-- Filtros -->
+                        <div class="row g-2 align-items-center">
+
                             <div class="col-md-2">
-                                <select class="form-select">
+                                <select class="form-select" name="categoria">
                                     <option value="">Categoria</option>
-                                    <option>Monitorização</option>
-                                    <option>Suporte de vida</option>
-                                    <option>Terapia</option>
-                                    <option>Diagnóstico</option>
-                                    <option>Laboratório</option>
-                                    <option>Esterilização</option>
-                                    <option>Reabilitação</option>
+                                    <option value="1" <?= $categoria == '1' ? 'selected' : '' ?>>Monitorização</option>
+                                    <option value="2" <?= $categoria == '2' ? 'selected' : '' ?>>Suporte de vida</option>
+                                    <option value="3" <?= $categoria == '3' ? 'selected' : '' ?>>Diagnóstico</option>
+                                    <option value="4" <?= $categoria == '4' ? 'selected' : '' ?>>Terapia</option>
+                                    <option value="5" <?= $categoria == '5' ? 'selected' : '' ?>>Laboratório</option>
+                                    <option value="6" <?= $categoria == '6' ? 'selected' : '' ?>>Esterilização</option>
+                                    <option value="7" <?= $categoria == '7' ? 'selected' : '' ?>>Reabilitação</option>
                                 </select>
                             </div>
+
                             <div class="col-md-2">
-                                <select class="form-select">
+                                <select class="form-select" name="estado">
                                     <option value="">Estado</option>
-                                    <option>Ativo</option>
-                                    <option>Em manutenção</option>
-                                    <option>Inativo</option>
-                                    <option>Em calibração</option>
-                                    <option>Em quarentena</option>
-                                    <option>Abatido</option>
+                                    <option value="ativo" <?= $estado == 'ativo' ? 'selected' : '' ?>>Ativo</option>
+                                    <option value="em_manutencao" <?= $estado == 'em_manutencao' ? 'selected' : '' ?>>Em manutenção</option>
+                                    <option value="inativo" <?= $estado == 'inativo' ? 'selected' : '' ?>>Inativo</option>
+                                    <option value="em_calibracao" <?= $estado == 'em_calibracao' ? 'selected' : '' ?>>Em calibração</option>
+                                    <option value="em_quarentena" <?= $estado == 'em_quarentena' ? 'selected' : '' ?>>Em quarentena</option>
+                                    <option value="abatido" <?= $estado == 'abatido' ? 'selected' : '' ?>>Abatido</option>
                                 </select>
                             </div>
+
                             <div class="col-md-2">
-                                <select class="form-select">
+                                <select class="form-select" name="criticidade">
                                     <option value="">Criticidade</option>
-                                    <option>Baixa</option>
-                                    <option>Média</option>
-                                    <option>Alta</option>
-                                    <option>Suporte de vida</option>
+                                    <option value="baixa" <?= $criticidade == 'baixa' ? 'selected' : '' ?>>Baixa</option>
+                                    <option value="media" <?= $criticidade == 'media' ? 'selected' : '' ?>>Média</option>
+                                    <option value="alta" <?= $criticidade == 'alta' ? 'selected' : '' ?>>Alta</option>
+                                    <option value="suporte_de_vida" <?= $criticidade == 'suporte_de_vida' ? 'selected' : '' ?>>Suporte de vida</option>
                                 </select>
                             </div>
+
                             <div class="col-md-2">
-                                <select class="form-select">
+                                <select class="form-select" name="servico">
                                     <option value="">Serviço</option>
-                                    <option>UCI</option>
-                                    <option>Urgência</option>
-                                    <option>Bloco Operatório</option>
-                                    <option>Medicina</option>
-                                    <option>Pediatria</option>
-                                    <option>Ortopedia</option>
+                                    <option value="1" <?= $servico == '1' ? 'selected' : '' ?>>UCI</option>
+                                    <option value="2" <?= $servico == '2' ? 'selected' : '' ?>>Urgência</option>
+                                    <option value="3" <?= $servico == '3' ? 'selected' : '' ?>>Bloco Operatório</option>
+                                    <option value="4" <?= $servico == '4' ? 'selected' : '' ?>>Medicina</option>
+                                    <option value="5" <?= $servico == '5' ? 'selected' : '' ?>>Pediatria</option>
+                                    <option value="6" <?= $servico == '6' ? 'selected' : '' ?>>Ortopedia</option>
                                 </select>
                             </div>
+
                             <div class="col-md-2">
-                                <select class="form-select">
+                                <select class="form-select" name="fornecedor">
                                     <option value="">Fornecedor</option>
-                                    <option>Philips Healthcare</option>
-                                    <option>Dräger Portugal</option>
-                                    <option>Zoll Medical</option>
-                                    <option>B. Braun</option>
+                                    <option value="1" <?= $fornecedor == '1' ? 'selected' : '' ?>>Philips Healthcare Portugal</option>
+                                    <option value="2" <?= $fornecedor == '2' ? 'selected' : '' ?>>Dräger Medical Portugal</option>
+                                    <option value="3" <?= $fornecedor == '3' ? 'selected' : '' ?>>GE Healthcare Portugal</option>
+                                    <option value="4" <?= $fornecedor == '4' ? 'selected' : '' ?>>Siemens Healthineers Portugal</option>
+                                    <option value="5" <?= $fornecedor == '5' ? 'selected' : '' ?>>B. Braun Medical Portugal</option>
                                 </select>
                             </div>
-                            <div class="col-md-auto">
-                                <button
-                                    type="button"
-                                    class="btn btn-outline-secondary"
-                                    title="Limpar filtros">
 
-                                    <i class="fas fa-filter-circle-xmark"></i>
-                                </button>
+                            <div class="col-md-2">
+                                <select
+                                    class="form-select"
+                                    name="ordenar"
+                                    onchange="this.form.submit()">
+
+                                    <option value="codigo_asc" <?= $ordenar == 'codigo_asc' ? 'selected' : '' ?>>Código ↑</option>
+                                    <option value="codigo_desc" <?= $ordenar == 'codigo_desc' ? 'selected' : '' ?>>Código ↓</option>
+                                    <option value="designacao_asc" <?= $ordenar == 'designacao_asc' ? 'selected' : '' ?>>Designação ↑</option>
+                                    <option value="designacao_desc" <?= $ordenar == 'designacao_desc' ? 'selected' : '' ?>>Designação ↓</option>
+                                    <option value="estado" <?= $ordenar == 'estado' ? 'selected' : '' ?>>Estado</option>
+                                    <option value="criticidade" <?= $ordenar == 'criticidade' ? 'selected' : '' ?>>Criticidade</option>
+                                </select>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Barra de resultados e toggle de vista -->
-            <div class="d-flex justify-content-between align-items-center mb-3">                
-                <div class="d-flex gap-2">
-                    <select class="form-select form-select-sm" style="width: auto;">
-                        <option>Ordenar: Código ↑</option>
-                        <option>Ordenar: Código ↓</option>
-                        <option>Ordenar: Designação ↑</option>
-                        <option>Ordenar: Estado</option>
-                        <option>Ordenar: Criticidade</option>
-                    </select>
+                        </div>
+
+                    </form>
+
                 </div>
             </div>
 
@@ -179,7 +274,7 @@ $ligacao = null;
                 <!-- Se não há erro mas o array está vazio, mostra "Não existem clientes registados."-->
                 <?php if (count($equipamentos) == 0) : ?>
                     <p class="text-muted">Nenhum equipamento registado.</p>
-                <!-- Se existem resultados, será mostrada a tabela de equipamentos (a ser colocada logo a seguir). -->    
+                    <!-- Se existem resultados, será mostrada a tabela de equipamentos (a ser colocada logo a seguir). -->
                 <?php else : ?>
 
                     <!-- Barra de resultados -->
@@ -216,34 +311,54 @@ $ligacao = null;
                                                     <td><?= htmlspecialchars($eq->codigo) ?></td>
                                                     <td><?= htmlspecialchars($eq->designacao) ?></td>
                                                     <td><?= htmlspecialchars($eq->marca) ?></td>
-                                                    <td><?= htmlspecialchars($eq->categoria) ?></td>
+                                                    <td><?= htmlspecialchars($eq->categoria_nome ?? '—') ?></td>
                                                     <td><?= htmlspecialchars($eq->servico_nome ?? '—') ?></td>
                                                     <td>
                                                         <?php
-                                                        $badgeEstado = match($eq->estado) {
+                                                        $badgeEstado = match ($eq->estado) {
                                                             'ativo' => 'success',
                                                             'em_manutencao' => 'warning',
                                                             'inativo', 'abatido' => 'secondary',
                                                             'em_calibracao', 'em_quarentena' => 'info',
                                                             default => 'secondary'
                                                         };
+
+                                                        $textoEstado = match ($eq->estado) {
+                                                            'ativo' => 'Ativo',
+                                                            'em_manutencao' => 'Em manutenção',
+                                                            'inativo' => 'Inativo',
+                                                            'em_calibracao' => 'Em calibração',
+                                                            'em_quarentena' => 'Em quarentena',
+                                                            'abatido' => 'Abatido',
+                                                            default => $eq->estado
+                                                        };
                                                         ?>
+
                                                         <span class="badge bg-<?= $badgeEstado ?>">
-                                                            <?= htmlspecialchars($eq->estado) ?>
+                                                            <?= htmlspecialchars($textoEstado) ?>
                                                         </span>
                                                     </td>
                                                     <td>
                                                         <?php
-                                                        $badgeCrit = match($eq->criticidade) {
+                                                        $badgeCrit = match ($eq->criticidade) {
                                                             'suporte_de_vida' => 'danger',
                                                             'alta' => 'warning',
                                                             'media' => 'info',
                                                             'baixa' => 'secondary',
                                                             default => 'secondary'
                                                         };
+
+                                                        $textoCrit = match ($eq->criticidade) {
+                                                            'suporte_de_vida' => 'Suporte de vida',
+                                                            'alta' => 'Alta',
+                                                            'media' => 'Média',
+                                                            'baixa' => 'Baixa',
+                                                            default => $eq->criticidade
+                                                        };
                                                         ?>
+
                                                         <span class="badge bg-<?= $badgeCrit ?>">
-                                                            <?= htmlspecialchars($eq->criticidade) ?>
+                                                            <?= htmlspecialchars($textoCrit) ?>
                                                         </span>
                                                     </td>
                                                     <td>
@@ -276,7 +391,7 @@ $ligacao = null;
                         </div>
                     </div>
                 <?php endif; ?> <!-- Fecha o if (count($resultados) == 0) -->
-            <?php endif; ?> <!-- Fecha o if (!empty($erro)) --> 
+            <?php endif; ?> <!-- Fecha o if (!empty($erro)) -->
 
             <!-- Vista cards 
                 <div id="vista-cards" class="row g-3" style="display: none;">
@@ -339,27 +454,7 @@ $ligacao = null;
                     </div>
                 </div> -->
 
-            <!-- JavaScript toggle de vista -->
-            <script>
-                const btnTabela = document.getElementById('btn-tabela');
-                const btnCards = document.getElementById('btn-cards');
-                const vistaTabela = document.getElementById('vista-tabela');
-                const vistaCards = document.getElementById('vista-cards');
 
-                btnTabela.addEventListener('click', function() {
-                    vistaTabela.style.display = 'block';
-                    vistaCards.style.display = 'none';
-                    btnTabela.classList.replace('btn-outline-secondary', 'btn-primary');
-                    btnCards.classList.replace('btn-primary', 'btn-outline-secondary');
-                });
-
-                btnCards.addEventListener('click', function() {
-                    vistaTabela.style.display = 'none';
-                    vistaCards.style.display = 'flex';
-                    btnCards.classList.replace('btn-outline-secondary', 'btn-primary');
-                    btnTabela.classList.replace('btn-primary', 'btn-outline-secondary');
-                });
-            </script>
         </main>
     </div>
 </div>
