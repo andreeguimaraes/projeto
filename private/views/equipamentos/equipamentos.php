@@ -9,8 +9,24 @@ require_once __DIR__ . '/../../../config/config.php';
 require_once __DIR__ . '/../../includes/funcoes.php';
 
 redirect_if_not_logged();
-?>
 
+if (isset($_GET['eliminar'])) {
+    $id = (int) $_GET['eliminar'];
+    try {
+        $ligacao = new PDO(
+            "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+            MYSQL_USERNAME,
+            MYSQL_PASSWORD
+        );
+        $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $ligacao->prepare("DELETE FROM equipamentos WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+    } catch (PDOException $e) {
+        // silencia o erro
+    }
+    header("Location: equipamentos.php");
+    exit;
+}?>
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
 
@@ -24,6 +40,11 @@ try {
         MYSQL_PASSWORD
     );
     $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Carrega as opções dos selects
+    $categorias = $ligacao->query("SELECT id, nome FROM categorias_equipamento ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
+    $servicos   = $ligacao->query("SELECT id, nome FROM servicos ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
+    $fornecedores = $ligacao->query("SELECT id, nome FROM fornecedores ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
 
     $pesquisa = $_GET['pesquisa'] ?? '';
     $categoria = $_GET['categoria'] ?? '';
@@ -185,29 +206,27 @@ $ligacao = null;
 
                         <!-- Filtros -->
                         <div class="row g-2 align-items-center">
-
+                            <!-- fornecedor -->
                             <div class="col-md-2">
                                 <select class="form-select" name="categoria">
                                     <option value="">Categoria</option>
-                                    <option value="1" <?= $categoria == '1' ? 'selected' : '' ?>>Monitorização</option>
-                                    <option value="2" <?= $categoria == '2' ? 'selected' : '' ?>>Suporte de vida</option>
-                                    <option value="3" <?= $categoria == '3' ? 'selected' : '' ?>>Diagnóstico</option>
-                                    <option value="4" <?= $categoria == '4' ? 'selected' : '' ?>>Terapia</option>
-                                    <option value="5" <?= $categoria == '5' ? 'selected' : '' ?>>Laboratório</option>
-                                    <option value="6" <?= $categoria == '6' ? 'selected' : '' ?>>Esterilização</option>
-                                    <option value="7" <?= $categoria == '7' ? 'selected' : '' ?>>Reabilitação</option>
+                                    <?php foreach ($categorias as $cat) : ?>
+                                        <option value="<?= $cat->id ?>" <?= $categoria == $cat->id ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($cat->nome) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
 
                             <div class="col-md-2">
-                                <select class="form-select" name="estado">
-                                    <option value="">Estado</option>
-                                    <option value="ativo" <?= $estado == 'ativo' ? 'selected' : '' ?>>Ativo</option>
-                                    <option value="em_manutencao" <?= $estado == 'em_manutencao' ? 'selected' : '' ?>>Em manutenção</option>
-                                    <option value="inativo" <?= $estado == 'inativo' ? 'selected' : '' ?>>Inativo</option>
-                                    <option value="em_calibracao" <?= $estado == 'em_calibracao' ? 'selected' : '' ?>>Em calibração</option>
-                                    <option value="em_quarentena" <?= $estado == 'em_quarentena' ? 'selected' : '' ?>>Em quarentena</option>
-                                    <option value="abatido" <?= $estado == 'abatido' ? 'selected' : '' ?>>Abatido</option>
+                                <!-- serviço -->
+                                <select class="form-select" name="servico">
+                                    <option value="">Serviço</option>
+                                    <?php foreach ($servicos as $s) : ?>
+                                        <option value="<?= $s->id ?>" <?= $servico == $s->id ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($s->nome) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
 
@@ -222,25 +241,14 @@ $ligacao = null;
                             </div>
 
                             <div class="col-md-2">
-                                <select class="form-select" name="servico">
-                                    <option value="">Serviço</option>
-                                    <option value="1" <?= $servico == '1' ? 'selected' : '' ?>>UCI</option>
-                                    <option value="2" <?= $servico == '2' ? 'selected' : '' ?>>Urgência</option>
-                                    <option value="3" <?= $servico == '3' ? 'selected' : '' ?>>Bloco Operatório</option>
-                                    <option value="4" <?= $servico == '4' ? 'selected' : '' ?>>Medicina</option>
-                                    <option value="5" <?= $servico == '5' ? 'selected' : '' ?>>Pediatria</option>
-                                    <option value="6" <?= $servico == '6' ? 'selected' : '' ?>>Ortopedia</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-2">
+                                <!-- fornecedor -->
                                 <select class="form-select" name="fornecedor">
                                     <option value="">Fornecedor</option>
-                                    <option value="1" <?= $fornecedor == '1' ? 'selected' : '' ?>>Philips Healthcare Portugal</option>
-                                    <option value="2" <?= $fornecedor == '2' ? 'selected' : '' ?>>Dräger Medical Portugal</option>
-                                    <option value="3" <?= $fornecedor == '3' ? 'selected' : '' ?>>GE Healthcare Portugal</option>
-                                    <option value="4" <?= $fornecedor == '4' ? 'selected' : '' ?>>Siemens Healthineers Portugal</option>
-                                    <option value="5" <?= $fornecedor == '5' ? 'selected' : '' ?>>B. Braun Medical Portugal</option>
+                                    <?php foreach ($fornecedores as $f) : ?>
+                                        <option value="<?= $f->id ?>" <?= $fornecedor == $f->id ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($f->nome) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
 
@@ -459,36 +467,53 @@ $ligacao = null;
     </div>
 </div>
 <!-- Modal de confirmação -->
-<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalEliminarLabel">
-                    <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
-            </div>
+<div class="modal fade" id="modalEliminar" tabindex="-1"
+     aria-labelledby="modalEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEliminarLabel">
+          <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
+        </h5>
+        <button type="button" class="btn-close btn-close-white"
+                data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
 
-            <div class="modal-body">
-                <p>Tem a certeza que pretende eliminar o seguinte equipamento?</p>
-                <div>
-                    <strong>EQ001 — Monitor IntelliVue MP5</strong><br>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <!-- Cancela e fecha o modal -->
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-arrow-left me-1"></i>Cancelar
-                </button>
-                <!-- Confirma a eliminação -->
-                <a href="equipamentos.php" class="btn btn-danger">
-                    <i class="fas fa-trash me-1"></i>Eliminar equipamento
-                </a>
-            </div>
-
+      <div class="modal-body">
+        <p>Tem a certeza que pretende eliminar o seguinte equipamento?</p>
+        <div>
+          <!-- Preenchido dinamicamente pelo JavaScript -->
+          <strong id="modalEquipamentoInfo"></strong>
         </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary"
+                data-bs-dismiss="modal">
+          <i class="fas fa-arrow-left me-1"></i>Cancelar
+        </button>
+        <!-- href preenchido dinamicamente pelo JavaScript -->
+        <a id="btnConfirmarEliminar" href="#" class="btn btn-danger">
+          <i class="fas fa-trash me-1"></i>Eliminar equipamento
+        </a>
+      </div>
     </div>
+  </div>
 </div>
+<script>
+document.getElementById('modalEliminar')
+  .addEventListener('show.bs.modal', function (e) {
+    const btn       = e.relatedTarget;
+    const id        = btn.dataset.id;
+    const codigo    = btn.dataset.codigo;
+    const designacao = btn.dataset.designacao;
+
+    document.getElementById('modalEquipamentoInfo').textContent =
+      codigo + ' — ' + designacao;
+
+    document.getElementById('btnConfirmarEliminar').href =
+      'equipamentos.php?eliminar=' + id;
+  });
+</script> 
 <!-- rodape -->
 <?php include '../../includes/footer.php'; ?>

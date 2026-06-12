@@ -1,312 +1,307 @@
+<?php
+// --------------------------------------------------------------------
+// SEGURANÇA
+// --------------------------------------------------------------------
+
+require_once __DIR__ . '/../../../config/config.php';
+require_once __DIR__ . '/../../includes/funcoes.php';
+
+redirect_if_not_logged();
+
+if (isset($_GET['eliminar'])) {
+    $id = (int) $_GET['eliminar'];
+    try {
+        $ligacao = new PDO(
+            "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+            MYSQL_USERNAME,
+            MYSQL_PASSWORD
+        );
+        $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $ligacao->prepare("DELETE FROM fornecedores WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+    } catch (PDOException $e) {
+        // silencia o erro
+    }
+    header("Location: fornecedor.php");
+    exit;
+}
+?>
 <?php include '../../includes/header.php'; ?>
-    <!-- Navbar --> 
-    <?php include '../../includes/nav.php'; ?>
+<?php include '../../includes/nav.php'; ?>
 
-    <div class="container-fluid">
-        <div class="row">
+<?php
+$erro = '';
+$fornecedores = [];
 
-            <!-- Offcanvas Sidebar -->
-            <?php include '../../includes/sidebar.php'; ?>
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            <!-- Conteúdo Principal -->
-            <main class="col-12 p-4">
-                <!-- Cabeçalho -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h2 class="mb-0">Fornecedores</h2>
-                        <p class="text-muted mb-0">Gere o inventário de fornecedores</p>
-                    </div>
-                    <a href="novo-fornecedor.php" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Novo fornecedor
-                    </a>
+    // Carrega os tipos de fornecedor para o select do filtro
+    $tipos = $ligacao->query("SELECT id, nome FROM tipos_fornecedor ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
+
+    $pesquisa = $_GET['pesquisa'] ?? '';
+    $tipo     = $_GET['tipo']     ?? '';
+    $ordenar  = $_GET['ordenar']  ?? 'codigo_asc';
+
+    $sql = "
+        SELECT
+            f.*,
+            tf.nome AS tipo_nome,
+            COUNT(DISTINCT ef.equipamento_id) AS total_equipamentos
+        FROM fornecedores f
+        LEFT JOIN tipos_fornecedor tf ON f.tipo_id = tf.id
+        LEFT JOIN equipamento_fornecedor ef ON f.id = ef.fornecedor_id
+        WHERE 1 = 1
+    ";
+
+    $params = [];
+
+    /* Pesquisa geral */
+    if (!empty($pesquisa)) {
+        $sql .= " AND (
+            f.codigo           LIKE :pesquisa OR
+            f.nome             LIKE :pesquisa OR
+            f.nif              LIKE :pesquisa OR
+            f.email            LIKE :pesquisa OR
+            f.telefone         LIKE :pesquisa OR
+            f.pessoa_contacto  LIKE :pesquisa
+        )";
+        $params[':pesquisa'] = '%' . $pesquisa . '%';
+    }
+
+    /* Filtro por tipo */
+    if (!empty($tipo)) {
+        $sql .= " AND f.tipo_id = :tipo";
+        $params[':tipo'] = $tipo;
+    }
+
+    $sql .= " GROUP BY f.id";
+
+    /* Ordenação */
+    switch ($ordenar) {
+        case 'codigo_desc':
+            $sql .= " ORDER BY f.codigo DESC";
+            break;
+        case 'nome_asc':
+            $sql .= " ORDER BY f.nome ASC";
+            break;
+        case 'nome_desc':
+            $sql .= " ORDER BY f.nome DESC";
+            break;
+        case 'codigo_asc':
+        default:
+            $sql .= " ORDER BY f.codigo ASC";
+            break;
+    }
+
+    $stmt = $ligacao->prepare($sql);
+    $stmt->execute($params);
+    $fornecedores = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+} catch (PDOException $e) {
+    $erro = "Aconteceu um erro na ligação.";
+}
+
+$ligacao = null;
+?>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <?php include '../../includes/sidebar.php'; ?>
+
+        <main class="col-12 p-4">
+
+            <!-- Cabeçalho -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-0">Fornecedores</h2>
+                    <p class="text-muted mb-0">Gere o inventário de fornecedores</p>
                 </div>
-                <!-- Filtros -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="row g-2">
-    
-                           <!-- Pesquisa -->
-                            <div class="col">
+                <a href="novo-fornecedor.php" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Novo fornecedor
+                </a>
+            </div>
+
+            <!-- Filtros -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <form method="GET" action="fornecedor.php">
+
+                        <!-- Pesquisa -->
+                        <div class="row g-2 mb-3">
+                            <div class="col-12">
                                 <div class="input-group">
-                                    <div style="position: relative; flex: 1;">
-                                        <input
-                                            type="text"
-                                            id="pesquisaFornecedor"
-                                            class="form-control pe-5"
-                                            placeholder="Pesquisar fornecedor..."
-                                        >
-
-                                        <button
-                                            type="button"
-                                            class="btn-limpar-pesquisa"
-                                            onclick="document.getElementById('pesquisaFornecedor').value='';"
-                                            title="Limpar pesquisa"
-                                        >
-                                            <i class="fas fa-xmark"></i>
-                                        </button>
-                                    </div>
-
-                                    <button
-                                        class="btn btn-primary"
-                                        type="button"
-                                        onclick="filtrar()"
-                                    >
+                                    <input
+                                        type="text"
+                                        name="pesquisa"
+                                        value="<?= htmlspecialchars($pesquisa) ?>"
+                                        class="form-control"
+                                        placeholder="Pesquisar fornecedor...">
+                                    <button class="btn btn-primary" type="submit">
                                         <i class="fas fa-search"></i>
                                     </button>
-                                </div>
-                            </div>
-                            <div class="row g-2">
-                                <div class="col-md-auto">
-                                    <select class="form-select">
-                                        <option value="">Tipo de fornecedor</option>
-                                        <option>Fabricante</option>
-                                        <option>Distribuidor / Fornecedor comercial</option>
-                                        <option>Assistência técnica</option>
-                                        <option>Fornecedor de consumíveis</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-auto">
-                                    <button
-                                        type="button"
+                                    <a href="fornecedor.php"
                                         class="btn btn-outline-secondary"
                                         title="Limpar filtros">
-
                                         <i class="fas fa-filter-circle-xmark"></i>
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="alert alert-info d-inline-block" role="alert">
-                        <i class="fas fa-circle-info me-2"></i>
-                        <strong>5 resultados encontrados</strong>
-                    </div>  
-                    <div class="d-flex gap-2">
-                        <select class="form-select form-select-sm" style="width: auto;">
-                            <option>Ordenar: Código ↑</option>
-                            <option>Ordenar: Código ↓</option>
-                            <option>Ordenar: Nome ↑</option>
-                            <option>Ordenar: Nome ↓</option>
-                        </select>
-                    </div>
-                </div>
 
-                <!-- Tabela de fornecedores -->
-                <div id="vista-tabela-forn" class="card">
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Empresa</th>
-                                        <th>Tipo</th>
-                                        <th>Contacto</th>
-                                        <th>Email</th>
-                                        <th>Equipamentos associados</th>
-                                        <th>Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                        <!-- Filtros adicionais -->
+                        <div class="row g-2 align-items-center">
 
-                                    <tr>
-                                        <td>FOR001</td>
-                                        <td>MedTech Portugal</td>
-                                        <td>Assistência técnica</td>
-                                        <td>225 456 700</td>
-                                        <td>geral@medtech.pt</td> 
-                                        <td>12</td>
-                                        <td>
-                                            <a href="detalhes-fornecedor.php"
-                                            class="btn btn-sm btn-outline-primary"
-                                            title="Ver detalhes">
-
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-
-                                            <a href="editar-fornecedor.php"
-                                            class="btn btn-sm btn-outline-warning"
-                                            title="Editar">
-
-                                                <i class="fas fa-pen"></i>
-                                            </a>
-
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-danger"
-                                                    title="Eliminar"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#modalEliminar">
-
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>FOR002</td>
-                                        <td>BioEquip Solutions</td>
-                                        <td>Distribuidor</td>
-                                        <td>229 887 654</td>
-                                        <td>contacto@bioequip.pt</td>
-                                        <td>8</td>
-                                        <td>
-                                            <a href="detalhes-fornecedor.php"
-                                            class="btn btn-sm btn-outline-primary">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-
-                                            <a href="editar-fornecedor.php"
-                                            class="btn btn-sm btn-outline-warning">
-                                                <i class="fas fa-pen"></i>
-                                            </a>
-
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-danger"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#modalEliminar">
-
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>FOR003</td>
-                                        <td>Hospital Devices Europe</td>
-                                        <td>Fabricante</td>
-                                        <td>226 345 222</td>
-                                        <td>support@hde.pt</td>
-                                        <td>15</td>
-                                        <td>
-                                            <a href="detalhes-fornecedor.php"
-                                            class="btn btn-sm btn-outline-primary">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-
-                                            <a href="editar-fornecedor.php"
-                                            class="btn btn-sm btn-outline-warning">
-                                                <i class="fas fa-pen"></i>
-                                            </a>
-
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-danger"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#modalEliminar">
-
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <!-- Vista cards fornecedores -->
-                <div id="vista-cards-forn" class="row g-3" style="display: none;">
-                    <div class="col-md-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <h6 class="mb-0">MedTech Portugal</h6>
-                                    <span class="badge bg-info text-dark">
-                                        Assistência técnica
-                                    </span>
-                                </div>
-
-                                <p class="text-muted small mb-1">
-                                    <i class="fas fa-barcode me-1"></i>FOR001
-                                </p>
-
-                                <p class="text-muted small mb-1">
-                                    <i class="fas fa-phone me-1"></i>225 456 700
-                                </p>
-
-                                <p class="text-muted small mb-1">
-                                    <i class="fas fa-envelope me-1"></i>geral@medtech.pt
-                                </p>
-
-                                <p class="text-muted small mb-2">
-                                    <i class="fas fa-stethoscope me-1"></i>12 equipamentos associados
-                                </p>
-
-                                <div class="d-flex gap-1">
-                                    <a href="detalhes-fornecedor.php" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-
-                                    <a href="editar-fornecedor.php" class="btn btn-sm btn-outline-warning">
-                                        <i class="fas fa-pen"></i>
-                                    </a>
-
-                                    <button
-                                        class="btn btn-sm btn-outline-danger"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modalEliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
+                            <div class="col-md-3">
+                                <select class="form-select" name="tipo">
+                                    <option value="">Tipo de fornecedor</option>
+                                    <?php foreach ($tipos as $t) : ?>
+                                        <option value="<?= $t->id ?>" <?= $tipo == $t->id ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($t->nome) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
+
+                            <div class="col-md-3">
+                                <select class="form-select" name="ordenar" onchange="this.form.submit()">
+                                    <option value="codigo_asc"  <?= $ordenar == 'codigo_asc'  ? 'selected' : '' ?>>Código ↑</option>
+                                    <option value="codigo_desc" <?= $ordenar == 'codigo_desc' ? 'selected' : '' ?>>Código ↓</option>
+                                    <option value="nome_asc"    <?= $ordenar == 'nome_asc'    ? 'selected' : '' ?>>Nome ↑</option>
+                                    <option value="nome_desc"   <?= $ordenar == 'nome_desc'   ? 'selected' : '' ?>>Nome ↓</option>
+                                </select>
+                            </div>
+
                         </div>
-                    </div>
-                </div>
 
-                <script>
-                    const btnTabelaForn = document.getElementById('btn-tabela-forn');
-                    const btnCardsForn = document.getElementById('btn-cards-forn');
-                    const vistaTabelaForn = document.getElementById('vista-tabela-forn');
-                    const vistaCardsForn = document.getElementById('vista-cards-forn');
-
-                    btnTabelaForn.addEventListener('click', function () {
-                        vistaTabelaForn.style.display = 'block';
-                        vistaCardsForn.style.display = 'none';
-                        btnTabelaForn.classList.replace('btn-outline-secondary', 'btn-primary');
-                        btnCardsForn.classList.replace('btn-primary', 'btn-outline-secondary');
-                    });
-
-                    btnCardsForn.addEventListener('click', function () {
-                        vistaTabelaForn.style.display = 'none';
-                        vistaCardsForn.style.display = 'flex';
-                        btnCardsForn.classList.replace('btn-outline-secondary', 'btn-primary');
-                        btnTabelaForn.classList.replace('btn-primary', 'btn-outline-secondary');
-                    });
-                </script>
-            </main>
-        </div>
-        <!-- Modal de confirmação -->
-        <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalEliminarLabel">
-                            <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <p>Tem a certeza que pretende eliminar o seguinte fornecedor?</p>
-                        <div>
-                            <strong>FOR003 — Hospital Devices Europe</strong><br>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <!-- Cancela e fecha o modal -->
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            <i class="fas fa-arrow-left me-1"></i>Cancelar
-                        </button>
-                        <!-- Confirma a eliminação -->
-                        <a href="fornecedor.php" class="btn btn-danger">
-                            <i class="fas fa-trash me-1"></i>Eliminar fornecedor
-                        </a>
-                    </div>
+                    </form>
                 </div>
             </div>
-        </div>
-    </div>    
 
-<!-- rodapé -->
+            <!-- Erros / Resultados -->
+            <?php if (!empty($erro)) : ?>
+                <p class="text-center text-danger"><?= $erro ?></p>
+            <?php else : ?>
+                <?php if (count($fornecedores) == 0) : ?>
+                    <p class="text-muted">Nenhum fornecedor registado.</p>
+                <?php else : ?>
+
+                    <!-- Barra de resultados -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="alert alert-info d-inline-block" role="alert">
+                            <i class="fas fa-circle-info me-2"></i>
+                            <strong><?= count($fornecedores) ?> resultados encontrados</strong>
+                        </div>
+                    </div>
+
+                    <!-- Tabela -->
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead style="background:#f8f9fa;">
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Empresa</th>
+                                            <th>Tipo</th>
+                                            <th>Pessoa de contacto</th>
+                                            <th>Telefone</th>
+                                            <th>Equipamentos associados</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($fornecedores as $f) : ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($f->codigo) ?></td>
+                                                <td><?= htmlspecialchars($f->nome) ?></td>
+                                                <td><?= htmlspecialchars($f->tipo_nome ?? '—') ?></td>
+                                                <td><?= htmlspecialchars($f->pessoa_contacto) ?></td>
+                                                <td><?= htmlspecialchars($f->telefone) ?></td>
+                                                <td><?= (int) $f->total_equipamentos ?></td>
+                                                <td>
+                                                    <div style="white-space: nowrap;">
+                                                        <a href="detalhes-fornecedor.php?id=<?= $f->id ?>"
+                                                            class="btn btn-sm btn-outline-primary" title="Ver detalhes">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a href="editar-fornecedor.php?id=<?= $f->id ?>"
+                                                            class="btn btn-sm btn-outline-warning" title="Editar">
+                                                            <i class="fas fa-pen"></i>
+                                                        </a>
+                                                        <button class="btn btn-sm btn-outline-danger" title="Eliminar"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modalEliminar"
+                                                            data-id="<?= $f->id ?>"
+                                                            data-codigo="<?= htmlspecialchars($f->codigo) ?>"
+                                                            data-nome="<?= htmlspecialchars($f->nome) ?>">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                <?php endif; ?>
+            <?php endif; ?>
+
+        </main>
+    </div>
+</div>
+
+<!-- Modal de confirmação -->
+<div class="modal fade" id="modalEliminar" tabindex="-1"
+     aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarLabel">
+                    <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
+                </h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem a certeza que pretende eliminar o seguinte fornecedor?</p>
+                <strong id="modalFornecedorInfo"></strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-arrow-left me-1"></i>Cancelar
+                </button>
+                <a id="btnConfirmarEliminar" href="#" class="btn btn-danger">
+                    <i class="fas fa-trash me-1"></i>Eliminar fornecedor
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('modalEliminar')
+    .addEventListener('show.bs.modal', function (e) {
+        const btn    = e.relatedTarget;
+        const id     = btn.dataset.id;
+        const codigo = btn.dataset.codigo;
+        const nome   = btn.dataset.nome;
+
+        document.getElementById('modalFornecedorInfo').textContent =
+            codigo + ' — ' + nome;
+
+        document.getElementById('btnConfirmarEliminar').href =
+            'fornecedor.php?eliminar=' + id;
+    });
+</script>
+
 <?php include '../../includes/footer.php'; ?>
