@@ -250,7 +250,7 @@ $ligacao = null;
                     <div class="card">
                         <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table class="table table-hover mb-0">
+                                <table class="table table-hover mb-0" id="tabela-localizacoes">
                                     <thead style="background:#f8f9fa;">
                                         <tr>
                                             <th>Código</th>
@@ -297,6 +297,9 @@ $ligacao = null;
                                 </table>
                             </div>
                         </div>
+                    </div>
+                     <!-- Controlos DataTables fora do card -->
+                    <div id="dt-controlos" class="d-flex justify-content-between align-items-center mt-3 px-1">
                     </div>
 
                 <?php endif; ?>
@@ -347,6 +350,32 @@ document.getElementById('modalEliminar')
 
         document.getElementById('btnConfirmarEliminar').href =
             '/MEDINV/private/views/localizacoes/localizacoes.php?eliminar=' + id;
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        var tabela = $('#tabela-localizacoes').DataTable({
+            language: {
+                lengthMenu: "Mostrar _MENU_ registos por página",
+                paginate: {
+                    next: "Seguinte",
+                    previous: "Anterior"
+                }
+            },
+            paging: true,
+            lengthChange: true,
+            searching: false,
+            ordering: false,
+            info: false,
+            lengthMenu: [10, 25, 50, 100],
+            pageLength: 10
+        });
+
+        // Move os controlos para o div fora do card
+        var wrapper = tabela.table().container();
+        $('#dt-controlos')
+            .append($(wrapper).find('.dataTables_length'))
+            .append($(wrapper).find('.dataTables_paginate'));
     });
 </script>
 
