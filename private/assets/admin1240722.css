@@ -262,3 +262,124 @@ body.login-page {
     justify-content: center;
     font-family: 'Titillium Web', Arial, sans-serif;
 }
+/* DataTables - controlos em baixo da tabela */
+.dataTables_wrapper .dataTables_paginate {
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+    float: right;
+}
+
+.dataTables_wrapper .dataTables_length {
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+    float: left;
+}
+/* DataTables - paginação */
+.dataTables_wrapper .dataTables_paginate {
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+    float: right;
+}
+
+.dataTables_wrapper .dataTables_length {
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+    float: left;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    border-radius: 6px !important;
+    padding: .375rem .75rem !important;
+    margin: 0 2px !important;
+    border: 1px solid #dee2e6 !important;
+    color: #0d6efd !important;
+    background: white !important;
+    font-size: .875rem;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #0d6efd !important;
+    border-color: #0d6efd !important;
+    color: white !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    background: #0d6efd !important;
+    border-color: #0d6efd !important;
+    color: white !important;
+    font-weight: 600;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+    color: #adb5bd !important;
+    background: white !important;
+    border-color: #dee2e6 !important;
+    cursor: default;
+}
+
+/* DataTables - seletor de registos */
+.dataTables_wrapper .dataTables_length select {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: .375rem 2rem .375rem .75rem;
+    font-size: .875rem;
+    color: #212529;
+    appearance: auto;
+}
+/* DataTables - controlos fora do card */
+#dt-controlos {
+    margin-top: 1rem;
+}
+
+#dt-controlos .dataTables_length {
+    float: left;
+}
+
+#dt-controlos .dataTables_paginate {
+    float: right;
+}
+
+#dt-controlos .dataTables_paginate .paginate_button {
+    display: inline-block;
+    padding: .375rem .75rem;
+    margin: 0 2px;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 6px;
+    color: #0d6efd !important;
+    background: white !important;
+    cursor: pointer;
+    font-size: .875rem;
+    text-decoration: none;
+}
+
+#dt-controlos .dataTables_paginate .paginate_button:hover {
+    background: #0d6efd !important;
+    border-color: #0d6efd !important;
+    color: white !important;
+}
+
+#dt-controlos .dataTables_paginate .paginate_button.current,
+#dt-controlos .dataTables_paginate .paginate_button.current:hover {
+    background: #0d6efd !important;
+    border-color: #0d6efd !important;
+    color: white !important;
+    font-weight: 600;
+}
+
+#dt-controlos .dataTables_paginate .paginate_button.disabled,
+#dt-controlos .dataTables_paginate .paginate_button.disabled:hover {
+    color: #adb5bd !important;
+    background: white !important;
+    border-color: #dee2e6 !important;
+    cursor: default;
+}
+
+#dt-controlos .dataTables_length select {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: .375rem 2rem .375rem .75rem;
+    font-size: .875rem;
+    color: #212529;
+}

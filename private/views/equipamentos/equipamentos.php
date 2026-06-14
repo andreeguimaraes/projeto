@@ -26,12 +26,15 @@ if (isset($_GET['eliminar'])) {
     }
     header("Location: equipamentos.php");
     exit;
-}?>
+} ?>
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
 
 <?php $erro = '';
 $equipamentos = [];
+$categorias = [];
+$servicos = [];
+$fornecedores = [];
 
 try {
     $ligacao = new PDO(
@@ -398,6 +401,9 @@ $ligacao = null;
                             </div>
                         </div>
                     </div>
+                     <!-- Controlos DataTables fora do card -->
+                    <div id="dt-controlos" class="d-flex justify-content-between align-items-center mt-3 px-1">
+                    </div>
                 <?php endif; ?> <!-- Fecha o if (count($resultados) == 0) -->
             <?php endif; ?> <!-- Fecha o if (!empty($erro)) -->
 
@@ -468,52 +474,78 @@ $ligacao = null;
 </div>
 <!-- Modal de confirmação -->
 <div class="modal fade" id="modalEliminar" tabindex="-1"
-     aria-labelledby="modalEliminarLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalEliminarLabel">
-          <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
-        </h5>
-        <button type="button" class="btn-close btn-close-white"
-                data-bs-dismiss="modal" aria-label="Fechar"></button>
-      </div>
+    aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarLabel">
+                    <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
+                </h5>
+                <button type="button" class="btn-close btn-close-white"
+                    data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
 
-      <div class="modal-body">
-        <p>Tem a certeza que pretende eliminar o seguinte equipamento?</p>
-        <div>
-          <!-- Preenchido dinamicamente pelo JavaScript -->
-          <strong id="modalEquipamentoInfo"></strong>
+            <div class="modal-body">
+                <p>Tem a certeza que pretende eliminar o seguinte equipamento?</p>
+                <div>
+                    <!-- Preenchido dinamicamente pelo JavaScript -->
+                    <strong id="modalEquipamentoInfo"></strong>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary"
+                    data-bs-dismiss="modal">
+                    <i class="fas fa-arrow-left me-1"></i>Cancelar
+                </button>
+                <!-- href preenchido dinamicamente pelo JavaScript -->
+                <a id="btnConfirmarEliminar" href="#" class="btn btn-danger">
+                    <i class="fas fa-trash me-1"></i>Eliminar equipamento
+                </a>
+            </div>
         </div>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary"
-                data-bs-dismiss="modal">
-          <i class="fas fa-arrow-left me-1"></i>Cancelar
-        </button>
-        <!-- href preenchido dinamicamente pelo JavaScript -->
-        <a id="btnConfirmarEliminar" href="#" class="btn btn-danger">
-          <i class="fas fa-trash me-1"></i>Eliminar equipamento
-        </a>
-      </div>
     </div>
-  </div>
 </div>
 <script>
-document.getElementById('modalEliminar')
-  .addEventListener('show.bs.modal', function (e) {
-    const btn       = e.relatedTarget;
-    const id        = btn.dataset.id;
-    const codigo    = btn.dataset.codigo;
-    const designacao = btn.dataset.designacao;
+    document.getElementById('modalEliminar')
+        .addEventListener('show.bs.modal', function(e) {
+            const btn = e.relatedTarget;
+            const id = btn.dataset.id;
+            const codigo = btn.dataset.codigo;
+            const designacao = btn.dataset.designacao;
 
-    document.getElementById('modalEquipamentoInfo').textContent =
-      codigo + ' — ' + designacao;
+            document.getElementById('modalEquipamentoInfo').textContent =
+                codigo + ' — ' + designacao;
 
-    document.getElementById('btnConfirmarEliminar').href =
-      'equipamentos.php?eliminar=' + id;
-  });
-</script> 
+            document.getElementById('btnConfirmarEliminar').href =
+                'equipamentos.php?eliminar=' + id;
+        });
+</script>
+<script>
+    $(document).ready(function() {
+        var tabela = $('#tabela-equipamentos').DataTable({
+            language: {
+                lengthMenu: "Mostrar _MENU_ registos por página",
+                paginate: {
+                    next: "Seguinte",
+                    previous: "Anterior"
+                }
+            },
+            paging: true,
+            lengthChange: true,
+            searching: false,
+            ordering: false,
+            info: false,
+            lengthMenu: [10, 25, 50, 100],
+            pageLength: 10
+        });
+
+        // Move os controlos para o div fora do card
+        var wrapper = tabela.table().container();
+        $('#dt-controlos')
+            .append($(wrapper).find('.dataTables_length'))
+            .append($(wrapper).find('.dataTables_paginate'));
+    });
+</script>
 <!-- rodape -->
 <?php include '../../includes/footer.php'; ?>

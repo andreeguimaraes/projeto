@@ -32,6 +32,7 @@ if (isset($_GET['eliminar'])) {
 <?php
 $erro = '';
 $fornecedores = [];
+$tipos = [];
 
 try {
     $ligacao = new PDO(

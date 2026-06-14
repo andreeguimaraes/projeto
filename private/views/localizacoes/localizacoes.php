@@ -31,6 +31,9 @@ if (isset($_GET['eliminar'])) {
 <?php
 $erro = '';
 $localizacoes = [];
+$servicos  = [];
+$edificios = [];
+$pisos     = [];
 
 try {
     $ligacao = new PDO(

@@ -19,6 +19,11 @@ require_once __DIR__ . '/../../config/config.php';
     <link rel="stylesheet" href="/MEDINV/assets/fontawesome/all.min.css">
     <!-- Chart.js -->
     <script src="/MEDINV/assets/chartjs/chart.js"></script>
+    <!-- jQuery -->
+    <script src="/MEDINV/private/assets/jquery/jquery-3.6.0.min.js"></script>
+    <!-- DataTables CSS + JS -->
+    <link rel="stylesheet" href="/isep-ginasio/private/assets/datatables/datatables.min.css">
+    <script src="/MEDINV/private/assets/datatables/datatables.min.js"></script> 
 </head>
 
 
