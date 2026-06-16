@@ -1,10 +1,14 @@
 <?php
+// --------------------------------------------------------------------
+// SEGURANÇA: Proteção de acesso à página de edição
+// Este ficheiro deve ser acedido apenas por utilizadores autenticados.
+// Caso não exista sessão iniciada, o utilizador será redirecionado para o login.
+// --------------------------------------------------------------------
 require_once __DIR__ . '/../../includes/funcoes.php';
-redirect_if_not_logged();
+redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
 
 $erros        = [];
 $erro_sistema = '';
-$sucesso      = false;
 $servicos     = [];
 $codigo       = ''; // gerado fora do bloco POST
 
@@ -73,9 +77,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
         $erros[] = "As observações não podem ter mais de 1000 caracteres.";
     }
 
-    // 3. VERIFICAR DUPLICADOS (só se não houver erros)
+    // 3. NORMALIZAR
+    $sala        = strtoupper(trim($sala));           // sala 201 → SALA 201
+    $observacoes = !empty($observacoes) ? trim($observacoes) : null;
+
+    
+    // 3. GRAVAR NA BASE DE DADOS
     if (empty($erros)) {
         try {
+            // Verificar duplicado
             $stmtDup = $ligacao->prepare("
                 SELECT id FROM localizacoes 
                 WHERE edificio = :edificio AND piso = :piso AND sala = :sala
@@ -87,40 +97,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
             ]);
             if ($stmtDup->fetch()) {
                 $erros[] = "Já existe uma localização com este edifício, piso e sala.";
+            } else {
+                // Recalcular código para evitar race conditions
+                $maxCodigo = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM localizacoes")->fetchColumn();
+                $codigo = 'LOC' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
+
+                $stmt = $ligacao->prepare("
+                    INSERT INTO localizacoes (codigo, edificio, piso, servico_id, sala, observacoes)
+                    VALUES (:codigo, :edificio, :piso, :servico_id, :sala, :observacoes)
+                ");
+                $stmt->execute([
+                    ':codigo'      => $codigo,
+                    ':edificio'    => $edificio,
+                    ':piso'        => $piso,
+                    ':servico_id'  => (int)$servico_id,
+                    ':sala'        => $sala,
+                    ':observacoes' => $observacoes ?: null,
+                ]);
+
+                $ligacao = null;
+                header("Location: localizacoes.php");
+                exit;
             }
-        } catch (PDOException $e) {
-            $erro_sistema = "Erro ao verificar duplicados.";
-        }
-    }
-
-    // 4. GRAVAR NA BASE DE DADOS
-    if (empty($erros) && empty($erro_sistema)) {
-        try {
-            // Recalcular código para evitar race conditions
-            $maxCodigo = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM localizacoes")->fetchColumn();
-            $codigo = 'LOC' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
-
-            $stmt = $ligacao->prepare("
-                INSERT INTO localizacoes (codigo, edificio, piso, servico_id, sala, observacoes)
-                VALUES (:codigo, :edificio, :piso, :servico_id, :sala, :observacoes)
-            ");
-            $stmt->execute([
-                ':codigo'      => $codigo,
-                ':edificio'    => $edificio,
-                ':piso'        => $piso,
-                ':servico_id'  => (int)$servico_id,
-                ':sala'        => $sala,
-                ':observacoes' => $observacoes ?: null,
-            ]);
-
-            $sucesso = true;
-
-            // Limpar campos e atualizar código
-            $edificio = $piso = $sala = $servico_id = $observacoes = '';
-
-            $maxCodigo = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM localizacoes")->fetchColumn();
-            $codigo = 'LOC' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
-
         } catch (PDOException $e) {
             $erro_sistema = "Erro ao guardar a localização. Por favor tente novamente.";
         }
@@ -154,13 +152,6 @@ $ligacao = null;
             <?php if (!empty($erro_sistema)) : ?>
                 <div class="alert alert-danger">
                     <i class="fas fa-triangle-exclamation me-2"></i><?= htmlspecialchars($erro_sistema) ?>
-                </div>
-            <?php endif; ?>
-
-            <!-- Sucesso -->
-            <?php if ($sucesso) : ?>
-                <div class="alert alert-success">
-                    <i class="fas fa-circle-check me-2"></i>Localização registada com sucesso!
                 </div>
             <?php endif; ?>
 

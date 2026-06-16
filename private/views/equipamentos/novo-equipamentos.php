@@ -7,6 +7,40 @@
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
 
+$localizacoes_bd = [];
+$fornecedores_bd = [];
+$categorias_bd   = [];
+
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $categorias_bd = $ligacao->query("SELECT id, nome FROM categorias_equipamento ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
+
+    $fornecedores_bd = $ligacao->query("
+        SELECT f.id, f.nome, f.nif, f.morada, f.website,
+            f.telefone, f.email,
+            f.pessoa_contacto, f.telefone_contacto, f.email_contacto,
+            tf.nome AS tipo
+        FROM fornecedores f
+        JOIN tipos_fornecedor tf ON tf.id = f.tipo_id
+        ORDER BY f.nome
+    ")->fetchAll(PDO::FETCH_OBJ);
+
+    $localizacoes_bd = $ligacao->query("
+        SELECT l.id, l.edificio, l.piso, l.sala, s.nome AS servico
+        FROM localizacoes l
+        JOIN servicos s ON s.id = l.servico_id
+        ORDER BY s.nome, l.sala
+    ")->fetchAll(PDO::FETCH_OBJ);
+} catch (PDOException $e) {
+    $erro_sistema = "Erro ao ligar à base de dados.";
+}
+
 // Verificar se o formulário foi submetido
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -68,8 +102,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($codigo)) {
         $erros[] = "O código interno é obrigatório.";
-    } elseif (!preg_match('/^[A-Za-z0-9\-_]+$/', $codigo)) {
-        $erros[] = "O código interno só pode conter letras, números, hífens e underscores.";
+    } elseif (!preg_match('/^EQ\d{3,}$/', $codigo)) {
+        $erros[] = "O código interno deve começar por 'EQ' seguido de pelo menos 3 dígitos (ex: EQ001).";
     } elseif (strlen($codigo) > 50) {
         $erros[] = "O código interno não pode ter mais de 50 caracteres.";
     }
@@ -110,12 +144,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($modelo)) {
         $erros[] = "O modelo é obrigatório.";
+    } elseif (strlen($modelo) < 2) {
+        $erros[] = "O modelo deve ter pelo menos 2 caracteres.";
     } elseif (strlen($modelo) > 100) {
         $erros[] = "O modelo não pode ter mais de 100 caracteres.";
     }
 
     if (empty($num_serie)) {
         $erros[] = "O número de série é obrigatório.";
+    } elseif (strlen($num_serie) < 2) {
+        $erros[] = "O número de série deve ter pelo menos 2 caracteres.";
     } elseif (strlen($num_serie) > 100) {
         $erros[] = "O número de série não pode ter mais de 100 caracteres.";
     }
@@ -339,8 +377,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ? ($mapa_tipo_entrada[strtolower($tipo_entrada)] ?? 'compra')
         : 'compra';
 
-        
-        // 3. Se não houver erros, guardar na base de dados
+
+    // 3. Se não houver erros, guardar na base de dados
     if (empty($erros)) {
         try {
             $ligacao = new PDO(
@@ -579,17 +617,15 @@ require_once '../../includes/header.php'; ?>
                                             value="<?= $_POST['designacao'] ?? '' ?>">
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label fw-bold">Categoria <span
-                                                class="text-danger">*</span></label>
+                                        <label class="form-label fw-bold">Categoria <span class="text-danger">*</span></label>
                                         <select class="form-select" name="categoria" required>
                                             <option value="">Selecione...</option>
-                                            <option <?= ($_POST['categoria'] ?? '') == 'Monitorização' ? 'selected' : '' ?>>Monitorização</option>
-                                            <option <?= ($_POST['categoria'] ?? '') == 'Suporte de vida' ? 'selected' : '' ?>>Suporte de vida</option>
-                                            <option <?= ($_POST['categoria'] ?? '') == 'Terapia' ? 'selected' : '' ?>>Terapia</option>
-                                            <option <?= ($_POST['categoria'] ?? '') == 'Diagnóstico' ? 'selected' : '' ?>>Diagnóstico</option>
-                                            <option <?= ($_POST['categoria'] ?? '') == 'Laboratório' ? 'selected' : '' ?>>Laboratório</option>
-                                            <option <?= ($_POST['categoria'] ?? '') == 'Esterilização' ? 'selected' : '' ?>>Esterilização</option>
-                                            <option <?= ($_POST['categoria'] ?? '') == 'Reabilitação' ? 'selected' : '' ?>>Reabilitação</option>
+                                            <?php foreach ($categorias_bd as $cat) : ?>
+                                                <option value="<?= htmlspecialchars($cat->nome) ?>"
+                                                    <?= (($_POST['categoria'] ?? '') == $cat->nome) ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($cat->nome) ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -658,7 +694,7 @@ require_once '../../includes/header.php'; ?>
                                     </div>
                                 </div>
                                 <hr>
-                                <!-- Aquisição — FORA da row anterior -->
+                                <!-- Aquisição -->
                                 <h6 class="text-muted mb-3"><i class="fas fa-shopping-cart me-2"></i>Aquisição</h6>
                                 <div class="row mb-4">
                                     <div class="col-md-4">
@@ -703,9 +739,12 @@ require_once '../../includes/header.php'; ?>
                                         <select class="form-select" name="localizacao_id" id="selectLocalizacao"
                                             onchange="preencherLocalizacao()">
                                             <option value="">Selecione...</option>
-                                            <option value="1">UCI — Sala 201 — Piso 2</option>
-                                            <option value="2">Urgência — Sala 101 — Piso 1</option>
-                                            <option value="3">Bloco Operatório — Sala 301 — Piso 3</option>
+                                            <?php foreach ($localizacoes_bd as $loc) : ?>
+                                                <option value="<?= $loc->id ?>"
+                                                    <?= (isset($localizacao_id) && $localizacao_id == $loc->id) ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($loc->servico) ?> — Sala <?= htmlspecialchars($loc->sala) ?> — Piso <?= htmlspecialchars($loc->piso) ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -756,9 +795,12 @@ require_once '../../includes/header.php'; ?>
                                         <select class="form-select" name="fornecedor_id" id="selectFornecedor"
                                             onchange="preencherFornecedor()">
                                             <option value="">Selecione...</option>
-                                            <option value="1">Philips Healthcare Portugal</option>
-                                            <option value="2">Dräger Portugal</option>
-                                            <option value="3">B. Braun Portugal</option>
+                                            <?php foreach ($fornecedores_bd as $forn) : ?>
+                                                <option value="<?= $forn->id ?>"
+                                                    <?= (isset($fornecedor_id) && $fornecedor_id == $forn->id) ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($forn->nome) ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -1063,13 +1105,14 @@ require_once '../../includes/header.php'; ?>
     </div>
 </div>
 <script>
-    // Configuração: para cada tab com campos obrigatórios, define qual botão "Seguinte"
-    // controla e qual tab do nav deve ser desbloqueada ao avançar
+    // ----------------------------------------------------------------
+    // VALIDAÇÃO DA TAB GERAL
+    // ----------------------------------------------------------------
     const validacoes = [{
         painelId: 'geral',
         btnNextId: 'btn-next-geral',
         tabNavNextId: 'tab-localizacao'
-    }, ];
+    }];
 
     function tabEstaValida(painelId) {
         const painel = document.getElementById(painelId);
@@ -1081,11 +1124,7 @@ require_once '../../includes/header.php'; ?>
         const valida = tabEstaValida(config.painelId);
         const btnNext = document.getElementById(config.btnNextId);
         const tabNext = document.getElementById(config.tabNavNextId);
-
-        // Ativa ou desativa o botão "Seguinte"
         btnNext.disabled = !valida;
-
-        // Ativa ou desativa o link do separador na nav
         if (valida) {
             tabNext.classList.remove('disabled', 'pe-none');
         } else {
@@ -1093,75 +1132,56 @@ require_once '../../includes/header.php'; ?>
         }
     }
 
-    // Para cada configuração, monitoriza em tempo real todos os campos obrigatórios
     validacoes.forEach(config => {
         const painel = document.getElementById(config.painelId);
         painel.addEventListener('input', () => atualizarBotao(config));
         painel.addEventListener('change', () => atualizarBotao(config));
-        // Avaliação inicial (garante estado correto ao carregar a página)
         atualizarBotao(config);
     });
 
-    // Adicionar linhas na tabela de documentação
+    // ----------------------------------------------------------------
+    // ADICIONAR LINHAS NA TABELA DE DOCUMENTAÇÃO
+    // ----------------------------------------------------------------
     let numLinhas = 1;
     document.getElementById('btnAddLinha').addEventListener('click', function() {
         numLinhas++;
         const n = numLinhas;
         const opcoes = `
-    <option value="">Selecione...</option>
-    <option>Manual de utilizador</option>
-    <option>Manual de serviço</option>
-    <option>Certificado de calibração</option>
-    <option>Contrato de manutenção</option>
-    <option>Fatura de aquisição</option>`;
+            <option value="">Selecione...</option>
+            <option>Manual de utilizador</option>
+            <option>Manual de serviço</option>
+            <option>Certificado de calibração</option>
+            <option>Contrato de manutenção</option>
+            <option>Fatura de aquisição</option>`;
         const tr = document.createElement('tr');
         tr.innerHTML = `
-    <td><select class="form-select" name="tipo_documento_${n}">${opcoes}</select></td>
-    <td><input type="text" class="form-control" name="nome_documento_${n}"></td>
-    <td><input type="date" class="form-control" name="data_documento_${n}"></td>
-    <td><input type="date" class="form-control" name="validade_documento_${n}"></td>
-    <td><input type="file" class="form-control form-control-sm" name="ficheiro_documento_${n}" accept=".pdf,.doc,.docx"></td>`;
+            <td><select class="form-select" name="tipo_documento_${n}">${opcoes}</select></td>
+            <td><input type="text" class="form-control" name="nome_documento_${n}"></td>
+            <td><input type="date" class="form-control" name="data_documento_${n}"></td>
+            <td><input type="date" class="form-control" name="validade_documento_${n}"></td>
+            <td><input type="file" class="form-control form-control-sm" name="ficheiro_documento_${n}" accept=".pdf,.doc,.docx"></td>`;
         document.querySelector('#tabelaDocs tbody').appendChild(tr);
     });
-    // Base de dados local dos fornecedores
-    // Em produção, estes dados viriam de uma chamada ao servidor (fetch/AJAX)
+
+    // ----------------------------------------------------------------
+    // DADOS DOS FORNECEDORES (carregados da BD via PHP)
+    // Declarados FORA da função para estarem acessíveis globalmente
+    // ----------------------------------------------------------------
     const fornecedores = {
-        1: {
-            nome: "Philips Healthcare Portugal",
-            nif: "500 123 456",
-            tipo: "Fabricante",
-            morada: "Av. da Liberdade, 110, Lisboa",
-            website: "www.philips.pt",
-            telefone: "+351 210 000 000",
-            email: "geral@philips.pt",
-            contacto: "João Ferreira",
-            telDireto: "+351 962 000 000",
-            emailDireto: "joao.ferreira@philips.pt"
+        <?php foreach ($fornecedores_bd as $f) : ?>
+        <?= $f->id ?>: {
+            nome:        <?= json_encode($f->nome) ?>,
+            nif:         <?= json_encode($f->nif) ?>,
+            tipo:        <?= json_encode($f->tipo) ?>,
+            morada:      <?= json_encode($f->morada) ?>,
+            website:     <?= json_encode($f->website ?? '—') ?>,
+            telefone:    <?= json_encode($f->telefone) ?>,
+            email:       <?= json_encode($f->email) ?>,
+            contacto:    <?= json_encode($f->pessoa_contacto) ?>,
+            telDireto:   <?= json_encode($f->telefone_contacto) ?>,
+            emailDireto: <?= json_encode($f->email_contacto ?? '—') ?>
         },
-        2: {
-            nome: "Dräger Portugal",
-            nif: "500 234 567",
-            tipo: "Fabricante",
-            morada: "Rua do Ouro, 55, Porto",
-            website: "www.draeger.com/pt",
-            telefone: "+351 220 000 000",
-            email: "geral@draeger.pt",
-            contacto: "Ana Sousa",
-            telDireto: "+351 933 000 000",
-            emailDireto: "ana.sousa@draeger.pt"
-        },
-        3: {
-            nome: "B. Braun Portugal",
-            nif: "500 345 678",
-            tipo: "Distribuidor",
-            morada: "Av. do Brasil, 23, Lisboa",
-            website: "www.bbraun.pt",
-            telefone: "+351 210 111 000",
-            email: "geral@bbraun.pt",
-            contacto: "Carlos Mendes",
-            telDireto: "+351 912 000 000",
-            emailDireto: "carlos.mendes@bbraun.pt"
-        }
+        <?php endforeach; ?>
     };
 
     function preencherFornecedor() {
@@ -1174,38 +1194,38 @@ require_once '../../includes/header.php'; ?>
         }
 
         const f = fornecedores[id];
-        document.getElementById('f-nome').textContent = f.nome;
-        document.getElementById('f-nif').textContent = f.nif;
-        document.getElementById('f-tipo').textContent = f.tipo;
-        document.getElementById('f-morada').textContent = f.morada;
-        document.getElementById('f-website').textContent = f.website;
-        document.getElementById('f-telefone').textContent = f.telefone;
-        document.getElementById('f-email').textContent = f.email;
-        document.getElementById('f-contacto').textContent = f.contacto;
-        document.getElementById('f-tel-direto').textContent = f.telDireto;
+        if (!f) {
+            painel.classList.add('d-none');
+            return;
+        }
+
+        document.getElementById('f-nome').textContent      = f.nome;
+        document.getElementById('f-nif').textContent       = f.nif;
+        document.getElementById('f-tipo').textContent      = f.tipo;
+        document.getElementById('f-morada').textContent    = f.morada;
+        document.getElementById('f-website').textContent   = f.website;
+        document.getElementById('f-telefone').textContent  = f.telefone;
+        document.getElementById('f-email').textContent     = f.email;
+        document.getElementById('f-contacto').textContent  = f.contacto;
+        document.getElementById('f-tel-direto').textContent  = f.telDireto;
         document.getElementById('f-email-direto').textContent = f.emailDireto;
 
         painel.classList.remove('d-none');
     }
+
+    // ----------------------------------------------------------------
+    // DADOS DAS LOCALIZAÇÕES (carregados da BD via PHP)
+    // Declarados FORA da função para estarem acessíveis globalmente
+    // ----------------------------------------------------------------
     const localizacoes = {
-        1: {
-            edificio: "Principal",
-            piso: "2",
-            servico: "UCI",
-            sala: "201"
+        <?php foreach ($localizacoes_bd as $l) : ?>
+        <?= $l->id ?>: {
+            edificio: <?= json_encode($l->edificio) ?>,
+            piso:     <?= json_encode($l->piso) ?>,
+            servico:  <?= json_encode($l->servico) ?>,
+            sala:     <?= json_encode($l->sala) ?>
         },
-        2: {
-            edificio: "Principal",
-            piso: "1",
-            servico: "Urgência",
-            sala: "101"
-        },
-        3: {
-            edificio: "Principal",
-            piso: "3",
-            servico: "Bloco Operatório",
-            sala: "301"
-        }
+        <?php endforeach; ?>
     };
 
     function preencherLocalizacao() {
@@ -1218,10 +1238,15 @@ require_once '../../includes/header.php'; ?>
         }
 
         const l = localizacoes[id];
+        if (!l) {
+            painel.classList.add('d-none');
+            return;
+        }
+
         document.getElementById('l-edificio').textContent = l.edificio;
-        document.getElementById('l-piso').textContent = l.piso;
-        document.getElementById('l-servico').textContent = l.servico;
-        document.getElementById('l-sala').textContent = l.sala;
+        document.getElementById('l-piso').textContent     = l.piso;
+        document.getElementById('l-servico').textContent  = l.servico;
+        document.getElementById('l-sala').textContent     = l.sala;
 
         painel.classList.remove('d-none');
     }
