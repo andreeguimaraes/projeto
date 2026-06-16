@@ -5,9 +5,9 @@
 // Caso não exista sessão iniciada, o utilizador será redirecionado para o login.
 // --------------------------------------------------------------------
 require_once __DIR__ . '/../../includes/funcoes.php';
-
 redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
 
+// Verificar se o formulário foi submetido
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 1. Recolher dados
@@ -299,180 +299,167 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $i++;
     }
-
     // ----------------------------------------------------------------
     // 4. NORMALIZAR E GRAVAR (só se não houver erros)
+    // Normalizar entrada. independentemente de como o utilizador escreve os dados, o sistema assegura consistência e padronização antes de qualquer registo na base de dados. 
     // ----------------------------------------------------------------
+    $designacao  = ucwords(strtolower($designacao));
+    $marca       = ucwords(strtolower($marca));
+    $num_serie   = strtoupper($num_serie);
+    $fabricante  = !empty($fabricante) ? ucwords(strtolower($fabricante)) : null;
+    $ano_fabrico    = !empty($ano_fabrico)    ? (int)$ano_fabrico   : null;
+    $custo          = !empty($custo)          ? (float)$custo        : null;
+    $data_aquisicao = !empty($data_aquisicao) ? $data_aquisicao     : null;
+    $observacoes    = !empty($observacoes)    ? $observacoes         : null;
+
+    $mapa_estado = [
+        'ativo'          => 'ativo',
+        'em manutenção'  => 'em_manutencao',
+        'inativo'        => 'inativo',
+        'em calibração'  => 'em_calibracao',
+        'em quarentena'  => 'em_quarentena',
+        'abatido'        => 'abatido',
+    ];
+    $mapa_criticidade = [
+        'baixa'           => 'baixa',
+        'média'           => 'media',
+        'alta'            => 'alta',
+        'suporte de vida' => 'suporte_de_vida',
+    ];
+    $mapa_tipo_entrada = [
+        'compra'     => 'compra',
+        'doação'     => 'doacao',
+        'aluguer'    => 'aluguer',
+        'empréstimo' => 'emprestimo',
+    ];
+
+    $estado_bd       = $mapa_estado[strtolower($estado)]           ?? 'ativo';
+    $criticidade_bd  = $mapa_criticidade[strtolower($criticidade)] ?? 'baixa';
+    $tipo_entrada_bd = !empty($tipo_entrada)
+        ? ($mapa_tipo_entrada[strtolower($tipo_entrada)] ?? 'compra')
+        : 'compra';
+
+        
+        // 3. Se não houver erros, guardar na base de dados
     if (empty($erros)) {
-        // Normalizar
-        $codigo     = strtoupper(trim($codigo));
-        $designacao = ucwords(strtolower($designacao));
-        $marca      = ucwords(strtolower($marca));
-        $modelo     = trim($modelo);
-        $num_serie  = strtoupper(trim($num_serie));
-        $fabricante = !empty($fabricante) ? ucwords(strtolower($fabricante)) : null;
-        $ano_fabrico    = !empty($ano_fabrico)    ? (int)$ano_fabrico        : null;
-        $custo          = !empty($custo)          ? (float)$custo            : null;
-        $data_aquisicao = !empty($data_aquisicao) ? $data_aquisicao          : null;
-        $observacoes    = !empty($observacoes)    ? $observacoes             : null;
-
-        // Mapear valores do formulário para enum da BD
-        $mapa_estado = [
-            'ativo'          => 'ativo',
-            'em manutenção'  => 'em_manutencao',
-            'inativo'        => 'inativo',
-            'em calibração'  => 'em_calibracao',
-            'em quarentena'  => 'em_quarentena',
-            'abatido'        => 'abatido',
-        ];
-        $mapa_criticidade = [
-            'baixa'           => 'baixa',
-            'média'           => 'media',
-            'alta'            => 'alta',
-            'suporte de vida' => 'suporte_de_vida',
-        ];
-        $mapa_tipo_entrada = [
-            'compra'     => 'compra',
-            'doação'     => 'doacao',
-            'aluguer'    => 'aluguer',
-            'empréstimo' => 'emprestimo',
-        ];
-
-        $estado_bd       = $mapa_estado[strtolower($estado)]           ?? 'ativo';
-        $criticidade_bd  = $mapa_criticidade[strtolower($criticidade)] ?? 'baixa';
-        $tipo_entrada_bd = !empty($tipo_entrada)
-            ? ($mapa_tipo_entrada[strtolower($tipo_entrada)] ?? 'compra')
-            : 'compra';
-
         try {
             $ligacao = new PDO(
-                "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+                "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
                 MYSQL_USERNAME,
                 MYSQL_PASSWORD
             );
-            $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            // Verificar código duplicado
-            $stmtCod = $ligacao->prepare("SELECT id FROM equipamentos WHERE codigo = :codigo");
-            $stmtCod->execute([':codigo' => $codigo]);
-            if ($stmtCod->fetch()) {
-                $erros[] = "Já existe um equipamento com este código.";
-            }
+            // Obter categoria_id pelo nome
+            $stmtCat = $ligacao->prepare("SELECT id FROM categorias_equipamento WHERE nome = :nome");
+            $stmtCat->execute([':nome' => $categoria]);
+            $categoria_id = $stmtCat->fetchColumn();
 
-            if (empty($erros)) {
-                // Obter categoria_id pelo nome
-                $stmtCat = $ligacao->prepare("SELECT id FROM categorias_equipamento WHERE nome = :nome");
-                $stmtCat->execute([':nome' => $categoria]);
-                $categoria_id = $stmtCat->fetchColumn();
+            // Gerar código automático
+            $maxCodigo    = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 3) AS UNSIGNED)), 0) FROM equipamentos")->fetchColumn();
+            $codigo_final = 'EQ' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
 
-                // Gerar código automático (recalculado para evitar race conditions)
-                $maxCodigo    = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 3) AS UNSIGNED)), 0) FROM equipamentos")->fetchColumn();
-                $codigo_final = 'EQ' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
+            // INSERT equipamento
+            $stmt = $ligacao->prepare("
+            INSERT INTO equipamentos (
+                codigo, designacao, categoria_id, marca, modelo,
+                numero_serie, fabricante, ano_fabrico, data_aquisicao,
+                custo_aquisicao, tipo_entrada, estado, criticidade,
+                localizacao_id, observacoes
+            ) VALUES (
+                :codigo, :designacao, :categoria_id, :marca, :modelo,
+                :numero_serie, :fabricante, :ano_fabrico, :data_aquisicao,
+                :custo_aquisicao, :tipo_entrada, :estado, :criticidade,
+                :localizacao_id, :observacoes
+            )
+        ");
+            $stmt->execute([
+                ':codigo'          => $codigo_final,
+                ':designacao'      => $designacao,
+                ':categoria_id'    => $categoria_id,
+                ':marca'           => $marca,
+                ':modelo'          => $modelo,
+                ':numero_serie'    => $num_serie,
+                ':fabricante'      => $fabricante,
+                ':ano_fabrico'     => $ano_fabrico,
+                ':data_aquisicao'  => $data_aquisicao,
+                ':custo_aquisicao' => $custo,
+                ':tipo_entrada'    => $tipo_entrada_bd,
+                ':estado'          => $estado_bd,
+                ':criticidade'     => $criticidade_bd,
+                ':localizacao_id'  => (int)$localizacao_id,
+                ':observacoes'     => $observacoes,
+            ]);
 
-                // INSERT equipamento
-                $stmt = $ligacao->prepare("
-                INSERT INTO equipamentos (
-                    codigo, designacao, categoria_id, marca, modelo,
-                    numero_serie, fabricante, ano_fabrico, data_aquisicao,
-                    custo_aquisicao, tipo_entrada, estado, criticidade,
-                    localizacao_id, observacoes
-                ) VALUES (
-                    :codigo, :designacao, :categoria_id, :marca, :modelo,
-                    :numero_serie, :fabricante, :ano_fabrico, :data_aquisicao,
-                    :custo_aquisicao, :tipo_entrada, :estado, :criticidade,
-                    :localizacao_id, :observacoes
-                )
-            ");
-                $stmt->execute([
-                    ':codigo'          => $codigo_final,
-                    ':designacao'      => $designacao,
-                    ':categoria_id'    => $categoria_id,
-                    ':marca'           => $marca,
-                    ':modelo'          => $modelo,
-                    ':numero_serie'    => $num_serie,
-                    ':fabricante'      => $fabricante,
-                    ':ano_fabrico'     => $ano_fabrico,
-                    ':data_aquisicao'  => $data_aquisicao,
-                    ':custo_aquisicao' => $custo,
-                    ':tipo_entrada'    => $tipo_entrada_bd,
-                    ':estado'          => $estado_bd,
-                    ':criticidade'     => $criticidade_bd,
-                    ':localizacao_id'  => (int)$localizacao_id,
-                    ':observacoes'     => $observacoes,
-                ]);
+            $equipamento_id = $ligacao->lastInsertId();
 
-                $equipamento_id = $ligacao->lastInsertId();
+            // INSERT garantia
+            $tem_garantia = !empty($tipo_garantia) || !empty($data_inicio_garantia) || !empty($data_fim_garantia);
+            if ($tem_garantia && !empty($tipo_garantia)) {
+                $stmtTG = $ligacao->prepare("SELECT id FROM tipos_garantia WHERE nome = :nome");
+                $stmtTG->execute([':nome' => $tipo_garantia]);
+                $tipo_garantia_id = $stmtTG->fetchColumn();
 
-                // INSERT garantia (só se tipo preenchido)
-                $tem_garantia = !empty($tipo_garantia) || !empty($data_inicio_garantia) || !empty($data_fim_garantia);
-                if ($tem_garantia && !empty($tipo_garantia)) {
-                    $stmtTG = $ligacao->prepare("SELECT id FROM tipos_garantia WHERE nome = :nome");
-                    $stmtTG->execute([':nome' => $tipo_garantia]);
-                    $tipo_garantia_id = $stmtTG->fetchColumn();
+                if ($tipo_garantia_id) {
+                    $maxGar     = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM garantias")->fetchColumn();
+                    $codigo_gar = 'GAR' . str_pad($maxGar + 1, 3, '0', STR_PAD_LEFT);
 
-                    if ($tipo_garantia_id) {
-                        $maxGar     = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM garantias")->fetchColumn();
-                        $codigo_gar = 'GAR' . str_pad($maxGar + 1, 3, '0', STR_PAD_LEFT);
-
-                        $ligacao->prepare("
-                        INSERT INTO garantias (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, estado)
-                        VALUES (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :estado)
-                    ")->execute([
-                            ':codigo'               => $codigo_gar,
-                            ':equipamento_id'       => $equipamento_id,
-                            ':tipo_id'              => $tipo_garantia_id,
-                            ':data_inicio'          => $data_inicio_garantia ?: null,
-                            ':data_fim'             => $data_fim_garantia    ?: null,
-                            ':entidade_responsavel' => !empty($_POST['entidade_garantia']) ? trim($_POST['entidade_garantia']) : null,
-                            ':estado'               => !empty($estado_garantia) ? strtolower($estado_garantia) : 'ativa',
-                        ]);
-                    }
-                }
-
-                // INSERT contrato (só se tipo preenchido)
-                $tem_contrato = !empty($tipo_contrato) || !empty($data_inicio_contrato) || !empty($data_fim_contrato) || !empty($entidade_contrato);
-                if ($tem_contrato && !empty($tipo_contrato)) {
-                    $stmtTC = $ligacao->prepare("SELECT id FROM tipos_contrato WHERE nome = :nome");
-                    $stmtTC->execute([':nome' => $tipo_contrato]);
-                    $tipo_contrato_id = $stmtTC->fetchColumn();
-
-                    if ($tipo_contrato_id) {
-                        $maxCon     = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM contratos")->fetchColumn();
-                        $codigo_con = 'CON' . str_pad($maxCon + 1, 3, '0', STR_PAD_LEFT);
-
-                        $ligacao->prepare("
-                        INSERT INTO contratos (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, periodicidade, estado)
-                        VALUES (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :periodicidade, :estado)
-                    ")->execute([
-                            ':codigo'               => $codigo_con,
-                            ':equipamento_id'       => $equipamento_id,
-                            ':tipo_id'              => $tipo_contrato_id,
-                            ':data_inicio'          => $data_inicio_contrato ?: null,
-                            ':data_fim'             => $data_fim_contrato    ?: null,
-                            ':entidade_responsavel' => $entidade_contrato    ?: null,
-                            ':periodicidade'        => !empty($periodicidade_contrato) ? strtolower($periodicidade_contrato) : null,
-                            ':estado'               => !empty($estado_contrato) ? strtolower($estado_contrato) : 'ativo',
-                        ]);
-                    }
-                }
-
-                // INSERT equipamento_fornecedor (se fornecedor selecionado)
-                if (!empty($fornecedor_id)) {
                     $ligacao->prepare("
-                    INSERT INTO equipamento_fornecedor (equipamento_id, fornecedor_id, tipo_id)
-                    VALUES (:equipamento_id, :fornecedor_id, :tipo_id)
+                    INSERT INTO garantias (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, estado)
+                    VALUES (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :estado)
                 ")->execute([
-                        ':equipamento_id' => $equipamento_id,
-                        ':fornecedor_id'  => (int)$fornecedor_id,
-                        ':tipo_id'        => 1,
+                        ':codigo'               => $codigo_gar,
+                        ':equipamento_id'       => $equipamento_id,
+                        ':tipo_id'              => $tipo_garantia_id,
+                        ':data_inicio'          => $data_inicio_garantia ?: null,
+                        ':data_fim'             => $data_fim_garantia    ?: null,
+                        ':entidade_responsavel' => !empty($_POST['entidade_garantia']) ? trim($_POST['entidade_garantia']) : null,
+                        ':estado'               => !empty($estado_garantia) ? strtolower($estado_garantia) : 'ativa',
                     ]);
                 }
-
-                $sucesso = true;
-                $ligacao = null;
-                header("Location: equipamentos.php");
-                exit;
             }
+
+            // INSERT contrato
+            $tem_contrato = !empty($tipo_contrato) || !empty($data_inicio_contrato) || !empty($data_fim_contrato) || !empty($entidade_contrato);
+            if ($tem_contrato && !empty($tipo_contrato)) {
+                $stmtTC = $ligacao->prepare("SELECT id FROM tipos_contrato WHERE nome = :nome");
+                $stmtTC->execute([':nome' => $tipo_contrato]);
+                $tipo_contrato_id = $stmtTC->fetchColumn();
+
+                if ($tipo_contrato_id) {
+                    $maxCon     = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM contratos")->fetchColumn();
+                    $codigo_con = 'CON' . str_pad($maxCon + 1, 3, '0', STR_PAD_LEFT);
+
+                    $ligacao->prepare("
+                    INSERT INTO contratos (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, periodicidade, estado)
+                    VALUES (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :periodicidade, :estado)
+                ")->execute([
+                        ':codigo'               => $codigo_con,
+                        ':equipamento_id'       => $equipamento_id,
+                        ':tipo_id'              => $tipo_contrato_id,
+                        ':data_inicio'          => $data_inicio_contrato ?: null,
+                        ':data_fim'             => $data_fim_contrato    ?: null,
+                        ':entidade_responsavel' => $entidade_contrato    ?: null,
+                        ':periodicidade'        => !empty($periodicidade_contrato) ? strtolower($periodicidade_contrato) : null,
+                        ':estado'               => !empty($estado_contrato) ? strtolower($estado_contrato) : 'ativo',
+                    ]);
+                }
+            }
+
+            // INSERT equipamento_fornecedor
+            if (!empty($fornecedor_id)) {
+                $ligacao->prepare("
+                INSERT INTO equipamento_fornecedor (equipamento_id, fornecedor_id, tipo_id)
+                VALUES (:equipamento_id, :fornecedor_id, :tipo_id)
+            ")->execute([
+                    ':equipamento_id' => $equipamento_id,
+                    ':fornecedor_id'  => (int)$fornecedor_id,
+                    ':tipo_id'        => 1,
+                ]);
+            }
+
+            $ligacao = null;
+            header("Location: equipamentos.php");
+            exit;
         } catch (PDOException $err) {
             $erro_sistema = "Erro ao gravar os dados: " . $err->getMessage();
         }
@@ -480,7 +467,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ligacao = null;
     }
 }
-
 ?>
 <?php
 require_once '../../includes/header.php'; ?>

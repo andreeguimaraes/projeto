@@ -13,7 +13,14 @@ $sucesso      = false;
 $tipos_fornecedor = [];
 $codigo = ''; // necessário porque é gerado fora do bloco POST
 
-
+// --------------------------------------------------------------------
+// LIGAÇÃO INICIAL À BD
+// Necessária antes do formulário ser submetido para:
+// 1. Carregar os tipos de fornecedor para o dropdown
+// 2. Gerar o próximo código de fornecedor (ex: FOR011)
+// Ao contrário da ficha da aula, este formulário tem campos dinâmicos
+// que dependem da BD mesmo antes de qualquer submissão.
+// --------------------------------------------------------------------
 try {
     $ligacao = new PDO(
         "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
@@ -22,24 +29,28 @@ try {
     );
     $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Carrega tipos de fornecedor da BD
+    // Carrega os tipos de fornecedor da BD para preencher o dropdown no HTML
     $tipos_fornecedor = $ligacao->query("SELECT id, nome FROM tipos_fornecedor ORDER BY nome")
                                 ->fetchAll(PDO::FETCH_OBJ);
 
-    // Gera o próximo código (FOR001, FOR002, ...)
+    // Calcula o próximo código automaticamente com base no maior código existente
+    // ex: se o maior for FOR010, gera FOR011
     $maxCodigo = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM fornecedores")->fetchColumn();
     $codigo = 'FOR' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
 
 } catch (PDOException $e) {
+    // Se a ligação falhar, guarda o erro e o formulário não carrega dados dinâmicos
     $erro_sistema = "Erro ao ligar à base de dados.";
 }
 
 // --------------------------------------------------------------------
 // PROCESSAMENTO DO FORMULÁRIO
+// Só corre quando o utilizador submete (método POST)
+// e não há erros de sistema (ex: BD inacessível)
 // --------------------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
 
-    // 1. Recolher dados
+    // 1. RECOLHER E FAZER TRIM
     $nome               = trim($_POST['nome_empresa']       ?? '');
     $nif                = trim($_POST['nif']                ?? '');
     $tipo_id            = trim($_POST['tipo_id']            ?? '');
@@ -52,9 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
     $email_contacto     = trim($_POST['email_contacto']     ?? '');
     $observacoes        = trim($_POST['observacoes']        ?? '');
 
-    // 2. Validar dados
+    // 2. VALIDAR
     if (empty($nome)) {
-    $erros[] = "O nome da empresa é obrigatório.";
+        $erros[] = "O nome da empresa é obrigatório.";
     } elseif (strlen($nome) < 2) {
         $erros[] = "O nome da empresa deve ter pelo menos 2 caracteres.";
     } elseif (!preg_match('/[a-zA-ZÀ-ÿ]/', $nome)) {
@@ -63,22 +74,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
         $erros[] = "O nome da empresa não pode ter mais de 150 caracteres.";
     }
 
-    if (empty($nif))               $erros[] = "O NIF é obrigatório.";
-    if (empty($tipo_id))           $erros[] = "O tipo de fornecedor é obrigatório.";
-    
+    if (empty($nif)) {
+        $erros[] = "O NIF é obrigatório.";
+    } elseif (!preg_match('/^[0-9]{9}$/', $nif)) {
+        $erros[] = "O NIF deve ter exatamente 9 dígitos.";
+    }
+
+    if (empty($tipo_id)) {
+        $erros[] = "O tipo de fornecedor é obrigatório.";
+    } elseif (!ctype_digit($tipo_id)) {
+        $erros[] = "O tipo de fornecedor selecionado não é válido.";
+    }
+
     if (empty($morada)) {
-    $erros[] = "A morada é obrigatória.";
+        $erros[] = "A morada é obrigatória.";
     } elseif (strlen($morada) < 5) {
         $erros[] = "A morada deve ter pelo menos 5 caracteres.";
     } elseif (strlen($morada) > 255) {
         $erros[] = "A morada não pode ter mais de 255 caracteres.";
     }
 
-    if (empty($telefone))          $erros[] = "O telefone é obrigatório.";
-    if (empty($email))             $erros[] = "O email é obrigatório.";
-    
+    if (empty($telefone)) {
+        $erros[] = "O telefone é obrigatório.";
+    } elseif (!preg_match('/^\+?[0-9\s]{9,20}$/', $telefone)) {
+        $erros[] = "O telefone não é válido.";
+    }
+
+    if (empty($email)) {
+        $erros[] = "O email é obrigatório.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erros[] = "O email geral não é válido.";
+    }
+
     if (empty($pessoa_contacto)) {
-    $erros[] = "O nome da pessoa de contacto é obrigatório.";
+        $erros[] = "O nome da pessoa de contacto é obrigatório.";
     } elseif (strlen($pessoa_contacto) < 2) {
         $erros[] = "O nome da pessoa de contacto deve ter pelo menos 2 caracteres.";
     } elseif (!preg_match('/[a-zA-ZÀ-ÿ]/', $pessoa_contacto)) {
@@ -87,113 +116,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
         $erros[] = "O nome não pode ter mais de 100 caracteres.";
     }
 
-    if (empty($telefone_contacto)) $erros[] = "O telefone direto é obrigatório.";
-
-    // NIF
-    if (empty($nif)) {
-        $erros[] = "O NIF é obrigatório.";
-    } elseif (!preg_match('/^[0-9]{9}$/', $nif)) {
-        $erros[] = "O NIF deve ter exatamente 9 dígitos.";
-    }
-    // Verifica NIF duplicado
-    if (empty($erros)) {
-        try {
-            $stmtNif = $ligacao->prepare("SELECT id FROM fornecedores WHERE nif = :nif");
-            $stmtNif->execute([':nif' => $nif]);
-            if ($stmtNif->fetch()) $erros[] = "Já existe um fornecedor com este NIF.";
-        } catch (PDOException $e) {
-            $erro_sistema = "Erro ao verificar duplicados.";
-        }
-    }
-    
-    // Tipo de fornecedor
-    if (!empty($tipo_id) && !ctype_digit($tipo_id)) {
-        $erros[] = "O tipo de fornecedor selecionado não é válido.";
-    }
-
-    // Telefone geral
-    if (empty($telefone)) {
-    $erros[] = "O telefone é obrigatório.";
-    } elseif (!preg_match('/^\+?[0-9\s]{9,20}$/', $telefone)) {
-        $erros[] = "O telefone não é válido.";
-    }
-
-    // Telefone direto
     if (empty($telefone_contacto)) {
         $erros[] = "O telefone direto é obrigatório.";
     } elseif (!preg_match('/^\+?[0-9\s]{9,20}$/', $telefone_contacto)) {
         $erros[] = "O telefone direto não é válido.";
     }
 
-    // Email geral
-    if (empty($email)) {
-        $erros[] = "O email é obrigatório.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $erros[] = "O email geral não é válido.";
-    }
-
-    // Email direto
     if (!empty($email_contacto) && !filter_var($email_contacto, FILTER_VALIDATE_EMAIL)) {
         $erros[] = "O email direto não é válido.";
     }
 
-    // Website
     if (!empty($website) && !filter_var($website, FILTER_VALIDATE_URL)) {
         $erros[] = "O website não é válido.";
     }
 
-
-
-    // 3. Se não houver erros, guardar na base de dados
-    if (empty($erros) && empty($erro_sistema)) {
+    // Normalizar entrada. independentemente de como o utilizador escreve os dados, o sistema assegura consistência e padronização antes de qualquer registo na base de dados. 
+    $nome            = ucwords(strtolower($nome));           // philips healthcare → Philips Healthcare
+    $morada          = ucwords(strtolower($morada));         // av. da liberdade → Av. Da Liberdade
+    $pessoa_contacto = ucwords(strtolower($pessoa_contacto)); // joão ferreira → João Ferreira
+    $email           = strtolower($email);                   // Geral@Empresa.PT → geral@empresa.pt
+    $email_contacto  = !empty($email_contacto) ? strtolower($email_contacto) : null;
+    $website         = !empty($website) ? strtolower($website) : null;
+    
+    // 3. GRAVAR NA BASE DE DADOS
+    // Só corre se não houver erros de validação
+    // A ligação já existe do try inicial — reutilizamos a mesma
+    if (empty($erros)) {
         try {
-            $maxCodigo = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM fornecedores")->fetchColumn();
-            $codigo = 'FOR' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
+            // Verificar se já existe um fornecedor com o mesmo NIF (duplicado)
+            $stmtNif = $ligacao->prepare("SELECT id FROM fornecedores WHERE nif = :nif");
+            $stmtNif->execute([':nif' => $nif]);
+            if ($stmtNif->fetch()) {
+                $erros[] = "Já existe um fornecedor com este NIF.";
+            } else {
+                // Recalcular o código imediatamente antes do INSERT
+                // para evitar conflitos se dois utilizadores submeterem ao mesmo tempo
+                $maxCodigo = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM fornecedores")->fetchColumn();
+                $codigo = 'FOR' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
 
-            $stmt = $ligacao->prepare("
-                INSERT INTO fornecedores
-                    (codigo, nome, nif, tipo_id, morada, website,
-                     telefone, email,
-                     pessoa_contacto, telefone_contacto, email_contacto,
-                     observacoes)
-                VALUES
-                    (:codigo, :nome, :nif, :tipo_id, :morada, :website,
-                     :telefone, :email,
-                     :pessoa_contacto, :telefone_contacto, :email_contacto,
-                     :observacoes)
-            ");
+                $stmt = $ligacao->prepare("
+                    INSERT INTO fornecedores
+                        (codigo, nome, nif, tipo_id, morada, website,
+                         telefone, email,
+                         pessoa_contacto, telefone_contacto, email_contacto,
+                         observacoes)
+                    VALUES
+                        (:codigo, :nome, :nif, :tipo_id, :morada, :website,
+                         :telefone, :email,
+                         :pessoa_contacto, :telefone_contacto, :email_contacto,
+                         :observacoes)
+                ");
+                $stmt->execute([
+                    ':codigo'            => $codigo,
+                    ':nome'              => $nome,
+                    ':nif'               => $nif,
+                    ':tipo_id'           => (int)$tipo_id,
+                    ':morada'            => $morada,
+                    ':website'           => $website           ?: null,
+                    ':telefone'          => $telefone,
+                    ':email'             => strtolower($email),
+                    ':pessoa_contacto'   => $pessoa_contacto,
+                    ':telefone_contacto' => $telefone_contacto,
+                    ':email_contacto'    => $email_contacto    ?: null,
+                    ':observacoes'       => $observacoes       ?: null,
+                ]);
 
-            $stmt->execute([
-                ':codigo'            => $codigo,
-                ':nome'              => $nome,
-                ':nif'               => $nif,
-                ':tipo_id'           => (int) $tipo_id,
-                ':morada'            => $morada,
-                ':website'           => $website    ?: null,
-                ':telefone'          => $telefone,
-                ':email'             => $email,
-                ':pessoa_contacto'   => $pessoa_contacto,
-                ':telefone_contacto' => $telefone_contacto,
-                ':email_contacto'    => $email_contacto ?: null,
-                ':observacoes'       => $observacoes    ?: null,
-            ]);
-
-            $sucesso = true;
-
-            // Limpa variáveis e actualiza código
-            $nome = $nif = $tipo_id = $morada = $website = '';
-            $telefone = $email = $pessoa_contacto = '';
-            $telefone_contacto = $email_contacto = $observacoes = '';
-
-            $maxCodigo = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM fornecedores")->fetchColumn();
-            $codigo = 'FOR' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
-
+                $ligacao = null;
+                header("Location: fornecedor.php");
+                exit;
+            }
         } catch (PDOException $e) {
             $erro_sistema = "Erro ao guardar o fornecedor. Por favor tente novamente.";
         }
     }
 }
 
+// Fechar a ligação à BD no final — já não é necessária
 $ligacao = null;
 ?>
 <?php include '../../includes/header.php'; ?>
