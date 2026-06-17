@@ -44,6 +44,8 @@ try {
     ")->fetchAll(PDO::FETCH_OBJ);
     $tipos_garantia_bd  = $ligacao->query("SELECT id, nome FROM tipos_garantia ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
     $tipos_contrato_bd  = $ligacao->query("SELECT id, nome FROM tipos_contrato ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
+    $maxCodigo = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 3) AS UNSIGNED)), 0) FROM equipamentos")->fetchColumn();
+    $codigo_sugerido = 'EQ' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
 } catch (PDOException $e) {
     $erro_sistema = "Erro ao ligar à base de dados.";
 }
@@ -271,6 +273,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $erros[] = "A entidade responsável da garantia não pode ter mais de 150 caracteres.";
             }
         }
+        // Validação do ficheiro da garantia
+        if (!empty($_FILES['ficheiro_garantia']['name'])) {
+            $ext = strtolower(pathinfo($_FILES['ficheiro_garantia']['name'], PATHINFO_EXTENSION));
+            $extensoes_permitidas = ['pdf', 'doc', 'docx'];
+            if (!in_array($ext, $extensoes_permitidas)) {
+                $erros[] = "O ficheiro da garantia deve ser PDF, DOC ou DOCX.";
+            }
+            if ($_FILES['ficheiro_garantia']['size'] > 5 * 1024 * 1024) {
+                $erros[] = "O ficheiro da garantia não pode exceder 5MB.";
+            }
+        }
     }
 
     // === TAB: CONTRATO ===
@@ -319,6 +332,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $erros[] = "A entidade responsável do contrato não pode ter mais de 150 caracteres.";
             }
         }
+        // Validação do ficheiro do contrato
+        if (!empty($_FILES['ficheiro_contrato']['name'])) {
+            $ext = strtolower(pathinfo($_FILES['ficheiro_contrato']['name'], PATHINFO_EXTENSION));
+            if (!in_array($ext, ['pdf', 'doc', 'docx'])) {
+                $erros[] = "O ficheiro do contrato deve ser PDF, DOC ou DOCX.";
+            }
+            if ($_FILES['ficheiro_contrato']['size'] > 5 * 1024 * 1024) {
+                $erros[] = "O ficheiro do contrato não pode exceder 5MB.";
+            }
+        }
     }
 
     // === TAB: DOCUMENTAÇÃO ===
@@ -361,8 +384,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'data'     => !empty($data_doc) ? $data_doc : null,
                 'validade' => !empty($valid_doc) ? $valid_doc : null,
             ];
+            // Validação dos ficheiros de documentação
+            if (!empty($_FILES["ficheiro_documento_$i"]['name'])) {
+                $ext = strtolower(pathinfo($_FILES["ficheiro_documento_$i"]['name'], PATHINFO_EXTENSION));
+                if (!in_array($ext, ['pdf', 'doc', 'docx'])) {
+                    $erros[] = "O ficheiro do documento na linha $i deve ser PDF, DOC ou DOCX.";
+                }
+                if ($_FILES["ficheiro_documento_$i"]['size'] > 5 * 1024 * 1024) {
+                    $erros[] = "O ficheiro do documento na linha $i não pode exceder 5MB.";
+                }
+            }
         }
-        $i++;
+        $i++; 
     }
     // Verificar código duplicado (só se o formato estiver correto)
     if (empty($erros)) {
@@ -422,6 +455,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 MYSQL_PASSWORD
             );
 
+            // 1. UPLOADS
+            $pasta_base = $_SERVER['DOCUMENT_ROOT'] . '/MEDINV/uploads/';
+
+            $path_garantia = null;
+            if (!empty($_FILES['ficheiro_garantia']['name'])) {
+                $ext     = strtolower(pathinfo($_FILES['ficheiro_garantia']['name'], PATHINFO_EXTENSION));
+                $nome    = 'GAR_' . time() . '.' . $ext;
+                $destino = $pasta_base . 'garantias/' . $nome;
+                if (move_uploaded_file($_FILES['ficheiro_garantia']['tmp_name'], $destino)) {
+                    $path_garantia = '/MEDINV/uploads/garantias/' . $nome;
+                }
+            }
+
+            $path_contrato = null;
+            if (!empty($_FILES['ficheiro_contrato']['name'])) {
+                $ext     = strtolower(pathinfo($_FILES['ficheiro_contrato']['name'], PATHINFO_EXTENSION));
+                $nome    = 'CON_' . time() . '.' . $ext;
+                $destino = $pasta_base . 'contratos/' . $nome;
+                if (move_uploaded_file($_FILES['ficheiro_contrato']['tmp_name'], $destino)) {
+                    $path_contrato = '/MEDINV/uploads/contratos/' . $nome;
+                }
+            }
+
+            // Upload docs — paths guardados no array $documentos
+            foreach ($documentos as $idx => $doc) {
+                $j = $idx + 1;
+                $path_doc = null;
+                if (!empty($_FILES["ficheiro_documento_$j"]['name'])) {
+                    $ext     = strtolower(pathinfo($_FILES["ficheiro_documento_$j"]['name'], PATHINFO_EXTENSION));
+                    $nome    = 'DOC_' . $j . '_' . time() . '.' . $ext;
+                    $destino = $pasta_base . 'documentos/' . $nome;
+                    if (move_uploaded_file($_FILES["ficheiro_documento_$j"]['tmp_name'], $destino)) {
+                        $path_doc = '/MEDINV/uploads/documentos/' . $nome;
+                    }
+                }
+                $documentos[$idx]['ficheiro_path'] = $path_doc;
+            }
             // Obter categoria_id pelo nome
             $stmtCat = $ligacao->prepare("SELECT id FROM categorias_equipamento WHERE nome = :nome");
             $stmtCat->execute([':nome' => $categoria]);
@@ -478,8 +548,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $codigo_gar = 'GAR' . str_pad($maxGar + 1, 3, '0', STR_PAD_LEFT);
 
                     $ligacao->prepare("
-                    INSERT INTO garantias (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, estado)
-                    VALUES (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :estado)
+                    INSERT INTO garantias (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, estado, ficheiro_path)
+                    VALUES (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :estado, :ficheiro_path)
                 ")->execute([
                         ':codigo'               => $codigo_gar,
                         ':equipamento_id'       => $equipamento_id,
@@ -488,6 +558,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         ':data_fim'             => $data_fim_garantia    ?: null,
                         ':entidade_responsavel' => !empty($_POST['entidade_garantia']) ? trim($_POST['entidade_garantia']) : null,
                         ':estado'               => !empty($estado_garantia) ? strtolower($estado_garantia) : 'ativa',
+                        ':ficheiro_path'        => $path_garantia,
                     ]);
                 }
             }
@@ -504,8 +575,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $codigo_con = 'CON' . str_pad($maxCon + 1, 3, '0', STR_PAD_LEFT);
 
                     $ligacao->prepare("
-                    INSERT INTO contratos (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, periodicidade, estado)
-                    VALUES (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :periodicidade, :estado)
+                    INSERT INTO contratos (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, periodicidade, estado, ficheiro_path)
+                    VALUES (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :periodicidade, :estado, :ficheiro_path)
                 ")->execute([
                         ':codigo'               => $codigo_con,
                         ':equipamento_id'       => $equipamento_id,
@@ -515,8 +586,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         ':entidade_responsavel' => $entidade_contrato    ?: null,
                         ':periodicidade'        => !empty($periodicidade_contrato) ? strtolower($periodicidade_contrato) : null,
                         ':estado'               => !empty($estado_contrato) ? strtolower($estado_contrato) : 'ativo',
+                        ':ficheiro_path'        => $path_contrato
                     ]);
                 }
+            }
+
+            foreach ($documentos as $doc) {
+                $maxDoc     = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM documentos")->fetchColumn();
+                $codigo_doc = 'DOC' . str_pad($maxDoc + 1, 3, '0', STR_PAD_LEFT);
+
+                $stmtTD = $ligacao->prepare("SELECT id FROM tipos_documento WHERE nome = :nome");
+                $stmtTD->execute([':nome' => $doc['tipo']]);
+                $tipo_doc_id = $stmtTD->fetchColumn() ?: null;
+                $ligacao->prepare("
+                    INSERT INTO documentos (codigo, equipamento_id, tipo_id, nome, data_documento, data_validade, ficheiro_path)
+                    VALUES (:codigo, :equipamento_id, :tipo_id, :nome, :data_documento, :data_validade, :ficheiro_path)
+                ")->execute([
+                    ':codigo'         => $codigo_doc,
+                    ':equipamento_id' => $equipamento_id,
+                    ':tipo_id'        => $tipo_doc_id,
+                    ':nome'           => $doc['nome'],
+                    ':data_documento' => $doc['data'],
+                    ':data_validade'  => $doc['validade'],
+                    ':ficheiro_path'  => $doc['ficheiro_path'],
+                ]);
             }
 
             // INSERT equipamento_fornecedor
@@ -642,8 +735,7 @@ require_once '../../includes/header.php'; ?>
                                         <label class="form-label fw-bold">Código interno <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="codigo"
-                                            placeholder="Ex: EQ048" required
-                                            value="<?= $_POST['codigo'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($codigo_sugerido ?? '') ?>" readonly>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Designação <span
@@ -957,7 +1049,7 @@ require_once '../../includes/header.php'; ?>
                                             <option value="cancelada" <?= ($_POST['estado_garantia'] ?? '') == 'cancelada' ? 'selected' : '' ?>>Cancelada</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
                                         <label class="form-label fw-bold">Ficheiro</label>
                                         <input type="file" class="form-control" name="ficheiro_garantia" accept=".pdf,.doc,.docx">
                                     </div>
