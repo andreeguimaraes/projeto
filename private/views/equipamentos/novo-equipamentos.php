@@ -10,6 +10,11 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
 $localizacoes_bd = [];
 $fornecedores_bd = [];
 $categorias_bd   = [];
+$erros        = [];
+$erro_sistema = '';
+$sucesso      = false;
+$tipos_garantia_bd = [];
+$tipos_contrato_bd = [];
 
 try {
     $ligacao = new PDO(
@@ -37,6 +42,8 @@ try {
         JOIN servicos s ON s.id = l.servico_id
         ORDER BY s.nome, l.sala
     ")->fetchAll(PDO::FETCH_OBJ);
+    $tipos_garantia_bd  = $ligacao->query("SELECT id, nome FROM tipos_garantia ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
+    $tipos_contrato_bd  = $ligacao->query("SELECT id, nome FROM tipos_contrato ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
 } catch (PDOException $e) {
     $erro_sistema = "Erro ao ligar à base de dados.";
 }
@@ -66,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $data_inicio_garantia = $_POST["data_inicio"] ?? "";
     $data_fim_garantia   = $_POST["data_fim"] ?? "";
     $estado_garantia     = $_POST["estado_garantia"] ?? "";
-    $periodicidade_garantia = $_POST["periodicidade_garantia"] ?? "";
+    $entidade_garantia    = $_POST["entidade_garantia"] ?? "";
 
     // Contrato
     $tipo_contrato       = $_POST["tipo_contrato"] ?? "";
@@ -90,13 +97,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $num_serie   = trim($num_serie);
     $fabricante  = trim($fabricante);
     $observacoes = trim($observacoes);
+    $entidade_garantia = trim($entidade_garantia);
 
     // ----------------------------------------------------------------
     // 3. VALIDAR
     // ----------------------------------------------------------------
-    $erros        = [];
-    $erro_sistema = '';
-    $sucesso      = false;
+
 
     // === TAB: INFORMAÇÃO GERAL ===
 
@@ -254,6 +260,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $erros[] = "A data de fim da garantia deve ser posterior à data de início.";
             }
         }
+        // Entidade responsável da garantia (opcional mas se preenchida deve ter pelo menos 2 caracteres e uma letra)
+        if (!empty($_POST['entidade_garantia'])) {
+            $entidade_garantia = trim($_POST['entidade_garantia']);
+            if (strlen($entidade_garantia) < 2) {
+                $erros[] = "A entidade responsável da garantia deve ter pelo menos 2 caracteres.";
+            } elseif (!preg_match('/[a-zA-ZÀ-ÿ]/', $entidade_garantia)) {
+                $erros[] = "A entidade responsável da garantia deve conter pelo menos uma letra.";
+            } elseif (strlen($entidade_garantia) > 150) {
+                $erros[] = "A entidade responsável da garantia não pode ter mais de 150 caracteres.";
+            }
+        }
     }
 
     // === TAB: CONTRATO ===
@@ -291,6 +308,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $periodicidades_validas = ['mensal', 'trimestral', 'semestral', 'anual'];
         if (!empty($periodicidade_contrato) && !in_array(strtolower($periodicidade_contrato), $periodicidades_validas)) {
             $erros[] = "A periodicidade do contrato selecionada não é válida.";
+        }
+        // Entidade responsável do contrato (opcional mas se preenchida deve ter pelo menos 2 caracteres e uma letra)
+        if (!empty($entidade_contrato)) {
+            if (strlen($entidade_contrato) < 2) {
+                $erros[] = "A entidade responsável do contrato deve ter pelo menos 2 caracteres.";
+            } elseif (!preg_match('/[a-zA-ZÀ-ÿ]/', $entidade_contrato)) {
+                $erros[] = "A entidade responsável do contrato deve conter pelo menos uma letra.";
+            } elseif (strlen($entidade_contrato) > 150) {
+                $erros[] = "A entidade responsável do contrato não pode ter mais de 150 caracteres.";
+            }
         }
     }
 
@@ -337,6 +364,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $i++;
     }
+    // Verificar código duplicado (só se o formato estiver correto)
+    if (empty($erros)) {
+        $stmtCod = $ligacao->prepare("SELECT id FROM equipamentos WHERE codigo = :codigo");
+        $stmtCod->execute([':codigo' => strtoupper($codigo)]);
+        if ($stmtCod->fetch()) {
+            $erros[] = "Já existe um equipamento com este código.";
+        }
+    }
     // ----------------------------------------------------------------
     // 4. NORMALIZAR E GRAVAR (só se não houver erros)
     // Normalizar entrada. independentemente de como o utilizador escreve os dados, o sistema assegura consistência e padronização antes de qualquer registo na base de dados. 
@@ -382,7 +417,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($erros)) {
         try {
             $ligacao = new PDO(
-                "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+                "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
                 MYSQL_USERNAME,
                 MYSQL_PASSWORD
             );
@@ -395,6 +430,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Gerar código automático
             $maxCodigo    = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 3) AS UNSIGNED)), 0) FROM equipamentos")->fetchColumn();
             $codigo_final = 'EQ' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
+
 
             // INSERT equipamento
             $stmt = $ligacao->prepare("
@@ -723,8 +759,7 @@ require_once '../../includes/header.php'; ?>
                                 <p class="text-muted small"><span class="text-danger">*</span> Campos obrigatórios
                                 </p>
                                 <div class="d-flex justify-content-end">
-                                    <button type="button" class="btn btn-primary" id="btn-next-geral" disabled
-                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-localizacao')).show()">
+                                    <button type="button" class="btn btn-primary" id="btn-next-geral">
                                         Seguinte <i class="fas fa-arrow-right ms-1"></i>
                                     </button>
                                 </div>
@@ -779,8 +814,7 @@ require_once '../../includes/header.php'; ?>
                                         onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-geral')).show()">
                                         <i class="fas fa-arrow-left me-1"></i> Anterior
                                     </button>
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-fornecedor')).show()">
+                                    <button type="button" class="btn btn-primary" id="btn-next-localizacao">
                                         Seguinte <i class="fas fa-arrow-right ms-1"></i>
                                     </button>
                                 </div>
@@ -871,8 +905,7 @@ require_once '../../includes/header.php'; ?>
                                         onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-localizacao')).show()">
                                         <i class="fas fa-arrow-left me-1"></i> Anterior
                                     </button>
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-garantia')).show()">
+                                    <button type="button" class="btn btn-primary" id="btn-next-fornecedor">
                                         Seguinte <i class="fas fa-arrow-right ms-1"></i>
                                     </button>
                                 </div>
@@ -890,9 +923,12 @@ require_once '../../includes/header.php'; ?>
                                         <label class="form-label fw-bold">Tipo</label>
                                         <select class="form-select" name="tipo_garantia">
                                             <option value="">Selecione...</option>
-                                            <option <?= ($_POST['tipo_garantia'] ?? '') == 'Garantia do fabricante' ? 'selected' : '' ?>>Garantia do fabricante</option>
-                                            <option <?= ($_POST['tipo_garantia'] ?? '') == 'Garantia estendida' ? 'selected' : '' ?>>Garantia estendida</option>
-                                            <option <?= ($_POST['tipo_garantia'] ?? '') == 'Sem garantia' ? 'selected' : '' ?>>Sem garantia</option>
+                                            <?php foreach ($tipos_garantia_bd as $tg) : ?>
+                                                <option value="<?= htmlspecialchars($tg->nome) ?>"
+                                                    <?= (($_POST['tipo_garantia'] ?? '') == $tg->nome) ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($tg->nome) ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                     <div class="col-md-3">
@@ -909,27 +945,16 @@ require_once '../../includes/header.php'; ?>
                                 <div class="row mb-4">
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Entidade responsável</label>
-                                        <select class="form-select" name="entidade_garantia">
-                                            <option selected>Philips Healthcare Portugal</option>
-                                            <option>Dräger Portugal</option>
-                                            <option>B. Braun</option>
-                                        </select>
+                                        <input type="text" class="form-control" name="entidade_garantia"
+                                            placeholder="Ex: Philips Healthcare Portugal"
+                                            value="<?= htmlspecialchars($_POST['entidade_garantia'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Estado</label>
                                         <select class="form-select" name="estado_garantia">
-                                            <option <?= ($_POST['estado_garantia'] ?? '') == 'Ativa' ? 'selected' : '' ?>>Ativa</option>
-                                            <option <?= ($_POST['estado_garantia'] ?? '') == 'Expirada' ? 'selected' : '' ?>>Expirada</option>
-                                            <option <?= ($_POST['estado_garantia'] ?? '') == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label fw-bold">Periodicidade</label>
-                                        <select class="form-select" name="periodicidade_garantia">
-                                            <option <?= ($_POST['periodicidade_garantia'] ?? '') == 'Anual' ? 'selected' : '' ?>>Anual</option>
-                                            <option <?= ($_POST['periodicidade_garantia'] ?? '') == 'Semestral' ? 'selected' : '' ?>>Semestral</option>
-                                            <option <?= ($_POST['periodicidade_garantia'] ?? '') == 'Trimestral' ? 'selected' : '' ?>>Trimestral</option>
-                                            <option <?= ($_POST['periodicidade_garantia'] ?? '') == 'Mensal' ? 'selected' : '' ?>>Mensal</option>
+                                            <option value="ativa" <?= ($_POST['estado_garantia'] ?? '') == 'ativa' ? 'selected' : '' ?>>Ativa</option>
+                                            <option value="expirada" <?= ($_POST['estado_garantia'] ?? '') == 'expirada' ? 'selected' : '' ?>>Expirada</option>
+                                            <option value="cancelada" <?= ($_POST['estado_garantia'] ?? '') == 'cancelada' ? 'selected' : '' ?>>Cancelada</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3">
@@ -942,8 +967,7 @@ require_once '../../includes/header.php'; ?>
                                         onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-fornecedor')).show()">
                                         <i class="fas fa-arrow-left me-1"></i> Anterior
                                     </button>
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-contrato')).show()">
+                                    <button type="button" class="btn btn-primary" id="btn-next-garantia">
                                         Seguinte <i class="fas fa-arrow-right ms-1"></i>
                                     </button>
                                 </div>
@@ -960,20 +984,19 @@ require_once '../../includes/header.php'; ?>
                                         <label class="form-label fw-bold">Tipo de contrato</label>
                                         <select class="form-select" name="tipo_contrato">
                                             <option value="">Selecione...</option>
-                                            <option <?= ($_POST['tipo_contrato'] ?? '') == 'Manutenção preventiva' ? 'selected' : '' ?>>Manutenção preventiva</option>
-                                            <option <?= ($_POST['tipo_contrato'] ?? '') == 'Manutenção corretiva' ? 'selected' : '' ?>>Manutenção corretiva</option>
-                                            <option <?= ($_POST['tipo_contrato'] ?? '') == 'Manutenção total' ? 'selected' : '' ?>>Manutenção total</option>
-                                            <option <?= ($_POST['tipo_contrato'] ?? '') == 'Sem contrato' ? 'selected' : '' ?>>Sem contrato</option>
+                                            <?php foreach ($tipos_contrato_bd as $tc) : ?>
+                                                <option value="<?= htmlspecialchars($tc->nome) ?>"
+                                                    <?= (($_POST['tipo_contrato'] ?? '') == $tc->nome) ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($tc->nome) ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Entidade responsável</label>
-                                        <select class="form-select" name="entidade_contrato">
-                                            <option value="">Selecione...</option>
-                                            <option <?= ($_POST['entidade_contrato'] ?? '') == 'Philips Healthcare Portugal' ? 'selected' : '' ?>>Philips Healthcare Portugal</option>
-                                            <option <?= ($_POST['entidade_contrato'] ?? '') == 'Dräger Portugal' ? 'selected' : '' ?>>Dräger Portugal</option>
-                                            <option <?= ($_POST['entidade_contrato'] ?? '') == 'B. Braun' ? 'selected' : '' ?>>B. Braun</option>
-                                        </select>
+                                        <input type="text" class="form-control" name="entidade_contrato"
+                                            placeholder="Ex: Philips Healthcare Portugal"
+                                            value="<?= htmlspecialchars($_POST['entidade_contrato'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Data de início</label>
@@ -1023,8 +1046,7 @@ require_once '../../includes/header.php'; ?>
                                         onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-garantia')).show()">
                                         <i class="fas fa-arrow-left me-1"></i> Anterior
                                     </button>
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-docs')).show()">
+                                    <button type="button" class="btn btn-primary" id="btn-next-contrato">
                                         Seguinte <i class="fas fa-arrow-right ms-1"></i>
                                     </button>
                                 </div>
@@ -1106,37 +1128,192 @@ require_once '../../includes/header.php'; ?>
 </div>
 <script>
     // ----------------------------------------------------------------
-    // VALIDAÇÃO DA TAB GERAL
+    // VALIDAÇÃO SEPARADOR A SEPARADOR
     // ----------------------------------------------------------------
-    const validacoes = [{
-        painelId: 'geral',
-        btnNextId: 'btn-next-geral',
-        tabNavNextId: 'tab-localizacao'
-    }];
 
-    function tabEstaValida(painelId) {
-        const painel = document.getElementById(painelId);
-        const camposObrigatorios = painel.querySelectorAll('[required]');
-        return Array.from(camposObrigatorios).every(campo => campo.value.trim() !== '');
-    }
+    function mostrarErros(idConteiner, erros) {
+        // Remove erros anteriores
+        const anterior = document.getElementById('erros-' + idConteiner);
+        if (anterior) anterior.remove();
 
-    function atualizarBotao(config) {
-        const valida = tabEstaValida(config.painelId);
-        const btnNext = document.getElementById(config.btnNextId);
-        const tabNext = document.getElementById(config.tabNavNextId);
-        btnNext.disabled = !valida;
-        if (valida) {
-            tabNext.classList.remove('disabled', 'pe-none');
-        } else {
-            tabNext.classList.add('disabled', 'pe-none');
+        if (erros.length > 0) {
+            const div = document.createElement('div');
+            div.id = 'erros-' + idConteiner;
+            div.className = 'alert alert-danger mt-3';
+            div.innerHTML = '<strong>Por favor corrija os seguintes erros:</strong><ul class="mb-0 mt-2">' +
+                erros.map(e => `<li>${e}</li>`).join('') +
+                '</ul>';
+            document.getElementById(idConteiner).appendChild(div);
+            return false;
         }
+        return true;
     }
 
-    validacoes.forEach(config => {
-        const painel = document.getElementById(config.painelId);
-        painel.addEventListener('input', () => atualizarBotao(config));
-        painel.addEventListener('change', () => atualizarBotao(config));
-        atualizarBotao(config);
+    // --- TAB: INFORMAÇÃO GERAL ---
+    function validarGeral() {
+        const erros = [];
+
+        const codigo = document.querySelector('[name="codigo"]').value.trim();
+        if (!codigo) {
+            erros.push("O código interno é obrigatório.");
+        } else if (!/^EQ\d{3,}$/.test(codigo)) {
+            erros.push("O código deve começar por 'EQ' seguido de pelo menos 3 dígitos (ex: EQ001).");
+        }
+
+        const designacao = document.querySelector('[name="designacao"]').value.trim();
+        if (!designacao) {
+            erros.push("A designação é obrigatória.");
+        } else if (designacao.length < 3) {
+            erros.push("A designação deve ter pelo menos 3 caracteres.");
+        } else if (!/[a-zA-ZÀ-ÿ]/.test(designacao)) {
+            erros.push("A designação deve conter pelo menos uma letra.");
+        }
+
+        const categoria = document.querySelector('[name="categoria"]').value;
+        if (!categoria) erros.push("A categoria é obrigatória.");
+
+        const marca = document.querySelector('[name="marca"]').value.trim();
+        if (!marca) {
+            erros.push("A marca é obrigatória.");
+        } else if (marca.length < 2) {
+            erros.push("A marca deve ter pelo menos 2 caracteres.");
+        } else if (!/[a-zA-ZÀ-ÿ]/.test(marca)) {
+            erros.push("A marca deve conter pelo menos uma letra.");
+        }
+
+        const modelo = document.querySelector('[name="modelo"]').value.trim();
+        if (!modelo) {
+            erros.push("O modelo é obrigatório.");
+        } else if (modelo.length < 2) {
+            erros.push("O modelo deve ter pelo menos 2 caracteres.");
+        }
+
+        const numSerie = document.querySelector('[name="num_serie"]').value.trim();
+        if (!numSerie) {
+            erros.push("O número de série é obrigatório.");
+        } else if (numSerie.length < 2) {
+            erros.push("O número de série deve ter pelo menos 2 caracteres.");
+        }
+
+        const fabricante = document.querySelector('[name="fabricante"]').value.trim();
+        if (fabricante && fabricante.length < 2) {
+            erros.push("O fabricante deve ter pelo menos 2 caracteres.");
+        } else if (fabricante && !/[a-zA-ZÀ-ÿ]/.test(fabricante)) {
+            erros.push("O fabricante deve conter pelo menos uma letra.");
+        }
+
+        const anoFabrico = document.querySelector('[name="ano_fabrico"]').value.trim();
+        if (anoFabrico) {
+            const ano = parseInt(anoFabrico);
+            if (!/^\d{4}$/.test(anoFabrico) || ano < 1900 || ano > new Date().getFullYear()) {
+                erros.push("O ano de fabrico deve estar entre 1900 e " + new Date().getFullYear() + ".");
+            }
+        }
+
+        const criticidade = document.querySelector('[name="criticidade"]').value;
+        if (!criticidade) erros.push("A criticidade é obrigatória.");
+
+        const estado = document.querySelector('[name="estado_equipamento"]').value;
+        if (!estado) erros.push("O estado é obrigatório.");
+
+        const custo = document.querySelector('[name="custo"]').value.trim();
+        if (custo && (isNaN(custo) || parseFloat(custo) < 0)) {
+            erros.push("O custo de aquisição deve ser um valor positivo.");
+        }
+
+        return erros;
+    }
+
+    document.getElementById('btn-next-geral').addEventListener('click', function() {
+        const erros = validarGeral();
+        if (mostrarErros('geral', erros)) {
+            bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-localizacao')).show();
+        }
+    });
+
+    // --- TAB: LOCALIZAÇÃO ---
+    function validarLocalizacao() {
+        const erros = [];
+        const localizacao = document.querySelector('[name="localizacao_id"]').value;
+        if (!localizacao) erros.push("A localização é obrigatória.");
+        return erros;
+    }
+
+    document.getElementById('btn-next-localizacao').addEventListener('click', function() {
+        const erros = validarLocalizacao();
+        if (mostrarErros('localizacao', erros)) {
+            bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-fornecedor')).show();
+        }
+    });
+
+    // --- TAB: FORNECEDOR ---
+    // Opcional — apenas avança sem validação obrigatória
+    document.getElementById('btn-next-fornecedor').addEventListener('click', function() {
+        mostrarErros('fornecedor', []);
+        bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-garantia')).show();
+    });
+
+    // --- TAB: GARANTIA ---
+    function validarGarantia() {
+        const erros = [];
+
+        const tipo = document.querySelector('[name="tipo_garantia"]').value;
+        const inicio = document.querySelector('[name="data_inicio"]').value;
+        const fim = document.querySelector('[name="data_fim"]').value;
+
+        const temGarantia = tipo || inicio || fim;
+
+        if (temGarantia) {
+            if (!tipo) erros.push("O tipo de garantia é obrigatório quando a garantia está preenchida.");
+            if (!inicio) {
+                erros.push("A data de início da garantia é obrigatória.");
+            }
+            if (!fim) {
+                erros.push("A data de fim da garantia é obrigatória.");
+            }
+            if (inicio && fim && fim <= inicio) {
+                erros.push("A data de fim da garantia deve ser posterior à data de início.");
+            }
+        }
+
+        return erros;
+    }
+
+    document.getElementById('btn-next-garantia').addEventListener('click', function() {
+        const erros = validarGarantia();
+        if (mostrarErros('garantia', erros)) {
+            bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-contrato')).show();
+        }
+    });
+
+    // --- TAB: CONTRATO ---
+    function validarContrato() {
+        const erros = [];
+
+        const tipo = document.querySelector('[name="tipo_contrato"]').value;
+        const inicio = document.querySelector('[name="data_inicio_contrato"]').value;
+        const fim = document.querySelector('[name="data_fim_contrato"]').value;
+        const entidade = document.querySelector('[name="entidade_contrato"]').value;
+
+        const temContrato = tipo || inicio || fim || entidade;
+
+        if (temContrato) {
+            if (!tipo) erros.push("O tipo de contrato é obrigatório quando o contrato está preenchido.");
+            if (!inicio) erros.push("A data de início do contrato é obrigatória.");
+            if (!fim) erros.push("A data de fim do contrato é obrigatória.");
+            if (inicio && fim && fim <= inicio) {
+                erros.push("A data de fim do contrato deve ser posterior à data de início.");
+            }
+        }
+
+        return erros;
+    }
+
+    document.getElementById('btn-next-contrato').addEventListener('click', function() {
+        const erros = validarContrato();
+        if (mostrarErros('contrato', erros)) {
+            bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-docs')).show();
+        }
     });
 
     // ----------------------------------------------------------------
@@ -1165,22 +1342,21 @@ require_once '../../includes/header.php'; ?>
 
     // ----------------------------------------------------------------
     // DADOS DOS FORNECEDORES (carregados da BD via PHP)
-    // Declarados FORA da função para estarem acessíveis globalmente
     // ----------------------------------------------------------------
     const fornecedores = {
         <?php foreach ($fornecedores_bd as $f) : ?>
-        <?= $f->id ?>: {
-            nome:        <?= json_encode($f->nome) ?>,
-            nif:         <?= json_encode($f->nif) ?>,
-            tipo:        <?= json_encode($f->tipo) ?>,
-            morada:      <?= json_encode($f->morada) ?>,
-            website:     <?= json_encode($f->website ?? '—') ?>,
-            telefone:    <?= json_encode($f->telefone) ?>,
-            email:       <?= json_encode($f->email) ?>,
-            contacto:    <?= json_encode($f->pessoa_contacto) ?>,
-            telDireto:   <?= json_encode($f->telefone_contacto) ?>,
-            emailDireto: <?= json_encode($f->email_contacto ?? '—') ?>
-        },
+            <?= $f->id ?>: {
+                nome: <?= json_encode($f->nome) ?>,
+                nif: <?= json_encode($f->nif) ?>,
+                tipo: <?= json_encode($f->tipo) ?>,
+                morada: <?= json_encode($f->morada) ?>,
+                website: <?= json_encode($f->website ?? '—') ?>,
+                telefone: <?= json_encode($f->telefone) ?>,
+                email: <?= json_encode($f->email) ?>,
+                contacto: <?= json_encode($f->pessoa_contacto) ?>,
+                telDireto: <?= json_encode($f->telefone_contacto) ?>,
+                emailDireto: <?= json_encode($f->email_contacto ?? '—') ?>
+            },
         <?php endforeach; ?>
     };
 
@@ -1199,15 +1375,15 @@ require_once '../../includes/header.php'; ?>
             return;
         }
 
-        document.getElementById('f-nome').textContent      = f.nome;
-        document.getElementById('f-nif').textContent       = f.nif;
-        document.getElementById('f-tipo').textContent      = f.tipo;
-        document.getElementById('f-morada').textContent    = f.morada;
-        document.getElementById('f-website').textContent   = f.website;
-        document.getElementById('f-telefone').textContent  = f.telefone;
-        document.getElementById('f-email').textContent     = f.email;
-        document.getElementById('f-contacto').textContent  = f.contacto;
-        document.getElementById('f-tel-direto').textContent  = f.telDireto;
+        document.getElementById('f-nome').textContent = f.nome;
+        document.getElementById('f-nif').textContent = f.nif;
+        document.getElementById('f-tipo').textContent = f.tipo;
+        document.getElementById('f-morada').textContent = f.morada;
+        document.getElementById('f-website').textContent = f.website;
+        document.getElementById('f-telefone').textContent = f.telefone;
+        document.getElementById('f-email').textContent = f.email;
+        document.getElementById('f-contacto').textContent = f.contacto;
+        document.getElementById('f-tel-direto').textContent = f.telDireto;
         document.getElementById('f-email-direto').textContent = f.emailDireto;
 
         painel.classList.remove('d-none');
@@ -1215,16 +1391,15 @@ require_once '../../includes/header.php'; ?>
 
     // ----------------------------------------------------------------
     // DADOS DAS LOCALIZAÇÕES (carregados da BD via PHP)
-    // Declarados FORA da função para estarem acessíveis globalmente
     // ----------------------------------------------------------------
     const localizacoes = {
         <?php foreach ($localizacoes_bd as $l) : ?>
-        <?= $l->id ?>: {
-            edificio: <?= json_encode($l->edificio) ?>,
-            piso:     <?= json_encode($l->piso) ?>,
-            servico:  <?= json_encode($l->servico) ?>,
-            sala:     <?= json_encode($l->sala) ?>
-        },
+            <?= $l->id ?>: {
+                edificio: <?= json_encode($l->edificio) ?>,
+                piso: <?= json_encode($l->piso) ?>,
+                servico: <?= json_encode($l->servico) ?>,
+                sala: <?= json_encode($l->sala) ?>
+            },
         <?php endforeach; ?>
     };
 
@@ -1244,9 +1419,9 @@ require_once '../../includes/header.php'; ?>
         }
 
         document.getElementById('l-edificio').textContent = l.edificio;
-        document.getElementById('l-piso').textContent     = l.piso;
-        document.getElementById('l-servico').textContent  = l.servico;
-        document.getElementById('l-sala').textContent     = l.sala;
+        document.getElementById('l-piso').textContent = l.piso;
+        document.getElementById('l-servico').textContent = l.servico;
+        document.getElementById('l-sala').textContent = l.sala;
 
         painel.classList.remove('d-none');
     }
