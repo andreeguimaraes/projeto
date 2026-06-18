@@ -3,7 +3,6 @@ require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
 require_once __DIR__ . '/../../includes/validacoes.php';
 
-
 // Só aceita GET e POST
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
     header('Location: ' . BASE_URL . '/MEDINV/public/login.php');
@@ -22,6 +21,10 @@ if (!$id || !is_numeric($id)) {
 $eq = null;
 $categorias = [];
 $erros = [];
+$garantia = null;
+$contrato = null;
+$tipos_garantia_bd = [];
+$tipos_contrato_bd = [];
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -52,6 +55,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $entidade_contrato   = trim($_POST['entidade_contrato']   ?? '');
     $data_inicio_contrato = trim($_POST['data_inicio_contrato'] ?? '');
     $data_fim_contrato   = trim($_POST['data_fim_contrato']   ?? '');
+    $entidade_garantia = trim($_POST['entidade_garantia'] ?? '');
+    $estado_garantia = trim($_POST['estado_garantia'] ?? '');
+
+    $periodicidade_contrato = trim($_POST['periodicidade_contrato'] ?? '');
+    $estado_contrato = trim($_POST['estado_contrato'] ?? '');
+    $obs_contrato = trim($_POST['obs_contrato'] ?? '');
+
+
+    if ($estado_contrato === '') {
+        $estado_contrato = 'ativo';
+    }
+    if ($estado_garantia === '') {
+        $estado_garantia = 'ativa';
+    }
 
     // ----------------------------------------------------------------
     // 3. VALIDAR
@@ -72,10 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         validar_tipo_entrada($tipo_entrada),
         validar_localizacao($localizacao_id),
         validar_fornecedor($fornecedor_id),
-        validar_garantia($tipo_garantia, $data_inicio_garantia, $data_fim_garantia),
-        validar_contrato($tipo_contrato, $data_inicio_contrato, $data_fim_contrato, $entidade_contrato)
-    );
 
+    );
 
     if (empty($erros)) {
         try {
@@ -87,42 +102,191 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $stmt = $ligacao->prepare("
-                UPDATE equipamentos
-                SET designacao      = :designacao,
-                    categoria_id    = :categoria_id,
-                    marca           = :marca,
-                    modelo          = :modelo,
-                    numero_serie    = :numero_serie,
-                    fabricante      = :fabricante,
-                    ano_fabrico     = :ano_fabrico,
-                    criticidade     = :criticidade,
-                    estado          = :estado,
-                    data_aquisicao  = :data_aquisicao,
-                    custo_aquisicao = :custo_aquisicao,
-                    tipo_entrada    = :tipo_entrada,
-                    localizacao_id  = :localizacao_id,
-                    observacoes     = :observacoes
-                WHERE id = :id
-            ");
+    UPDATE equipamentos
+    SET designacao      = :designacao,
+        categoria_id    = :categoria_id,
+        marca           = :marca,
+        modelo          = :modelo,
+        numero_serie    = :numero_serie,
+        fabricante      = :fabricante,
+        data_aquisicao  = :data_aquisicao,
+        ano_fabrico     = :ano_fabrico,
+        custo_aquisicao = :custo_aquisicao,
+        tipo_entrada    = :tipo_entrada,
+        estado          = :estado,
+        criticidade     = :criticidade,
+        localizacao_id  = :localizacao_id,
+        observacoes     = :observacoes
+    WHERE id = :id
+");
 
-            $stmt->bindParam(':localizacao_id', $localizacao_id, PDO::PARAM_INT);
+            $data_aquisicao = $data_aquisicao !== '' ? $data_aquisicao : null;
+            $ano_fabrico = $ano_fabrico !== '' ? $ano_fabrico : null;
+            $custo_aquisicao = $custo_aquisicao !== '' ? $custo_aquisicao : null;
+            $stmt->bindParam(':designacao',       $designacao,       PDO::PARAM_STR);
+            $stmt->bindParam(':categoria_id',     $categoria_id,     PDO::PARAM_INT);
+            $stmt->bindParam(':marca',            $marca,            PDO::PARAM_STR);
+            $stmt->bindParam(':modelo',           $modelo,           PDO::PARAM_STR);
+            $stmt->bindParam(':numero_serie',     $numero_serie,     PDO::PARAM_STR);
+            $stmt->bindParam(':fabricante',       $fabricante,       PDO::PARAM_STR);
+            $stmt->bindParam(':data_aquisicao',   $data_aquisicao,   PDO::PARAM_STR);
+            $stmt->bindParam(':ano_fabrico',      $ano_fabrico,      PDO::PARAM_INT);
+            $stmt->bindParam(':custo_aquisicao',  $custo_aquisicao,  PDO::PARAM_STR);
+            $stmt->bindParam(':tipo_entrada',     $tipo_entrada,     PDO::PARAM_STR);
+            $stmt->bindParam(':estado',           $estado,           PDO::PARAM_STR);
+            $stmt->bindParam(':criticidade',      $criticidade,      PDO::PARAM_STR);
+            $stmt->bindParam(':localizacao_id',   $localizacao_id,   PDO::PARAM_INT);
+            $stmt->bindParam(':observacoes',      $observacoes,      PDO::PARAM_STR);
+            $stmt->bindParam(':id',               $id,               PDO::PARAM_INT);
 
-            $stmt->bindParam(':designacao',    $designacao,    PDO::PARAM_STR);
-            $stmt->bindParam(':categoria_id',  $categoria_id,  PDO::PARAM_INT);
-            $stmt->bindParam(':marca',         $marca,         PDO::PARAM_STR);
-            $stmt->bindParam(':modelo',        $modelo,        PDO::PARAM_STR);
-            $stmt->bindParam(':numero_serie',  $numero_serie,  PDO::PARAM_STR);
-            $stmt->bindParam(':fabricante',    $fabricante,    PDO::PARAM_STR);
-            $stmt->bindParam(':ano_fabrico',   $ano_fabrico,   PDO::PARAM_STR);
-            $stmt->bindParam(':criticidade',   $criticidade,   PDO::PARAM_STR);
-            $stmt->bindParam(':estado',        $estado,        PDO::PARAM_STR);
-            $stmt->bindParam(':data_aquisicao',  $data_aquisicao,  PDO::PARAM_STR);
-            $stmt->bindParam(':custo_aquisicao', $custo_aquisicao, PDO::PARAM_STR);
-            $stmt->bindParam(':tipo_entrada',    $tipo_entrada,    PDO::PARAM_STR);
-            $stmt->bindParam(':observacoes',     $observacoes,     PDO::PARAM_STR);
-            $stmt->bindParam(':id',              $id,              PDO::PARAM_INT);
 
             $stmt->execute();
+
+            if (!empty($fornecedor_id)) {
+
+                $stmtAtual = $ligacao->prepare("
+                    SELECT id
+                    FROM equipamento_fornecedor
+                    WHERE equipamento_id = :equipamento_id
+                    LIMIT 1
+                ");
+                $stmtAtual->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+                $stmtAtual->execute();
+                $fornecedorAtual = $stmtAtual->fetch(PDO::FETCH_OBJ);
+
+                if ($fornecedorAtual) {
+                    $stmtForn = $ligacao->prepare("
+                        UPDATE equipamento_fornecedor
+                        SET fornecedor_id = :fornecedor_id
+                        WHERE id = :id
+                    ");
+
+                    $stmtForn->bindParam(':fornecedor_id', $fornecedor_id, PDO::PARAM_INT);
+                    $stmtForn->bindParam(':id', $fornecedorAtual->id, PDO::PARAM_INT);
+                    $stmtForn->execute();
+                } else {
+                    $tipo_fornecedor_id = 1;
+
+                    $stmtForn = $ligacao->prepare("
+                        INSERT INTO equipamento_fornecedor 
+                            (equipamento_id, fornecedor_id, tipo_id)
+                        VALUES 
+                            (:equipamento_id, :fornecedor_id, :tipo_id)
+                    ");
+
+                    $stmtForn->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+                    $stmtForn->bindParam(':fornecedor_id', $fornecedor_id, PDO::PARAM_INT);
+                    $stmtForn->bindParam(':tipo_id', $tipo_fornecedor_id, PDO::PARAM_INT);
+                    $stmtForn->execute();
+                }
+            }
+            if (!empty($tipo_garantia) && !empty($data_inicio_garantia) && !empty($data_fim_garantia)) {
+
+                $stmtGarantiaAtual = $ligacao->prepare("
+                    SELECT id
+                    FROM garantias
+                    WHERE equipamento_id = :equipamento_id
+                    LIMIT 1
+                ");
+                $stmtGarantiaAtual->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+                $stmtGarantiaAtual->execute();
+                $garantiaAtual = $stmtGarantiaAtual->fetch(PDO::FETCH_OBJ);
+
+                if ($garantiaAtual) {
+                    $stmtGarantia = $ligacao->prepare("
+                        UPDATE garantias
+                        SET tipo_id = :tipo_id,
+                            data_inicio = :data_inicio,
+                            data_fim = :data_fim,
+                            entidade_responsavel = :entidade_responsavel,
+                            estado = :estado
+                        WHERE id = :id
+                    ");
+
+                    $stmtGarantia->bindParam(':tipo_id', $tipo_garantia, PDO::PARAM_INT);
+                    $stmtGarantia->bindParam(':data_inicio', $data_inicio_garantia, PDO::PARAM_STR);
+                    $stmtGarantia->bindParam(':data_fim', $data_fim_garantia, PDO::PARAM_STR);
+                    $stmtGarantia->bindParam(':entidade_responsavel', $entidade_garantia, PDO::PARAM_STR);
+                    $stmtGarantia->bindParam(':estado', $estado_garantia, PDO::PARAM_STR);
+                    $stmtGarantia->bindParam(':id', $garantiaAtual->id, PDO::PARAM_INT);
+                    $stmtGarantia->execute();
+                } else {
+                    $codigo_garantia = 'GAR' . str_pad($id, 5, '0', STR_PAD_LEFT);
+
+                    $stmtGarantia = $ligacao->prepare("
+                        INSERT INTO garantias
+                            (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, estado)
+                        VALUES
+                            (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :estado)
+                    ");
+
+                    $stmtGarantia->bindParam(':codigo', $codigo_garantia, PDO::PARAM_STR);
+                    $stmtGarantia->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+                    $stmtGarantia->bindParam(':tipo_id', $tipo_garantia, PDO::PARAM_INT);
+                    $stmtGarantia->bindParam(':data_inicio', $data_inicio_garantia, PDO::PARAM_STR);
+                    $stmtGarantia->bindParam(':data_fim', $data_fim_garantia, PDO::PARAM_STR);
+                    $stmtGarantia->bindParam(':entidade_responsavel', $entidade_garantia, PDO::PARAM_STR);
+                    $stmtGarantia->bindParam(':estado', $estado_garantia, PDO::PARAM_STR);
+                    $stmtGarantia->execute();
+                }
+            }
+
+            if (!empty($tipo_contrato) && !empty($data_inicio_contrato) && !empty($data_fim_contrato)) {
+
+                $stmtContratoAtual = $ligacao->prepare("
+                    SELECT id
+                    FROM contratos
+                    WHERE equipamento_id = :equipamento_id
+                    LIMIT 1
+                ");
+                $stmtContratoAtual->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+                $stmtContratoAtual->execute();
+                $contratoAtual = $stmtContratoAtual->fetch(PDO::FETCH_OBJ);
+
+                if ($contratoAtual) {
+                    $stmtContrato = $ligacao->prepare("
+                        UPDATE contratos
+                        SET tipo_id = :tipo_id,
+                            data_inicio = :data_inicio,
+                            data_fim = :data_fim,
+                            entidade_responsavel = :entidade_responsavel,
+                            periodicidade = :periodicidade,
+                            estado = :estado,
+                            observacoes = :observacoes
+                        WHERE id = :id
+                    ");
+
+                    $stmtContrato->bindParam(':tipo_id', $tipo_contrato, PDO::PARAM_INT);
+                    $stmtContrato->bindParam(':data_inicio', $data_inicio_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':data_fim', $data_fim_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':entidade_responsavel', $entidade_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':periodicidade', $periodicidade_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':estado', $estado_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':observacoes', $obs_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':id', $contratoAtual->id, PDO::PARAM_INT);
+                    $stmtContrato->execute();
+                } else {
+                    $codigo_contrato = 'CON' . str_pad($id, 5, '0', STR_PAD_LEFT);
+
+                    $stmtContrato = $ligacao->prepare("
+                        INSERT INTO contratos
+                            (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, periodicidade, estado, observacoes)
+                        VALUES
+                            (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :periodicidade, :estado, :observacoes)
+                    ");
+
+                    $stmtContrato->bindParam(':codigo', $codigo_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+                    $stmtContrato->bindParam(':tipo_id', $tipo_contrato, PDO::PARAM_INT);
+                    $stmtContrato->bindParam(':data_inicio', $data_inicio_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':data_fim', $data_fim_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':entidade_responsavel', $entidade_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':periodicidade', $periodicidade_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':estado', $estado_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':observacoes', $obs_contrato, PDO::PARAM_STR);
+                    $stmtContrato->execute();
+                }
+            }
 
             header('Location: equipamentos.php');
             exit;
@@ -139,7 +303,17 @@ try {
     );
     $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $stmt = $ligacao->prepare("SELECT * FROM equipamentos WHERE id = :id");
+    $stmt = $ligacao->prepare("
+        SELECT 
+            e.*,
+            ef.fornecedor_id,
+            ef.tipo_id AS tipo_fornecedor_associado
+        FROM equipamentos e
+        LEFT JOIN equipamento_fornecedor ef 
+            ON ef.equipamento_id = e.id
+        WHERE e.id = :id
+        LIMIT 1
+    ");
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
     $eq = $stmt->fetch(PDO::FETCH_OBJ);
@@ -153,27 +327,62 @@ try {
     $stmtCat->execute();
     $categorias = $stmtCat->fetchAll(PDO::FETCH_OBJ);
 
-
-    // Adicionar ao SELECT inicial (junto ao $categorias)
     $stmtLoc = $ligacao->prepare("
-    SELECT l.id, l.edificio, l.piso, l.sala, s.nome AS servico
-    FROM localizacoes l
-    JOIN servicos s ON s.id = l.servico_id
-    ORDER BY s.nome, l.sala
-");
+        SELECT l.id, l.edificio, l.piso, l.sala, s.nome AS servico
+        FROM localizacoes l
+        JOIN servicos s ON s.id = l.servico_id
+        ORDER BY s.nome, l.sala
+    ");
     $stmtLoc->execute();
+
     $localizacoes_bd = $stmtLoc->fetchAll(PDO::FETCH_OBJ);
 
     $stmtForn = $ligacao->prepare("
-    SELECT f.id, f.nome, f.nif, f.morada, f.website,
-        f.telefone, f.email, f.pessoa_contacto, f.telefone_contacto, f.email_contacto,
-        tf.nome AS tipo
-    FROM fornecedores f
-    JOIN tipos_fornecedor tf ON tf.id = f.tipo_id
-    ORDER BY f.nome
-");
+        SELECT f.id, f.nome, f.nif, f.morada, f.website,
+            f.telefone, f.email, f.pessoa_contacto, f.telefone_contacto, f.email_contacto,
+            tf.nome AS tipo
+        FROM fornecedores f
+        JOIN tipos_fornecedor tf ON tf.id = f.tipo_id
+        ORDER BY f.nome
+    ");
     $stmtForn->execute();
     $fornecedores_bd = $stmtForn->fetchAll(PDO::FETCH_OBJ);
+
+    $stmtGarantia = $ligacao->prepare("
+        SELECT *
+        FROM garantias
+        WHERE equipamento_id = :equipamento_id
+        LIMIT 1
+    ");
+    $stmtGarantia->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+    $stmtGarantia->execute();
+    $garantia = $stmtGarantia->fetch(PDO::FETCH_OBJ);
+
+    $stmtContrato = $ligacao->prepare("
+        SELECT *
+        FROM contratos
+        WHERE equipamento_id = :equipamento_id
+        LIMIT 1
+    ");
+    $stmtContrato->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+    $stmtContrato->execute();
+    $contrato = $stmtContrato->fetch(PDO::FETCH_OBJ);
+
+    $stmtTiposGarantia = $ligacao->prepare("
+        SELECT *
+        FROM tipos_garantia
+        ORDER BY id
+    ");
+    $stmtTiposGarantia->execute();
+    $tipos_garantia_bd = $stmtTiposGarantia->fetchAll(PDO::FETCH_OBJ);
+
+    $stmtTiposContrato = $ligacao->prepare("
+        SELECT *
+        FROM tipos_contrato
+        ORDER BY id
+    ");
+    $stmtTiposContrato->execute();
+    $tipos_contrato_bd = $stmtTiposContrato->fetchAll(PDO::FETCH_OBJ);
 } catch (PDOException $err) {
     $erros[] = "Erro na ligação à base de dados.";
     $eq = null;
@@ -201,7 +410,7 @@ $ligacao = null;
                 </a>
             </div>
 
-            <form action="editar-equipamentos.php?id_equipamento=<?= $idEncriptado ?>" method="post">
+            <form action="editar-equipamentos.php?id_equipamento=<?= htmlspecialchars($idEncriptado) ?>" method="post" enctype="multipart/form-data" novalidate>
                 <?php if (!empty($erros)): ?>
                     <div class="alert alert-danger mb-3">
                         <?php foreach ($erros as $erro): ?>
@@ -280,14 +489,13 @@ $ligacao = null;
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Modelo <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="modelo"
-                                            value="<?= htmlspecialchars($eq->modelo  ?? '') ?>">
+                                        <input type="text" class="form-control" name="modelo" value="<?= htmlspecialchars($modelo ?? $eq->modelo ?? '') ?>" required>
 
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Número de série <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="numero_serie"
-                                            value="<?= htmlspecialchars($eq->numero_serie ?? '') ?>">
+                                            value="<?= htmlspecialchars($eq->numero_serie ?? '') ?>" required>
                                     </div>
                                 </div>
                                 <div class="row mb-4">
@@ -419,16 +627,18 @@ $ligacao = null;
                                 <div class="row mb-4">
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Selecionar fornecedor</label>
-                                        <select class="form-select" name="fornecedor_id" id="selectFornecedor"
-                                            onchange="preencherFornecedor()">
+                                        <select class="form-select" name="fornecedor_id" id="selectFornecedor" onchange="preencherFornecedor()">
                                             <option value="">Selecione...</option>
-                                            <option value="1" selected>Philips Healthcare Portugal</option>
-                                            <option value="2">Dräger Portugal</option>
-                                            <option value="3">B. Braun Portugal</option>
+                                            <?php foreach ($fornecedores_bd as $f): ?>
+                                                <option value="<?= $f->id ?>"
+                                                    <?= (($_POST['fornecedor_id'] ?? $eq->fornecedor_id ?? '') == $f->id) ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($f->nome) ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
-                                <div id="infoFornecedor">
+                                <div id="infoFornecedor" class="d-none">
                                     <hr>
                                     <h6 class="text-muted mb-3"><i class="fas fa-building me-2"></i>Informação do fornecedor</h6>
                                     <div class="row mb-3">
@@ -507,37 +717,35 @@ $ligacao = null;
                                         <label class="form-label fw-bold">Tipo</label>
                                         <select class="form-select" name="tipo_garantia">
                                             <option value="">Selecione...</option>
-                                            <option selected>Garantia do fabricante</option>
-                                            <option>Garantia estendida</option>
-                                            <option>Sem garantia</option>
+                                            <?php foreach ($tipos_garantia_bd as $tg): ?>
+                                                <option value="<?= $tg->id ?>"
+                                                    <?= (($_POST['tipo_garantia'] ?? $garantia->tipo_id ?? '') == $tg->id) ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($tg->nome) ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Data de início</label>
-                                        <input type="date" class="form-control" name="data_inicio_garantia" value="2022-03-15">
+                                        <input type="date" class="form-control" name="data_inicio_garantia" value="<?= htmlspecialchars($_POST['data_inicio_garantia'] ?? $garantia->data_inicio ?? '') ?>">
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Data de fim</label>
-                                        <input type="date" class="form-control" name="data_fim_garantia" value="2027-03-15">
+                                        <input type="date" class="form-control" name="data_fim_garantia" value="<?= htmlspecialchars($_POST['data_fim_garantia'] ?? $garantia->data_fim ?? '') ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-4">
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Entidade responsável</label>
-                                        <select class="form-select" name="entidade_garantia">
-                                            <option value="">Selecione...</option>
-                                            <option selected>Philips Healthcare Portugal</option>
-                                            <option>Dräger Portugal</option>
-                                            <option>B. Braun</option>
-                                        </select>
+                                        <input type="text" class="form-control" name="entidade_garantia" value="<?= htmlspecialchars($_POST['entidade_garantia'] ?? $garantia->entidade_responsavel ?? '') ?>">
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Estado</label>
                                         <select class="form-select" name="estado_garantia">
                                             <option value="">Selecione...</option>
-                                            <option selected>Ativa</option>
-                                            <option>Expirada</option>
-                                            <option>Cancelada</option>
+                                            <option value="ativa" <?= (($_POST['estado_garantia'] ?? $garantia->estado ?? '') == 'ativa') ? 'selected' : '' ?>>Ativa</option>
+                                            <option value="expirada" <?= (($_POST['estado_garantia'] ?? $garantia->estado ?? '') == 'expirada') ? 'selected' : '' ?>>Expirada</option>
+                                            <option value="cancelada" <?= (($_POST['estado_garantia'] ?? $garantia->estado ?? '') == 'cancelada') ? 'selected' : '' ?>>Cancelada</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3">
@@ -571,48 +779,46 @@ $ligacao = null;
                                         <label class="form-label fw-bold">Tipo de contrato</label>
                                         <select class="form-select" name="tipo_contrato">
                                             <option value="">Selecione...</option>
-                                            <option selected>Manutenção preventiva</option>
-                                            <option>Manutenção corretiva</option>
-                                            <option>Manutenção total</option>
-                                            <option>Sem contrato</option>
+                                            <?php foreach ($tipos_contrato_bd as $tc): ?>
+                                                <option value="<?= $tc->id ?>"
+                                                    <?= (($_POST['tipo_contrato'] ?? $contrato->tipo_id ?? '') == $tc->id) ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($tc->nome) ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Entidade responsável</label>
-                                        <select class="form-select" name="entidade_contrato">
-                                            <option value="">Selecione...</option>
-                                            <option selected>Philips Healthcare Portugal</option>
-                                            <option>Dräger Portugal</option>
-                                            <option>B. Braun</option>
-                                        </select>
+                                        <input type="text" class="form-control" name="entidade_contrato"
+                                            value="<?= htmlspecialchars($_POST['entidade_contrato'] ?? $contrato->entidade_responsavel ?? '') ?>">
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Data de início</label>
-                                        <input type="date" class="form-control" name="data_inicio_contrato" value="2022-03-15">
+                                        <input type="date" class="form-control" name="data_inicio_contrato" value="<?= htmlspecialchars($_POST['data_inicio_contrato'] ?? $contrato->data_inicio ?? '') ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-4">
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Data de fim</label>
-                                        <input type="date" class="form-control" name="data_fim_contrato" value="2027-03-15">
+                                        <input type="date" class="form-control" name="data_fim_contrato" value="<?= htmlspecialchars($_POST['data_fim_contrato'] ?? $contrato->data_fim ?? '') ?>">
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Periodicidade</label>
                                         <select class="form-select" name="periodicidade_contrato">
                                             <option value="">Selecione...</option>
-                                            <option selected>Anual</option>
-                                            <option>Semestral</option>
-                                            <option>Trimestral</option>
-                                            <option>Mensal</option>
+                                            <option value="mensal" <?= (($_POST['periodicidade_contrato'] ?? $contrato->periodicidade ?? '') == 'mensal') ? 'selected' : '' ?>>Mensal</option>
+                                            <option value="trimestral" <?= (($_POST['periodicidade_contrato'] ?? $contrato->periodicidade ?? '') == 'trimestral') ? 'selected' : '' ?>>Trimestral</option>
+                                            <option value="semestral" <?= (($_POST['periodicidade_contrato'] ?? $contrato->periodicidade ?? '') == 'semestral') ? 'selected' : '' ?>>Semestral</option>
+                                            <option value="anual" <?= (($_POST['periodicidade_contrato'] ?? $contrato->periodicidade ?? '') == 'anual') ? 'selected' : '' ?>>Anual</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Estado</label>
                                         <select class="form-select" name="estado_contrato">
                                             <option value="">Selecione...</option>
-                                            <option selected>Ativo</option>
-                                            <option>Expirado</option>
-                                            <option>Cancelado</option>
+                                            <option value="ativo" <?= (($_POST['estado_contrato'] ?? $contrato->estado ?? 'ativo') == 'ativo') ? 'selected' : '' ?>>Ativo</option>
+                                            <option value="expirado" <?= (($_POST['estado_contrato'] ?? $contrato->estado ?? '') == 'expirado') ? 'selected' : '' ?>>Expirado</option>
+                                            <option value="cancelado" <?= (($_POST['estado_contrato'] ?? $contrato->estado ?? '') == 'cancelado') ? 'selected' : '' ?>>Cancelado</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3">
@@ -624,8 +830,7 @@ $ligacao = null;
                                 <div class="row mb-4">
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Observações</label>
-                                        <input type="text" class="form-control" name="obs_contrato"
-                                            value="Contrato de manutenção preventiva associado ao equipamento.">
+                                        <input type="text" class="form-control" name="obs_contrato" value="<?= htmlspecialchars($_POST['obs_contrato'] ?? $contrato->observacoes ?? '') ?>">
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between">
@@ -792,37 +997,45 @@ $ligacao = null;
     function preencherFornecedor() {
         const id = document.getElementById('selectFornecedor').value;
         const painel = document.getElementById('infoFornecedor');
-        if (!id) {
+
+        if (!id || !fornecedores[id]) {
             painel.classList.add('d-none');
             return;
         }
+
         const f = fornecedores[id];
-        document.getElementById('f-nome').textContent = f.nome;
-        document.getElementById('f-nif').textContent = f.nif;
-        document.getElementById('f-tipo').textContent = f.tipo;
-        document.getElementById('f-morada').textContent = f.morada;
-        document.getElementById('f-website').textContent = f.website;
-        document.getElementById('f-telefone').textContent = f.telefone;
-        document.getElementById('f-email').textContent = f.email;
-        document.getElementById('f-contacto').textContent = f.contacto;
-        document.getElementById('f-tel-direto').textContent = f.telDireto;
-        document.getElementById('f-email-direto').textContent = f.emailDireto;
+
+        document.getElementById('f-nome').textContent = f.nome ?? '—';
+        document.getElementById('f-nif').textContent = f.nif ?? '—';
+        document.getElementById('f-tipo').textContent = f.tipo ?? '—';
+        document.getElementById('f-morada').textContent = f.morada ?? '—';
+        document.getElementById('f-website').textContent = f.website ?? '—';
+        document.getElementById('f-telefone').textContent = f.telefone ?? '—';
+        document.getElementById('f-email').textContent = f.email ?? '—';
+        document.getElementById('f-contacto').textContent = f.contacto ?? '—';
+        document.getElementById('f-tel-direto').textContent = f.telDireto ?? '—';
+        document.getElementById('f-email-direto').textContent = f.emailDireto ?? '—';
+
         painel.classList.remove('d-none');
     }
 
-    
+
     function preencherLocalizacao() {
         const id = document.getElementById('selectLocalizacao').value;
         const painel = document.getElementById('infoLocalizacao');
-        if (!id) {
+
+        if (!id || !localizacoes[id]) {
             painel.classList.add('d-none');
             return;
         }
+
         const l = localizacoes[id];
-        document.getElementById('l-edificio').textContent = l.edificio;
-        document.getElementById('l-piso').textContent = l.piso;
-        document.getElementById('l-servico').textContent = l.servico;
-        document.getElementById('l-sala').textContent = l.sala;
+
+        document.getElementById('l-edificio').textContent = l.edificio ?? '—';
+        document.getElementById('l-piso').textContent = l.piso ?? '—';
+        document.getElementById('l-servico').textContent = l.servico ?? '—';
+        document.getElementById('l-sala').textContent = l.sala ?? '—';
+
         painel.classList.remove('d-none');
     }
     const fornecedores = {
@@ -852,6 +1065,11 @@ $ligacao = null;
             },
         <?php endforeach; ?>
     };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        preencherFornecedor();
+        preencherLocalizacao();
+    });
 </script>
 
 <?php include '../../includes/footer.php'; ?>

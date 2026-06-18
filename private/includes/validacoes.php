@@ -173,10 +173,12 @@ function validar_custo_aquisicao(string $custo): array {
 
 function validar_tipo_entrada(string $tipo_entrada): array {
     $erros = [];
-    $validos = ['compra', 'doação', 'aluguer', 'empréstimo'];
+    $validos = ['compra', 'doacao', 'aluguer', 'emprestimo'];
+
     if (!empty($tipo_entrada) && !in_array(strtolower($tipo_entrada), $validos)) {
         $erros[] = "O tipo de entrada selecionado não é válido.";
     }
+
     return $erros;
 }
 
