@@ -16,3 +16,10 @@ define('MYSQL_PASSWORD', 'guimarães_722');
 //Chave opcional para operações de encriptação, útil em sistemas que armazenam dados sensíveis. 
 define('MYSQL_AES_KEY',  'guimarães_722');
 
+
+// --------------------------------------------------------------------
+// Segurança – Encriptação com OpenSSL
+// --------------------------------------------------------------------
+define('OPENSSL_METHOD', 'AES-256-CBC'); // Algoritmo simétrico robusto
+define('OPENSSL_KEY', 'H0SDRQzIGqclX2kbYBk9xspdn9U5f3Wa'); // Chave  privada de 32 caracteres
+define('OPENSSL_IV', 'BzKAbjuREsHgnw56'); // Vetor de inicialização (16caracteres)

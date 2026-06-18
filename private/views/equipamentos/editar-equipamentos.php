@@ -1,6 +1,48 @@
 <?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+
+require_once __DIR__ . '/../../includes/validacoes.php';
+
+// Só aceita GET e POST
+if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
+    header('Location: ' . BASE_URL . '/private/views/equipamentos/equipamentos.php');
+    exit;
+}
+
+// Desencriptar e validar o ID
+$idEncriptado = $_GET['id'] ?? null;
+$id = aes_decrypt($idEncriptado);
+
+if (!$id || !is_numeric($id)) {
+    header('Location: ' . BASE_URL . '/private/views/equipamentos/equipamentos.php');
+    exit;
+}
+echo ($id);
+
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt = $ligacao->prepare("SELECT * FROM equipamentos WHERE id = :id");
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    $eq = $stmt->fetch(PDO::FETCH_OBJ);
+
+    if (!$eq) {
+        header('Location: equipamentos.php');
+        exit;
+    }
+
+} catch (PDOException $err) {
+    $erros[] = "Erro na ligação à base de dados.";
+    $eq = null;
+}
+$ligacao = null;
 ?>
 <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 <!-- Navbar -->
@@ -18,7 +60,7 @@ redirect_if_not_logged();
                     <h2 class="mb-0">Editar equipamento</h2>
                     <p class="text-muted mb-0">EQ001 — Monitor IntelliVue MP5</p>
                 </div>
-                <a href="detalhes-equipamentos.php" class="btn btn-outline-secondary">
+                <a href="equipamentos.php" class="btn btn-outline-secondary">
                     <i class="fas fa-arrow-left me-2"></i>Voltar
                 </a>
             </div>

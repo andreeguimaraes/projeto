@@ -374,12 +374,13 @@ $ligacao = null;
                                                     </td>
                                                     <td>
                                                         <div style="white-space: nowrap;">
-                                                            <a href="detalhes-equipamentos.php?id=<?= $eq->id ?>"
+                                                            <a href="detalhes-equipamentos.php?id_equipamento=<?= $eq->id ?>"
                                                                 class="btn btn-sm btn-outline-primary" title="Ver detalhes">
                                                                 <i class="fas fa-eye"></i>
                                                             </a>
-                                                            <a href="editar-equipamentos.php?id=<?= $eq->id ?>"
-                                                                class="btn btn-sm btn-outline-warning" title="Editar">
+                                                            <!-- este link inclui o ID do equipamento na URL.  -->
+                                                            <a href="editar-equipamentos.php?id=<?= aes_encrypt($eq->id) ?>"
+                                                            class="btn btn-sm btn-outline-warning">
                                                                 <i class="fas fa-pen"></i>
                                                             </a>
                                                             <button class="btn btn-sm btn-outline-danger" title="Eliminar"
