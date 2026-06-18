@@ -6,6 +6,7 @@
 // --------------------------------------------------------------------
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
+require_once __DIR__ . '/../../includes/validacoes.php';
 
 $localizacoes_bd = [];
 $fornecedores_bd = [];
@@ -59,13 +60,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $categoria     = $_POST["categoria"] ?? "";
     $marca         = $_POST["marca"] ?? "";
     $modelo        = $_POST["modelo"] ?? "";
-    $num_serie     = $_POST["num_serie"] ?? "";
+    $numero_serie     = $_POST["numero_serie"] ?? "";
     $fabricante    = $_POST["fabricante"] ?? "";
     $ano_fabrico   = $_POST["ano_fabrico"] ?? "";
     $criticidade   = $_POST["criticidade"] ?? "";
-    $estado        = $_POST["estado_equipamento"] ?? "";
+    $estado        = $_POST["estado"] ?? "";
     $data_aquisicao = $_POST["data_aquisicao"] ?? "";
-    $custo         = $_POST["custo"] ?? "";
+    $custo_aquisicao         = $_POST["custo_aquisicao"] ?? "";
     $tipo_entrada  = $_POST["tipo_entrada"] ?? "";
     $localizacao_id = $_POST["localizacao_id"] ?? "";
     $fornecedor_id  = $_POST["fornecedor_id"] ?? "";
@@ -96,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $designacao  = trim($designacao);
     $marca       = trim($marca);
     $modelo      = trim($modelo);
-    $num_serie   = trim($num_serie);
+    $numero_serie   = trim($numero_serie);
     $fabricante  = trim($fabricante);
     $observacoes = trim($observacoes);
     $entidade_garantia = trim($entidade_garantia);
@@ -104,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // ----------------------------------------------------------------
     // 3. VALIDAR
     // ----------------------------------------------------------------
-
+/*
 
     // === TAB: INFORMAÇÃO GERAL ===
 
@@ -158,11 +159,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $erros[] = "O modelo não pode ter mais de 100 caracteres.";
     }
 
-    if (empty($num_serie)) {
+    if (empty($numero_serie)) {
         $erros[] = "O número de série é obrigatório.";
-    } elseif (strlen($num_serie) < 2) {
+    } elseif (strlen($numero_serie) < 2) {
         $erros[] = "O número de série deve ter pelo menos 2 caracteres.";
-    } elseif (strlen($num_serie) > 100) {
+    } elseif (strlen($numero_serie) > 100) {
         $erros[] = "O número de série não pode ter mais de 100 caracteres.";
     }
 
@@ -202,10 +203,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    if (!empty($custo)) {
-        if (!is_numeric($custo) || (float)$custo < 0) {
+    if (!empty($custo_aquisicao)) {
+        if (!is_numeric($custo_aquisicao) || (float)$custo_aquisicao < 0) {
             $erros[] = "O custo de aquisição deve ser um valor numérico positivo.";
-        } elseif ((float)$custo > 9999999.99) {
+        } elseif ((float)$custo_aquisicao > 9999999.99) {
             $erros[] = "O custo de aquisição introduzido é demasiado elevado.";
         }
     }
@@ -411,10 +412,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // ----------------------------------------------------------------
     $designacao  = ucwords(strtolower($designacao));
     $marca       = ucwords(strtolower($marca));
-    $num_serie   = strtoupper($num_serie);
+    $numero_serie   = strtoupper($numero_serie);
     $fabricante  = !empty($fabricante) ? ucwords(strtolower($fabricante)) : null;
     $ano_fabrico    = !empty($ano_fabrico)    ? (int)$ano_fabrico   : null;
-    $custo          = !empty($custo)          ? (float)$custo        : null;
+    $custo_aquisicao          = !empty($custo_aquisicao)          ? (float)$custo_aquisicao        : null;
     $data_aquisicao = !empty($data_aquisicao) ? $data_aquisicao     : null;
     $observacoes    = !empty($observacoes)    ? $observacoes         : null;
 
@@ -522,11 +523,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ':categoria_id'    => $categoria_id,
                 ':marca'           => $marca,
                 ':modelo'          => $modelo,
-                ':numero_serie'    => $num_serie,
+                ':numero_serie'    => $numero_serie,
                 ':fabricante'      => $fabricante,
                 ':ano_fabrico'     => $ano_fabrico,
                 ':data_aquisicao'  => $data_aquisicao,
-                ':custo_aquisicao' => $custo,
+                ':custo_aquisicao' => $custo_aquisicao,
                 ':tipo_entrada'    => $tipo_entrada_bd,
                 ':estado'          => $estado_bd,
                 ':criticidade'     => $criticidade_bd,
@@ -632,6 +633,111 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $ligacao = null;
+    }
+
+    */
+    // ----------------------------------------------------------------
+    // 3. VALIDAR
+    // ----------------------------------------------------------------
+    $erros = array_merge(
+        validar_codigo($codigo),
+        validar_designacao($designacao),
+        validar_categoria($categoria),
+        validar_marca($marca),
+        validar_modelo($modelo),
+        validar_numero_serie($numero_serie),
+        validar_fabricante($fabricante),
+        validar_ano_fabrico($ano_fabrico),
+        validar_criticidade($criticidade),
+        validar_estado($estado),
+        validar_data_aquisicao($data_aquisicao),
+        validar_custo_aquisicao($custo_aquisicao),
+        validar_tipo_entrada($tipo_entrada),
+        validar_localizacao($localizacao_id),
+        validar_fornecedor($fornecedor_id),
+        validar_garantia($tipo_garantia, $data_inicio_garantia, $data_fim_garantia),
+        validar_contrato($tipo_contrato, $data_inicio_contrato, $data_fim_contrato, $entidade_contrato)
+    );
+
+    // Validações que ficam aqui (dependem de $_FILES ou índice dinâmico)
+
+    // Ficheiro da garantia
+    if (!empty($_FILES['ficheiro_garantia']['name'])) {
+        $ext = strtolower(pathinfo($_FILES['ficheiro_garantia']['name'], PATHINFO_EXTENSION));
+        if (!in_array($ext, ['pdf', 'doc', 'docx'])) {
+            $erros[] = "O ficheiro da garantia deve ser PDF, DOC ou DOCX.";
+        }
+        if ($_FILES['ficheiro_garantia']['size'] > 5 * 1024 * 1024) {
+            $erros[] = "O ficheiro da garantia não pode exceder 5MB.";
+        }
+    }
+
+    // Ficheiro do contrato
+    if (!empty($_FILES['ficheiro_contrato']['name'])) {
+        $ext = strtolower(pathinfo($_FILES['ficheiro_contrato']['name'], PATHINFO_EXTENSION));
+        if (!in_array($ext, ['pdf', 'doc', 'docx'])) {
+            $erros[] = "O ficheiro do contrato deve ser PDF, DOC ou DOCX.";
+        }
+        if ($_FILES['ficheiro_contrato']['size'] > 5 * 1024 * 1024) {
+            $erros[] = "O ficheiro do contrato não pode exceder 5MB.";
+        }
+    }
+
+    // Documentação linha a linha
+    $documentos = [];
+    $i = 1;
+    while (isset($_POST["tipo_documento_$i"])) {
+        $tipo_doc  = trim($_POST["tipo_documento_$i"] ?? "");
+        $nome_doc  = trim($_POST["nome_documento_$i"] ?? "");
+        $data_doc  = trim($_POST["data_documento_$i"] ?? "");
+        $valid_doc = trim($_POST["validade_documento_$i"] ?? "");
+
+        $linha_preenchida = !empty($tipo_doc) || !empty($nome_doc) || !empty($data_doc) || !empty($valid_doc);
+
+        if ($linha_preenchida) {
+            if (empty($tipo_doc))  $erros[] = "O tipo do documento na linha $i é obrigatório.";
+            if (empty($nome_doc))  $erros[] = "O nome do documento na linha $i é obrigatório.";
+            if (!empty($data_doc)) {
+                $partes = explode('-', $data_doc);
+                if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
+                    $erros[] = "A data do documento na linha $i não é válida.";
+                }
+            }
+            if (!empty($valid_doc)) {
+                $partes = explode('-', $valid_doc);
+                if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
+                    $erros[] = "A data de validade do documento na linha $i não é válida.";
+                }
+            }
+            if (!empty($data_doc) && !empty($valid_doc) && $valid_doc < $data_doc) {
+                $erros[] = "A validade do documento na linha $i não pode ser anterior à sua data.";
+            }
+            if (!empty($_FILES["ficheiro_documento_$i"]['name'])) {
+                $ext = strtolower(pathinfo($_FILES["ficheiro_documento_$i"]['name'], PATHINFO_EXTENSION));
+                if (!in_array($ext, ['pdf', 'doc', 'docx'])) {
+                    $erros[] = "O ficheiro do documento na linha $i deve ser PDF, DOC ou DOCX.";
+                }
+                if ($_FILES["ficheiro_documento_$i"]['size'] > 5 * 1024 * 1024) {
+                    $erros[] = "O ficheiro do documento na linha $i não pode exceder 5MB.";
+                }
+            }
+            $documentos[] = [
+                'tipo'     => $tipo_doc,
+                'nome'     => $nome_doc,
+                'data'     => !empty($data_doc) ? $data_doc : null,
+                'validade' => !empty($valid_doc) ? $valid_doc : null,
+            ];
+        }
+        $i++;
+    }
+
+    // Verificar código duplicado
+    if (empty($erros)) {
+        $stmtCod = $ligacao->prepare("SELECT id FROM equipamentos WHERE codigo = :codigo");
+        $stmtCod->execute([':codigo' => strtoupper($codigo)]);
+        if ($stmtCod->fetch()) {
+            $erros[] = "Já existe um equipamento com este código.";
+        }
     }
 }
 ?>
@@ -775,9 +881,9 @@ require_once '../../includes/header.php'; ?>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Número de série <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="num_serie"
+                                        <input type="text" class="form-control" name="numero_serie"
                                             placeholder="Ex: MP5-2022-45873" required
-                                            value="<?= $_POST['num_serie'] ?? '' ?>">
+                                            value="<?= $_POST['numero_serie'] ?? '' ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-4">
@@ -810,14 +916,14 @@ require_once '../../includes/header.php'; ?>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Estado atual <span
                                                 class="text-danger">*</span></label>
-                                        <select class="form-select" name="estado_equipamento" required>
+                                        <select class="form-select" name="estado" required>
                                             <option value="">Selecione...</option>
-                                            <option <?= ($_POST['estado_equipamento'] ?? '') == 'Ativo' ? 'selected' : '' ?>>Ativo</option>
-                                            <option <?= ($_POST['estado_equipamento'] ?? '') == 'Em manutenção' ? 'selected' : '' ?>>Em manutenção</option>
-                                            <option <?= ($_POST['estado_equipamento'] ?? '') == 'Inativo' ? 'selected' : '' ?>>Inativo</option>
-                                            <option <?= ($_POST['estado_equipamento'] ?? '') == 'Em calibração' ? 'selected' : '' ?>>Em calibração</option>
-                                            <option <?= ($_POST['estado_equipamento'] ?? '') == 'Em quarentena' ? 'selected' : '' ?>>Em quarentena</option>
-                                            <option <?= ($_POST['estado_equipamento'] ?? '') == 'Abatido' ? 'selected' : '' ?>>Abatido</option>
+                                            <option <?= ($_POST['estado'] ?? '') == 'Ativo' ? 'selected' : '' ?>>Ativo</option>
+                                            <option <?= ($_POST['estado'] ?? '') == 'Em manutenção' ? 'selected' : '' ?>>Em manutenção</option>
+                                            <option <?= ($_POST['estado'] ?? '') == 'Inativo' ? 'selected' : '' ?>>Inativo</option>
+                                            <option <?= ($_POST['estado'] ?? '') == 'Em calibração' ? 'selected' : '' ?>>Em calibração</option>
+                                            <option <?= ($_POST['estado'] ?? '') == 'Em quarentena' ? 'selected' : '' ?>>Em quarentena</option>
+                                            <option <?= ($_POST['estado'] ?? '') == 'Abatido' ? 'selected' : '' ?>>Abatido</option>
                                         </select>
                                     </div>
                                 </div>
@@ -832,9 +938,9 @@ require_once '../../includes/header.php'; ?>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Custo de aquisição (€)</label>
-                                        <input type="number" class="form-control" name="custo"
+                                        <input type="number" class="form-control" name="custo_aquisicao"
                                             placeholder="Ex: 12500" step="0.01" min="0"
-                                            value="<?= $_POST['custo'] ?? '' ?>">
+                                            value="<?= $_POST['custo_aquisicao'] ?? '' ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Tipo de entrada</label>
@@ -1280,7 +1386,7 @@ require_once '../../includes/header.php'; ?>
             erros.push("O modelo deve ter pelo menos 2 caracteres.");
         }
 
-        const numSerie = document.querySelector('[name="num_serie"]').value.trim();
+        const numSerie = document.querySelector('[name="numero_serie"]').value.trim();
         if (!numSerie) {
             erros.push("O número de série é obrigatório.");
         } else if (numSerie.length < 2) {
@@ -1305,10 +1411,10 @@ require_once '../../includes/header.php'; ?>
         const criticidade = document.querySelector('[name="criticidade"]').value;
         if (!criticidade) erros.push("A criticidade é obrigatória.");
 
-        const estado = document.querySelector('[name="estado_equipamento"]').value;
+        const estado = document.querySelector('[name="estado"]').value;
         if (!estado) erros.push("O estado é obrigatório.");
 
-        const custo = document.querySelector('[name="custo"]').value.trim();
+        const custo = document.querySelector('[name="custo_aquisicao"]').value.trim();
         if (custo && (isNaN(custo) || parseFloat(custo) < 0)) {
             erros.push("O custo de aquisição deve ser um valor positivo.");
         }
