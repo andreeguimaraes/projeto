@@ -379,7 +379,7 @@ $ligacao = null;
                                                                 <i class="fas fa-eye"></i>
                                                             </a>
                                                             <!-- este link inclui o ID do equipamento na URL.  -->
-                                                            <a href="editar-equipamentos.php?id=<?= aes_encrypt($eq->id) ?>"
+                                                            <a href="editar-equipamentos.php?id_equipamento=<?= aes_encrypt($eq->id) ?>"
                                                             class="btn btn-sm btn-outline-warning">
                                                                 <i class="fas fa-pen"></i>
                                                             </a>

@@ -2,27 +2,27 @@
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
 
-require_once __DIR__ . '/../../includes/validacoes.php';
-
 // Só aceita GET e POST
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
-    header('Location: ' . BASE_URL . '/private/views/equipamentos/equipamentos.php');
+    header('Location: ' . BASE_URL . '/MEDINV/public/login.php');
     exit;
 }
 
 // Desencriptar e validar o ID
-$idEncriptado = $_GET['id'] ?? null;
+$idEncriptado = $_GET['id_equipamento'] ?? null;
 $id = aes_decrypt($idEncriptado);
 
 if (!$id || !is_numeric($id)) {
     header('Location: ' . BASE_URL . '/private/views/equipamentos/equipamentos.php');
     exit;
 }
-echo ($id);
+
+$eq = null;
+$categorias = [];
 
 try {
     $ligacao = new PDO(
-        "mysql:host=" . MYSQL_HOST . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
         MYSQL_USERNAME,
         MYSQL_PASSWORD
     );
@@ -33,11 +33,14 @@ try {
     $stmt->execute();
     $eq = $stmt->fetch(PDO::FETCH_OBJ);
 
+
     if (!$eq) {
         header('Location: equipamentos.php');
         exit;
     }
-
+    $stmtCat = $ligacao->prepare("SELECT * FROM categorias_equipamento ORDER BY nome");
+    $stmtCat->execute();
+    $categorias = $stmtCat->fetchAll(PDO::FETCH_OBJ);
 } catch (PDOException $err) {
     $erros[] = "Erro na ligação à base de dados.";
     $eq = null;
@@ -65,7 +68,7 @@ $ligacao = null;
                 </a>
             </div>
 
-            <form action="" method="post" id="formEditar" enctype="multipart/form-data">
+            <form action="editar-equipamentos.php?id_equipamento=<?= $idEncriptado ?>" method="post">
                 <div class="card shadow rounded mt-4">
                     <div class="card-body">
 
@@ -109,71 +112,73 @@ $ligacao = null;
                                 <div class="row mb-3">
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Código interno <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="codigo" value="EQ001" required>
+                                        <input type="text" class="form-control" name="codigo" value="<?= htmlspecialchars($eq->codigo ?? '') ?>" required>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Designação <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="designacao" value="Monitor IntelliVue MP5" required>
+                                        <input type="text" class="form-control" name="designacao"
+                                            value="<?= htmlspecialchars($eq->designacao ?? '') ?>" required>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Categoria <span class="text-danger">*</span></label>
-                                        <select class="form-select" name="categoria" required>
+                                        <select class="form-select" name="categoria_id" required>
                                             <option value="">Selecione...</option>
-                                            <option selected>Monitorização</option>
-                                            <option>Suporte de vida</option>
-                                            <option>Terapia</option>
-                                            <option>Diagnóstico</option>
-                                            <option>Laboratório</option>
-                                            <option>Esterilização</option>
-                                            <option>Reabilitação</option>
+                                            <?php foreach ($categorias as $cat): ?>
+                                                <option value="<?= $cat->id ?>"
+                                                    <?= $eq->categoria_id == $cat->id ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($cat->nome) ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Marca <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="marca" value="Philips" required>
+                                        <input type="text" class="form-control" name="marca"
+                                            value="<?= htmlspecialchars($eq->marca  ?? '') ?>" required>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Modelo <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="modelo" value="IntelliVue MP5" required>
+                                        <input type="text" class="form-control" name="modelo"
+                                            value="<?= htmlspecialchars($eq->modelo  ?? '') ?>">
+
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Número de série <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="num_serie" value="MP5-2022-45873" required>
+                                        <input type="text" class="form-control" name="numero_serie"
+                                            value="<?= htmlspecialchars($eq->numero_serie ?? '') ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-4">
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Fabricante</label>
-                                        <input type="text" class="form-control" name="fabricante" value="Philips Healthcare">
+                                        <input type="text" class="form-control" name="fabricante" value="<?= htmlspecialchars($eq->fabricante ?? '') ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Ano de fabrico</label>
-                                        <input type="number" class="form-control" name="ano_fabrico" value="2022" min="1900" max="2026">
+                                        <input type="number" class="form-control" name="ano_fabrico" value="<?= $eq->ano_fabrico ?? '' ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Criticidade <span class="text-danger">*</span></label>
-                                        <select class="form-select" name="criticidade" required>
-                                            <option value="">Selecione...</option>
-                                            <option>Baixa</option>
-                                            <option>Média</option>
-                                            <option>Alta</option>
-                                            <option selected>Suporte de vida</option>
+                                        <select class="form-select" name="criticidade">
+                                            <option value="baixa" <?= $eq->criticidade == 'baixa' ? 'selected' : '' ?>>Baixa</option>
+                                            <option value="media" <?= $eq->criticidade == 'media' ? 'selected' : '' ?>>Média</option>
+                                            <option value="alta" <?= $eq->criticidade == 'alta' ? 'selected' : '' ?>>Alta</option>
+                                            <option value="suporte_de_vida" <?= $eq->criticidade == 'suporte_de_vida' ? 'selected' : '' ?>>Suporte de vida</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row mb-4">
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Estado atual <span class="text-danger">*</span></label>
-                                        <select class="form-select" name="estado_equipamento" required>
-                                            <option value="">Selecione...</option>
-                                            <option selected>Ativo</option>
-                                            <option>Em manutenção</option>
-                                            <option>Inativo</option>
-                                            <option>Em calibração</option>
-                                            <option>Em quarentena</option>
-                                            <option>Abatido</option>
+                                        <select class="form-select" name="estado" required>
+                                            <option value="ativo"          <?= $eq->estado == 'ativo'          ? 'selected' : '' ?>>Ativo</option>
+                                            <option value="em_manutencao"  <?= $eq->estado == 'em_manutencao'  ? 'selected' : '' ?>>Em manutenção</option>
+                                            <option value="inativo"        <?= $eq->estado == 'inativo'        ? 'selected' : '' ?>>Inativo</option>
+                                            <option value="em_calibracao"  <?= $eq->estado == 'em_calibracao'  ? 'selected' : '' ?>>Em calibração</option>
+                                            <option value="em_quarentena"  <?= $eq->estado == 'em_quarentena'  ? 'selected' : '' ?>>Em quarentena</option>
+                                            <option value="abatido"        <?= $eq->estado == 'abatido'        ? 'selected' : '' ?>>Abatido</option>
                                         </select>
                                     </div>
                                 </div>
@@ -182,27 +187,28 @@ $ligacao = null;
                                 <div class="row mb-4">
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Data de aquisição</label>
-                                        <input type="date" class="form-control" name="data_aquisicao" value="2022-03-15">
+                                        <input type="date" class="form-control" name="data_aquisicao" value="<?= $eq->data_aquisicao ?? '' ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Custo de aquisição (€)</label>
-                                        <input type="number" class="form-control" name="custo" value="12500" step="0.01" min="0">
+                                        <input type="number" class="form-control" name="custo_aquisicao" step="0.01" min="0" value="<?= $eq->custo_aquisicao ?? '' ?>">
+
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Tipo de entrada</label>
                                         <select class="form-select" name="tipo_entrada">
                                             <option value="">Selecione...</option>
-                                            <option selected>Compra</option>
-                                            <option>Doação</option>
-                                            <option>Aluguer</option>
-                                            <option>Empréstimo</option>
+                                            <option value="compra"      <?= $eq->tipo_entrada == 'compra'      ? 'selected' : '' ?>>Compra</option>
+                                            <option value="doacao"      <?= $eq->tipo_entrada == 'doacao'      ? 'selected' : '' ?>>Doação</option>
+                                            <option value="aluguer"     <?= $eq->tipo_entrada == 'aluguer'     ? 'selected' : '' ?>>Aluguer</option>
+                                            <option value="emprestimo"  <?= $eq->tipo_entrada == 'emprestimo'  ? 'selected' : '' ?>>Empréstimo</option>
                                         </select>
                                     </div>
                                 </div>
                                 <hr>
                                 <h5 class="text-muted mb-3"><i class="fas fa-note-sticky me-2"></i>Observações</h5>
                                 <div class="mb-4">
-                                    <textarea class="form-control" name="observacoes" rows="4">Equipamento em bom estado de conservação. Última manutenção preventiva realizada em janeiro de 2026.</textarea>
+                                    <textarea class="form-control" name="observacoes" rows="4"><?= htmlspecialchars($eq->observacoes ?? '') ?></textarea>
                                 </div>
                                 <p class="text-muted small"><span class="text-danger">*</span> Campos obrigatórios</p>
                                 <div class="d-flex justify-content-end">
@@ -627,15 +633,51 @@ $ligacao = null;
     });
 
     const fornecedores = {
-        1: { nome: "Philips Healthcare Portugal", nif: "500 123 456", tipo: "Fabricante", morada: "Av. da Liberdade, 110, Lisboa", website: "www.philips.pt", telefone: "+351 210 000 000", email: "geral@philips.pt", contacto: "João Ferreira", telDireto: "+351 962 000 000", emailDireto: "joao.ferreira@philips.pt" },
-        2: { nome: "Dräger Portugal", nif: "500 234 567", tipo: "Fabricante", morada: "Rua do Ouro, 55, Porto", website: "www.draeger.com/pt", telefone: "+351 220 000 000", email: "geral@draeger.pt", contacto: "Ana Sousa", telDireto: "+351 933 000 000", emailDireto: "ana.sousa@draeger.pt" },
-        3: { nome: "B. Braun Portugal", nif: "500 345 678", tipo: "Distribuidor", morada: "Av. do Brasil, 23, Lisboa", website: "www.bbraun.pt", telefone: "+351 210 111 000", email: "geral@bbraun.pt", contacto: "Carlos Mendes", telDireto: "+351 912 000 000", emailDireto: "carlos.mendes@bbraun.pt" }
+        1: {
+            nome: "Philips Healthcare Portugal",
+            nif: "500 123 456",
+            tipo: "Fabricante",
+            morada: "Av. da Liberdade, 110, Lisboa",
+            website: "www.philips.pt",
+            telefone: "+351 210 000 000",
+            email: "geral@philips.pt",
+            contacto: "João Ferreira",
+            telDireto: "+351 962 000 000",
+            emailDireto: "joao.ferreira@philips.pt"
+        },
+        2: {
+            nome: "Dräger Portugal",
+            nif: "500 234 567",
+            tipo: "Fabricante",
+            morada: "Rua do Ouro, 55, Porto",
+            website: "www.draeger.com/pt",
+            telefone: "+351 220 000 000",
+            email: "geral@draeger.pt",
+            contacto: "Ana Sousa",
+            telDireto: "+351 933 000 000",
+            emailDireto: "ana.sousa@draeger.pt"
+        },
+        3: {
+            nome: "B. Braun Portugal",
+            nif: "500 345 678",
+            tipo: "Distribuidor",
+            morada: "Av. do Brasil, 23, Lisboa",
+            website: "www.bbraun.pt",
+            telefone: "+351 210 111 000",
+            email: "geral@bbraun.pt",
+            contacto: "Carlos Mendes",
+            telDireto: "+351 912 000 000",
+            emailDireto: "carlos.mendes@bbraun.pt"
+        }
     };
 
     function preencherFornecedor() {
         const id = document.getElementById('selectFornecedor').value;
         const painel = document.getElementById('infoFornecedor');
-        if (!id) { painel.classList.add('d-none'); return; }
+        if (!id) {
+            painel.classList.add('d-none');
+            return;
+        }
         const f = fornecedores[id];
         document.getElementById('f-nome').textContent = f.nome;
         document.getElementById('f-nif').textContent = f.nif;
@@ -651,15 +693,33 @@ $ligacao = null;
     }
 
     const localizacoes = {
-        1: { edificio: "Principal", piso: "2", servico: "UCI", sala: "201" },
-        2: { edificio: "Principal", piso: "1", servico: "Urgência", sala: "101" },
-        3: { edificio: "Principal", piso: "3", servico: "Bloco Operatório", sala: "301" }
+        1: {
+            edificio: "Principal",
+            piso: "2",
+            servico: "UCI",
+            sala: "201"
+        },
+        2: {
+            edificio: "Principal",
+            piso: "1",
+            servico: "Urgência",
+            sala: "101"
+        },
+        3: {
+            edificio: "Principal",
+            piso: "3",
+            servico: "Bloco Operatório",
+            sala: "301"
+        }
     };
 
     function preencherLocalizacao() {
         const id = document.getElementById('selectLocalizacao').value;
         const painel = document.getElementById('infoLocalizacao');
-        if (!id) { painel.classList.add('d-none'); return; }
+        if (!id) {
+            painel.classList.add('d-none');
+            return;
+        }
         const l = localizacoes[id];
         document.getElementById('l-edificio').textContent = l.edificio;
         document.getElementById('l-piso').textContent = l.piso;
