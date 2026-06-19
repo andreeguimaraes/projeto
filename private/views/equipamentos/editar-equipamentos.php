@@ -25,6 +25,8 @@ $garantia = null;
 $contrato = null;
 $tipos_garantia_bd = [];
 $tipos_contrato_bd = [];
+$tipos_documento_bd = [];
+$documentos_bd = [];
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -58,6 +60,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $entidade_garantia = trim($_POST['entidade_garantia'] ?? '');
     $estado_garantia = trim($_POST['estado_garantia'] ?? '');
 
+    $ficheiro_garantia_path = null;
+    if (!empty($_FILES['ficheiro_garantia']['name']) && $_FILES['ficheiro_garantia']['error'] === UPLOAD_ERR_OK) {
+        $extensao = pathinfo($_FILES['ficheiro_garantia']['name'], PATHINFO_EXTENSION);
+        $nomeFicheiro = uniqid('garantia_') . '.' . $extensao;
+        $dirUploads = __DIR__ . '/../../../uploads/';
+        if (!is_dir($dirUploads)) {
+            mkdir($dirUploads, 0755, true);
+        }
+        if (move_uploaded_file($_FILES['ficheiro_garantia']['tmp_name'], $dirUploads . $nomeFicheiro)) {
+            $ficheiro_garantia_path = 'uploads/' . $nomeFicheiro;
+        }
+    }
+
+    $ficheiro_contrato_path = null;
+    if (!empty($_FILES['ficheiro_contrato']['name']) && $_FILES['ficheiro_contrato']['error'] === UPLOAD_ERR_OK) {
+        $extensao = pathinfo($_FILES['ficheiro_contrato']['name'], PATHINFO_EXTENSION);
+        $nomeFicheiro = uniqid('contrato_') . '.' . $extensao;
+        $dirUploads = __DIR__ . '/../../../uploads/';
+        if (!is_dir($dirUploads)) {
+            mkdir($dirUploads, 0755, true);
+        }
+        if (move_uploaded_file($_FILES['ficheiro_contrato']['tmp_name'], $dirUploads . $nomeFicheiro)) {
+            $ficheiro_contrato_path = 'uploads/' . $nomeFicheiro;
+        }
+    }
     $periodicidade_contrato = trim($_POST['periodicidade_contrato'] ?? '');
     $estado_contrato = trim($_POST['estado_contrato'] ?? '');
     $obs_contrato = trim($_POST['obs_contrato'] ?? '');
@@ -89,7 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         validar_tipo_entrada($tipo_entrada),
         validar_localizacao($localizacao_id),
         validar_fornecedor($fornecedor_id),
-
+        validar_garantia($tipo_garantia, $data_inicio_garantia, $data_fim_garantia),
+        validar_contrato($tipo_contrato, $data_inicio_contrato, $data_fim_contrato, $entidade_contrato)
     );
 
     if (empty($erros)) {
@@ -154,19 +182,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmtAtual->execute();
                 $fornecedorAtual = $stmtAtual->fetch(PDO::FETCH_OBJ);
 
+                // buscar o tipo_id real do fornecedor escolhido
+                $stmtTipoForn = $ligacao->prepare("SELECT tipo_id FROM fornecedores WHERE id = :fornecedor_id");
+                $stmtTipoForn->bindParam(':fornecedor_id', $fornecedor_id, PDO::PARAM_INT);
+                $stmtTipoForn->execute();
+                $tipo_fornecedor_id = $stmtTipoForn->fetchColumn();
+
                 if ($fornecedorAtual) {
                     $stmtForn = $ligacao->prepare("
                         UPDATE equipamento_fornecedor
-                        SET fornecedor_id = :fornecedor_id
+                        SET fornecedor_id = :fornecedor_id,
+                            tipo_id = :tipo_id
                         WHERE id = :id
                     ");
 
                     $stmtForn->bindParam(':fornecedor_id', $fornecedor_id, PDO::PARAM_INT);
+                    $stmtForn->bindParam(':tipo_id', $tipo_fornecedor_id, PDO::PARAM_INT);
                     $stmtForn->bindParam(':id', $fornecedorAtual->id, PDO::PARAM_INT);
                     $stmtForn->execute();
                 } else {
-                    $tipo_fornecedor_id = 1;
-
                     $stmtForn = $ligacao->prepare("
                         INSERT INTO equipamento_fornecedor 
                             (equipamento_id, fornecedor_id, tipo_id)
@@ -193,16 +227,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $garantiaAtual = $stmtGarantiaAtual->fetch(PDO::FETCH_OBJ);
 
                 if ($garantiaAtual) {
-                    $stmtGarantia = $ligacao->prepare("
-                        UPDATE garantias
-                        SET tipo_id = :tipo_id,
-                            data_inicio = :data_inicio,
-                            data_fim = :data_fim,
-                            entidade_responsavel = :entidade_responsavel,
-                            estado = :estado
-                        WHERE id = :id
-                    ");
-
+                    if ($ficheiro_garantia_path !== null) {
+                        $stmtGarantia = $ligacao->prepare("
+                            UPDATE garantias
+                            SET tipo_id = :tipo_id,
+                                data_inicio = :data_inicio,
+                                data_fim = :data_fim,
+                                entidade_responsavel = :entidade_responsavel,
+                                estado = :estado,
+                                ficheiro_path = :ficheiro_path
+                            WHERE id = :id
+                        ");
+                        $stmtGarantia->bindParam(':ficheiro_path', $ficheiro_garantia_path, PDO::PARAM_STR);
+                    } else {
+                        $stmtGarantia = $ligacao->prepare("
+                            UPDATE garantias
+                            SET tipo_id = :tipo_id,
+                                data_inicio = :data_inicio,
+                                data_fim = :data_fim,
+                                entidade_responsavel = :entidade_responsavel,
+                                estado = :estado
+                            WHERE id = :id
+                        ");
+                    }
                     $stmtGarantia->bindParam(':tipo_id', $tipo_garantia, PDO::PARAM_INT);
                     $stmtGarantia->bindParam(':data_inicio', $data_inicio_garantia, PDO::PARAM_STR);
                     $stmtGarantia->bindParam(':data_fim', $data_fim_garantia, PDO::PARAM_STR);
@@ -210,14 +257,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtGarantia->bindParam(':estado', $estado_garantia, PDO::PARAM_STR);
                     $stmtGarantia->bindParam(':id', $garantiaAtual->id, PDO::PARAM_INT);
                     $stmtGarantia->execute();
+                
                 } else {
                     $codigo_garantia = 'GAR' . str_pad($id, 5, '0', STR_PAD_LEFT);
 
                     $stmtGarantia = $ligacao->prepare("
                         INSERT INTO garantias
-                            (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, estado)
+                            (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, estado, ficheiro_path)
                         VALUES
-                            (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :estado)
+                            (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :estado, :ficheiro_path)
                     ");
 
                     $stmtGarantia->bindParam(':codigo', $codigo_garantia, PDO::PARAM_STR);
@@ -227,6 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtGarantia->bindParam(':data_fim', $data_fim_garantia, PDO::PARAM_STR);
                     $stmtGarantia->bindParam(':entidade_responsavel', $entidade_garantia, PDO::PARAM_STR);
                     $stmtGarantia->bindParam(':estado', $estado_garantia, PDO::PARAM_STR);
+                    $stmtGarantia->bindParam(':ficheiro_path', $ficheiro_garantia_path, PDO::PARAM_STR);
                     $stmtGarantia->execute();
                 }
             }
@@ -244,17 +293,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $contratoAtual = $stmtContratoAtual->fetch(PDO::FETCH_OBJ);
 
                 if ($contratoAtual) {
-                    $stmtContrato = $ligacao->prepare("
-                        UPDATE contratos
-                        SET tipo_id = :tipo_id,
-                            data_inicio = :data_inicio,
-                            data_fim = :data_fim,
-                            entidade_responsavel = :entidade_responsavel,
-                            periodicidade = :periodicidade,
-                            estado = :estado,
-                            observacoes = :observacoes
-                        WHERE id = :id
-                    ");
+                    if ($ficheiro_contrato_path !== null) {
+                        $stmtContrato = $ligacao->prepare("
+                            UPDATE contratos
+                            SET tipo_id = :tipo_id,
+                                data_inicio = :data_inicio,
+                                data_fim = :data_fim,
+                                entidade_responsavel = :entidade_responsavel,
+                                periodicidade = :periodicidade,
+                                estado = :estado,
+                                observacoes = :observacoes,
+                                ficheiro_path = :ficheiro_path
+                            WHERE id = :id
+                        ");
+                        $stmtContrato->bindParam(':ficheiro_path', $ficheiro_contrato_path, PDO::PARAM_STR);
+                    } else {
+                        $stmtContrato = $ligacao->prepare("
+                            UPDATE contratos
+                            SET tipo_id = :tipo_id,
+                                data_inicio = :data_inicio,
+                                data_fim = :data_fim,
+                                entidade_responsavel = :entidade_responsavel,
+                                periodicidade = :periodicidade,
+                                estado = :estado,
+                                observacoes = :observacoes
+                            WHERE id = :id
+                        ");
+                    }
 
                     $stmtContrato->bindParam(':tipo_id', $tipo_contrato, PDO::PARAM_INT);
                     $stmtContrato->bindParam(':data_inicio', $data_inicio_contrato, PDO::PARAM_STR);
@@ -270,9 +335,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $stmtContrato = $ligacao->prepare("
                         INSERT INTO contratos
-                            (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, periodicidade, estado, observacoes)
+                            (codigo, equipamento_id, tipo_id, data_inicio, data_fim, entidade_responsavel, periodicidade, estado, observacoes, ficheiro_path)
                         VALUES
-                            (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :periodicidade, :estado, :observacoes)
+                            (:codigo, :equipamento_id, :tipo_id, :data_inicio, :data_fim, :entidade_responsavel, :periodicidade, :estado, :observacoes, :ficheiro_path)
                     ");
 
                     $stmtContrato->bindParam(':codigo', $codigo_contrato, PDO::PARAM_STR);
@@ -284,7 +349,96 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtContrato->bindParam(':periodicidade', $periodicidade_contrato, PDO::PARAM_STR);
                     $stmtContrato->bindParam(':estado', $estado_contrato, PDO::PARAM_STR);
                     $stmtContrato->bindParam(':observacoes', $obs_contrato, PDO::PARAM_STR);
+                    $stmtContrato->bindParam(':ficheiro_path', $ficheiro_contrato_path, PDO::PARAM_STR);
                     $stmtContrato->execute();
+                }
+            }
+            // Processar documentos
+            $dirUploads = __DIR__ . '/../../../uploads/';
+            if (!is_dir($dirUploads)) {
+                mkdir($dirUploads, 0755, true);
+            }
+            $documentosNovosNestaSubmissao = 0;
+
+            foreach ($_POST as $chave => $valor) {
+                if (strpos($chave, 'nome_documento_') === 0) {
+                    $n = substr($chave, strlen('nome_documento_'));
+
+                    $nome_doc = trim($_POST["nome_documento_{$n}"] ?? '');
+                    $tipo_doc = trim($_POST["tipo_documento_{$n}"] ?? '');
+                    $data_doc = trim($_POST["data_documento_{$n}"] ?? '');
+                    $validade_doc = trim($_POST["validade_documento_{$n}"] ?? '');
+                    $documento_id = trim($_POST["documento_id_{$n}"] ?? '');
+
+                    // linha vazia (adicionada mas não preenchida) - ignora
+                    if ($nome_doc === '' || $tipo_doc === '') {
+                        continue;
+                    }
+
+                    $data_doc = $data_doc !== '' ? $data_doc : null;
+                    $validade_doc = $validade_doc !== '' ? $validade_doc : null;
+
+                    // upload do ficheiro, se foi enviado um novo
+                    $ficheiro_path = null;
+                    if (!empty($_FILES["ficheiro_documento_{$n}"]['name']) && $_FILES["ficheiro_documento_{$n}"]['error'] === UPLOAD_ERR_OK) {
+                        $extensao = pathinfo($_FILES["ficheiro_documento_{$n}"]['name'], PATHINFO_EXTENSION);
+                        $nomeFicheiro = uniqid('doc_') . '.' . $extensao;
+                        $destino = $dirUploads . $nomeFicheiro;
+
+                        if (move_uploaded_file($_FILES["ficheiro_documento_{$n}"]['tmp_name'], $destino)) {
+                            $ficheiro_path = 'uploads/' . $nomeFicheiro;
+                        }
+                    }
+
+                    if (!empty($documento_id)) {
+                        // documento já existe - UPDATE
+                        if ($ficheiro_path !== null) {
+                            $stmtDoc = $ligacao->prepare("
+                    UPDATE documentos
+                    SET tipo_id = :tipo_id, nome = :nome, data_documento = :data_documento,
+                        data_validade = :data_validade, ficheiro_path = :ficheiro_path
+                    WHERE id = :id
+                ");
+                            $stmtDoc->bindParam(':ficheiro_path', $ficheiro_path, PDO::PARAM_STR);
+                        } else {
+                            $stmtDoc = $ligacao->prepare("
+                    UPDATE documentos
+                    SET tipo_id = :tipo_id, nome = :nome, data_documento = :data_documento,
+                        data_validade = :data_validade
+                    WHERE id = :id
+                ");
+                        }
+                        $stmtDoc->bindParam(':tipo_id', $tipo_doc, PDO::PARAM_INT);
+                        $stmtDoc->bindParam(':nome', $nome_doc, PDO::PARAM_STR);
+                        $stmtDoc->bindParam(':data_documento', $data_doc, PDO::PARAM_STR);
+                        $stmtDoc->bindParam(':data_validade', $validade_doc, PDO::PARAM_STR);
+                        $stmtDoc->bindParam(':id', $documento_id, PDO::PARAM_INT);
+                        $stmtDoc->execute();
+                    } else {
+                        // documento novo - INSERT
+                        $stmtCountDoc = $ligacao->prepare("SELECT COUNT(*) FROM documentos WHERE equipamento_id = :equipamento_id");
+                        $stmtCountDoc->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+                        $stmtCountDoc->execute();
+                        $proximoNumero = $stmtCountDoc->fetchColumn() + 1 + $documentosNovosNestaSubmissao;
+                        $documentosNovosNestaSubmissao++;
+
+                        $codigo_doc = 'DOC' . str_pad($id, 3, '0', STR_PAD_LEFT) . '-' . str_pad($proximoNumero, 2, '0', STR_PAD_LEFT);
+
+                        $stmtDoc = $ligacao->prepare("
+                INSERT INTO documentos
+                    (codigo, equipamento_id, tipo_id, nome, data_documento, data_validade, ficheiro_path)
+                VALUES
+                    (:codigo, :equipamento_id, :tipo_id, :nome, :data_documento, :data_validade, :ficheiro_path)
+            ");
+                        $stmtDoc->bindParam(':codigo', $codigo_doc, PDO::PARAM_STR);
+                        $stmtDoc->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+                        $stmtDoc->bindParam(':tipo_id', $tipo_doc, PDO::PARAM_INT);
+                        $stmtDoc->bindParam(':nome', $nome_doc, PDO::PARAM_STR);
+                        $stmtDoc->bindParam(':data_documento', $data_doc, PDO::PARAM_STR);
+                        $stmtDoc->bindParam(':data_validade', $validade_doc, PDO::PARAM_STR);
+                        $stmtDoc->bindParam(':ficheiro_path', $ficheiro_path, PDO::PARAM_STR);
+                        $stmtDoc->execute();
+                    }
                 }
             }
 
@@ -304,14 +458,9 @@ try {
     $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $ligacao->prepare("
-        SELECT 
-            e.*,
-            ef.fornecedor_id,
-            ef.tipo_id AS tipo_fornecedor_associado
-        FROM equipamentos e
-        LEFT JOIN equipamento_fornecedor ef 
-            ON ef.equipamento_id = e.id
-        WHERE e.id = :id
+        SELECT *
+        FROM equipamentos
+        WHERE id = :id
         LIMIT 1
     ");
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -319,10 +468,22 @@ try {
     $eq = $stmt->fetch(PDO::FETCH_OBJ);
 
 
+
+
     if (!$eq) {
         header('Location: equipamentos.php');
         exit;
     }
+        $stmtFornAtual = $ligacao->prepare("
+        SELECT fornecedor_id, tipo_id
+        FROM equipamento_fornecedor
+        WHERE equipamento_id = :equipamento_id
+        ORDER BY id
+        LIMIT 1
+    ");
+    $stmtFornAtual->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+    $stmtFornAtual->execute();
+    $fornecedorAssociado = $stmtFornAtual->fetch(PDO::FETCH_OBJ);
     $stmtCat = $ligacao->prepare("SELECT * FROM categorias_equipamento ORDER BY nome");
     $stmtCat->execute();
     $categorias = $stmtCat->fetchAll(PDO::FETCH_OBJ);
@@ -383,6 +544,24 @@ try {
     ");
     $stmtTiposContrato->execute();
     $tipos_contrato_bd = $stmtTiposContrato->fetchAll(PDO::FETCH_OBJ);
+
+    $stmtTiposDoc = $ligacao->prepare("
+        SELECT *
+        FROM tipos_documento
+        ORDER BY id
+    ");
+    $stmtTiposDoc->execute();
+    $tipos_documento_bd = $stmtTiposDoc->fetchAll(PDO::FETCH_OBJ);
+
+    $stmtDocs = $ligacao->prepare("
+        SELECT *
+        FROM documentos
+        WHERE equipamento_id = :equipamento_id
+        ORDER BY id
+    ");
+    $stmtDocs->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+    $stmtDocs->execute();
+    $documentos_bd = $stmtDocs->fetchAll(PDO::FETCH_OBJ);
 } catch (PDOException $err) {
     $erros[] = "Erro na ligação à base de dados.";
     $eq = null;
@@ -489,7 +668,7 @@ $ligacao = null;
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Modelo <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="modelo" value="<?= htmlspecialchars($modelo ?? $eq->modelo ?? '') ?>" required>
+                                        <input type="text" class="form-control" name="modelo" value="<?= htmlspecialchars($eq->modelo ?? '') ?>" required>
 
                                     </div>
                                     <div class="col-md-4">
@@ -631,7 +810,7 @@ $ligacao = null;
                                             <option value="">Selecione...</option>
                                             <?php foreach ($fornecedores_bd as $f): ?>
                                                 <option value="<?= $f->id ?>"
-                                                    <?= (($_POST['fornecedor_id'] ?? $eq->fornecedor_id ?? '') == $f->id) ? 'selected' : '' ?>>
+                                                    <?= (($_POST['fornecedor_id'] ?? $fornecedorAssociado->fornecedor_id ?? '') == $f->id) ? 'selected' : '' ?>>
                                                     <?= htmlspecialchars($f->nome) ?>
                                                 </option>
                                             <?php endforeach; ?>
@@ -751,7 +930,9 @@ $ligacao = null;
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Ficheiro</label>
                                         <input type="file" class="form-control" name="ficheiro_garantia" accept=".pdf,.doc,.docx">
-                                        <small class="text-muted">Ficheiro atual: garantia_eq001.pdf</small>
+                                        <?php if (!empty($garantia->ficheiro_path)): ?>
+                                            <small class="text-muted">Atual: <?= htmlspecialchars(basename($garantia->ficheiro_path)) ?></small>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between">
@@ -824,7 +1005,9 @@ $ligacao = null;
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Ficheiro</label>
                                         <input type="file" class="form-control" name="ficheiro_contrato" accept=".pdf,.doc,.docx">
-                                        <small class="text-muted">Ficheiro atual: contrato_eq001.pdf</small>
+                                        <?php if (!empty($contrato->ficheiro_path)): ?>
+                                            <small class="text-muted">Atual: <?= htmlspecialchars(basename($contrato->ficheiro_path)) ?></small>
+                                        <?php endif; ?>                                    
                                     </div>
                                 </div>
                                 <div class="row mb-4">
@@ -862,78 +1045,36 @@ $ligacao = null;
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>
-                                                    <select class="form-select" name="tipo_documento_1">
-                                                        <option value="">Selecione...</option>
-                                                        <option selected>Manual de utilizador</option>
-                                                        <option>Manual de serviço</option>
-                                                        <option>Certificado de calibração</option>
-                                                        <option>Contrato de manutenção</option>
-                                                        <option>Fatura de aquisição</option>
-                                                    </select>
-                                                </td>
-                                                <td><input type="text" class="form-control" name="nome_documento_1" value="Manual MP5"></td>
-                                                <td><input type="date" class="form-control" name="data_documento_1" value="2022-03-15"></td>
-                                                <td><input type="date" class="form-control" name="validade_documento_1"></td>
-                                                <td>
-                                                    <input type="file" class="form-control form-control-sm" name="ficheiro_documento_1" accept=".pdf,.doc,.docx">
-                                                    <small class="text-muted">Atual: manual_mp5.pdf</small>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('tr').remove()">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <select class="form-select" name="tipo_documento_2">
-                                                        <option value="">Selecione...</option>
-                                                        <option>Manual de utilizador</option>
-                                                        <option>Manual de serviço</option>
-                                                        <option selected>Certificado de calibração</option>
-                                                        <option>Contrato de manutenção</option>
-                                                        <option>Fatura de aquisição</option>
-                                                    </select>
-                                                </td>
-                                                <td><input type="text" class="form-control" name="nome_documento_2" value="Certificado de calibração"></td>
-                                                <td><input type="date" class="form-control" name="data_documento_2" value="2024-01-10"></td>
-                                                <td><input type="date" class="form-control" name="validade_documento_2" value="2025-01-10"></td>
-                                                <td>
-                                                    <input type="file" class="form-control form-control-sm" name="ficheiro_documento_2" accept=".pdf,.doc,.docx">
-                                                    <small class="text-muted">Atual: certificado.pdf</small>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('tr').remove()">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <select class="form-select" name="tipo_documento_3">
-                                                        <option value="">Selecione...</option>
-                                                        <option>Manual de utilizador</option>
-                                                        <option>Manual de serviço</option>
-                                                        <option>Certificado de calibração</option>
-                                                        <option selected>Contrato de manutenção</option>
-                                                        <option>Fatura de aquisição</option>
-                                                    </select>
-                                                </td>
-                                                <td><input type="text" class="form-control" name="nome_documento_3" value="Contrato de manutenção"></td>
-                                                <td><input type="date" class="form-control" name="data_documento_3" value="2022-03-15"></td>
-                                                <td><input type="date" class="form-control" name="validade_documento_3" value="2027-03-15"></td>
-                                                <td>
-                                                    <input type="file" class="form-control form-control-sm" name="ficheiro_documento_3" accept=".pdf,.doc,.docx">
-                                                    <small class="text-muted">Atual: contrato.pdf</small>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('tr').remove()">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                            <?php $n = 0;
+                                            foreach ($documentos_bd as $doc): $n++; ?>
+                                                <tr>
+                                                    <td>
+                                                        <input type="hidden" name="documento_id_<?= $n ?>" value="<?= $doc->id ?>">
+                                                        <select class="form-select" name="tipo_documento_<?= $n ?>">
+                                                            <option value="">Selecione...</option>
+                                                            <?php foreach ($tipos_documento_bd as $td): ?>
+                                                                <option value="<?= $td->id ?>" <?= $doc->tipo_id == $td->id ? 'selected' : '' ?>>
+                                                                    <?= htmlspecialchars($td->nome) ?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control" name="nome_documento_<?= $n ?>" value="<?= htmlspecialchars($doc->nome) ?>"></td>
+                                                    <td><input type="date" class="form-control" name="data_documento_<?= $n ?>" value="<?= htmlspecialchars($doc->data_documento ?? '') ?>"></td>
+                                                    <td><input type="date" class="form-control" name="validade_documento_<?= $n ?>" value="<?= htmlspecialchars($doc->data_validade ?? '') ?>"></td>
+                                                    <td>
+                                                        <input type="file" class="form-control form-control-sm" name="ficheiro_documento_<?= $n ?>" accept=".pdf,.doc,.docx">
+                                                        <?php if (!empty($doc->ficheiro_path)): ?>
+                                                            <small class="text-muted">Atual: <?= htmlspecialchars(basename($doc->ficheiro_path)) ?></small>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('tr').remove()">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -966,20 +1107,19 @@ $ligacao = null;
 </div>
 
 <script>
-    let numLinhas = 3;
+    let numLinhas = <?= $n ?? 0 ?>;
+    const opcoesDocumento = `
+        <option value="">Selecione...</option>
+        <?php foreach ($tipos_documento_bd as $td): ?>
+            <option value="<?= $td->id ?>"><?= htmlspecialchars($td->nome) ?></option>
+        <?php endforeach; ?>
+    `;
     document.getElementById('btnAddLinha').addEventListener('click', function() {
         numLinhas++;
         const n = numLinhas;
-        const opcoes = `
-            <option value="">Selecione...</option>
-            <option>Manual de utilizador</option>
-            <option>Manual de serviço</option>
-            <option>Certificado de calibração</option>
-            <option>Contrato de manutenção</option>
-            <option>Fatura de aquisição</option>`;
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td><select class="form-select" name="tipo_documento_${n}">${opcoes}</select></td>
+            <td><select class="form-select" name="tipo_documento_${n}">${opcoesDocumento}</select></td>
             <td><input type="text" class="form-control" name="nome_documento_${n}"></td>
             <td><input type="date" class="form-control" name="data_documento_${n}"></td>
             <td><input type="date" class="form-control" name="validade_documento_${n}"></td>
@@ -991,7 +1131,6 @@ $ligacao = null;
             </td>`;
         document.querySelector('#tabelaDocs tbody').appendChild(tr);
     });
-
 
 
     function preencherFornecedor() {

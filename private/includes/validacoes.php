@@ -47,6 +47,8 @@ function validar_categoria(string $categoria): array {
     $erros = [];
     if (empty($categoria)) {
         $erros[] = "A categoria é obrigatória.";
+    } elseif (!filter_var($categoria, FILTER_VALIDATE_INT) || (int)$categoria <= 0) {
+        $erros[] = "A categoria selecionada não é válida.";
     }
     return $erros;
 }
@@ -117,7 +119,7 @@ function validar_ano_fabrico(string $ano_fabrico): array {
 
 function validar_criticidade(string $criticidade): array {
     $erros = [];
-    $validas = ['baixa', 'media', 'média', 'alta', 'suporte_de_vida', 'suporte de vida'];
+    $validas = ['baixa', 'media', 'média', 'alta', 'suporte_de_vida'];
     if (empty($criticidade)) {
         $erros[] = "A criticidade é obrigatória.";
     } elseif (!in_array(strtolower($criticidade), $validas)) {

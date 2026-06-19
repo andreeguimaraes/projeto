@@ -42,10 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($nif === '') {
         $erros[] = "O NIF é obrigatório.";
+    } elseif (!preg_match('/^\d{9}$/', $nif)) {
+        $erros[] = "O NIF deve ter 9 dígitos.";
     }
 
     if ($tipo_id === '') {
         $erros[] = "O tipo de fornecedor é obrigatório.";
+    } elseif (!is_numeric($tipo_id)) {
+        $erros[] = "O tipo de fornecedor selecionado não é válido.";
     }
 
     if ($telefone === '') {
@@ -302,10 +306,6 @@ $ligacao = null;
                             </a>
 
                             <div class="d-flex gap-2">
-                                <a href="detalhes-fornecedor.php?id_fornecedor=<?= htmlspecialchars($idEncriptado) ?>" class="btn btn-outline-primary">
-                                    <i class="fas fa-eye me-1"></i>Ver detalhes
-                                </a>
-
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-floppy-disk me-1"></i>Guardar alterações
                                 </button>
