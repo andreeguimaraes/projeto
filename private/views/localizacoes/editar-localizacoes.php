@@ -1,346 +1,308 @@
-<?php include '../../includes/header.php'; ?>
+<?php
+require_once __DIR__ . '/../../includes/funcoes.php';
+redirect_if_not_logged();
+require_once __DIR__ . '/../../includes/validacoes.php';
 
-    <!-- Navbar -->
-    <?php include '../../includes/nav.php'; ?>
+// Só aceita GET e POST
+if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
+    header('Location: ' . BASE_URL . '/public/login.php');
+    exit;
+}
 
-    <div class="container-fluid">
+// Desencriptar e validar o ID
+$idEncriptado = $_GET['id_localizacao'] ?? null;
+$id = aes_decrypt($idEncriptado);
 
-        <div class="row">
+if (!$id || !is_numeric($id)) {
+    header('Location: localizacoes.php');
+    exit;
+}
 
-            <!-- Sidebar -->
-            <?php include '../../includes/sidebar.php'; ?>
+$localizacao = null;
+$servicos_bd = [];
+$erros = [];
 
-            <!-- Conteúdo Principal -->
-            <main class="col-12 p-4">
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-                <!-- Cabeçalho -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+    $edificio = trim($_POST['edificio'] ?? '');
+    $piso = trim($_POST['piso'] ?? '');
+    $sala = trim($_POST['sala'] ?? '');
+    $servico_id = trim($_POST['servico_id'] ?? '');
+    $observacoes = trim($_POST['observacoes'] ?? '');
 
-                    <div>
+    // Validações
+    if ($edificio === '') {
+        $erros[] = "O edifício é obrigatório.";
+    }
 
-                        <h2 class="mb-0">
-                            Editar localização
-                        </h2>
+    if (!in_array($edificio, ['Principal', 'Bloco B', 'Bloco C'])) {
+        $erros[] = "O edifício selecionado não é válido.";
+    }
 
-                        <p class="text-muted mb-0">
-                            LOC001 — UCI Piso 2 Sala 201
-                        </p>
+    if ($piso === '') {
+        $erros[] = "O piso é obrigatório.";
+    }
 
-                    </div>
+    if (!in_array($piso, ['0', '1', '2', '3'])) {
+        $erros[] = "O piso selecionado não é válido.";
+    }
 
-                    <a href="localizacoes.php"
-                       class="btn btn-outline-secondary">
+    if ($sala === '') {
+        $erros[] = "A sala é obrigatória.";
+    }
 
-                        <i class="fas fa-arrow-left me-2"></i>
-                        Voltar
+    if ($servico_id === '') {
+        $erros[] = "O serviço é obrigatório.";
+    }
 
-                    </a>
+    if (empty($erros)) {
+        try {
+            $ligacao = new PDO(
+                "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+                MYSQL_USERNAME,
+                MYSQL_PASSWORD
+            );
+            $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+            $stmt = $ligacao->prepare("
+                UPDATE localizacoes
+                SET edificio = :edificio,
+                    piso = :piso,
+                    servico_id = :servico_id,
+                    sala = :sala,
+                    observacoes = :observacoes
+                WHERE id = :id
+            ");
+
+            $stmt->bindParam(':edificio', $edificio, PDO::PARAM_STR);
+            $stmt->bindParam(':piso', $piso, PDO::PARAM_STR);
+            $stmt->bindParam(':servico_id', $servico_id, PDO::PARAM_INT);
+            $stmt->bindParam(':sala', $sala, PDO::PARAM_STR);
+            $stmt->bindParam(':observacoes', $observacoes, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            header('Location: localizacoes.php');
+            exit;
+
+        } catch (PDOException $err) {
+            $erros[] = "Erro ao atualizar localização: " . $err->getMessage();
+        }
+    }
+}
+
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Buscar localização atual
+    $stmt = $ligacao->prepare("
+        SELECT 
+            l.*,
+            s.nome AS servico_nome
+        FROM localizacoes l
+        JOIN servicos s ON s.id = l.servico_id
+        WHERE l.id = :id
+    ");
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    $localizacao = $stmt->fetch(PDO::FETCH_OBJ);
+
+    if (!$localizacao) {
+        header('Location: localizacoes.php');
+        exit;
+    }
+
+    // Buscar serviços para o select
+    $stmtServicos = $ligacao->prepare("
+        SELECT *
+        FROM servicos
+        ORDER BY nome
+    ");
+    $stmtServicos->execute();
+    $servicos_bd = $stmtServicos->fetchAll(PDO::FETCH_OBJ);
+
+} catch (PDOException $err) {
+    $erros[] = "Erro na ligação à base de dados.";
+    $localizacao = null;
+}
+
+$ligacao = null;
+?>
+
+<?php require_once __DIR__ . '/../../includes/header.php'; ?>
+<?php include __DIR__ . '/../../includes/nav.php'; ?>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <?php include __DIR__ . '/../../includes/sidebar.php'; ?>
+
+        <main class="col-12 p-4">
+
+            <!-- Cabeçalho -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-0">Editar localização</h2>
+                    <p class="text-muted mb-0">
+                        <?= htmlspecialchars($localizacao->codigo ?? '') ?>
+                        —
+                        <?= htmlspecialchars($localizacao->servico_nome ?? '') ?>
+                        Piso <?= htmlspecialchars($localizacao->piso ?? '') ?>
+                        Sala <?= htmlspecialchars($localizacao->sala ?? '') ?>
+                    </p>
                 </div>
 
-                <!-- Formulário -->
-                <div class="card shadow rounded">
+                <a href="localizacoes.php" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Voltar
+                </a>
+            </div>
 
+            <form action="editar-localizacoes.php?id_localizacao=<?= htmlspecialchars($idEncriptado) ?>" method="post" novalidate>
+
+                <?php if (!empty($erros)): ?>
+                    <div class="alert alert-danger mb-3">
+                        <?php foreach ($erros as $erro): ?>
+                            <div><?= htmlspecialchars($erro) ?></div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+                <div class="card shadow rounded">
                     <div class="card-body">
 
-                        <form>
+                        <!-- LOCALIZAÇÃO -->
+                        <h5 class="text-muted mb-3">
+                            <i class="fas fa-location-dot me-2"></i>
+                            Dados da localização
+                        </h5>
 
-                            <!-- LOCALIZAÇÃO -->
-                            <h5 class="text-muted mb-3">
+                        <div class="row mb-4">
 
-                                <i class="fas fa-location-dot me-2"></i>
-                                Dados da localização
-
-                            </h5>
-
-                            <div class="row mb-4">
-
-                                <div class="col-md-3">
-
-                                    <label class="form-label">
-                                        Código
-                                    </label>
-
-                                    <input type="text"
-                                           class="form-control"
-                                           value="LOC001">
-
-                                </div>
-
-                                <div class="col-md-3">
-
-                                    <label class="form-label">
-                                        Edifício
-                                    </label>
-
-                                    <select class="form-select">
-
-                                        <option selected>
-                                            Principal
-                                        </option>
-
-                                        <option>
-                                            Anexo
-                                        </option>
-
-                                        <option>
-                                            Bloco Cirúrgico
-                                        </option>
-
-                                    </select>
-
-                                </div>
-
-                                <div class="col-md-3">
-
-                                    <label class="form-label">
-                                        Piso
-                                    </label>
-
-                                    <select class="form-select">
-
-                                        <option>
-                                            Piso 0
-                                        </option>
-
-                                        <option>
-                                            Piso 1
-                                        </option>
-
-                                        <option selected>
-                                            Piso 2
-                                        </option>
-
-                                        <option>
-                                            Piso 3
-                                        </option>
-
-                                    </select>
-
-                                </div>
-
-                                <div class="col-md-3">
-
-                                    <label class="form-label">
-                                        Sala / Gabinete
-                                    </label>
-
-                                    <input type="text"
-                                           class="form-control"
-                                           value="Sala 201">
-
-                                </div>
-
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Código</label>
+                                <input type="text"
+                                    class="form-control"
+                                    value="<?= htmlspecialchars($localizacao->codigo ?? '') ?>"
+                                    readonly>
                             </div>
 
-                            <hr>
-
-                            <!-- SERVIÇO -->
-                            <h5 class="text-muted mb-3">
-
-                                <i class="fas fa-hospital me-2"></i>
-                                Serviço / Departamento
-
-                            </h5>
-
-                            <div class="row mb-4">
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label">
-                                        Serviço
-                                    </label>
-
-                                    <select class="form-select">
-
-                                        <option selected>
-                                            UCI
-                                        </option>
-
-                                        <option>
-                                            Urgência
-                                        </option>
-
-                                        <option>
-                                            Bloco Operatório
-                                        </option>
-
-                                        <option>
-                                            Medicina
-                                        </option>
-
-                                        <option>
-                                            Pediatria
-                                        </option>
-
-                                        <option>
-                                            Ortopedia
-                                        </option>
-
-                                    </select>
-
-                                </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Edifício <span class="text-danger">*</span></label>
+                                <select class="form-select" name="edificio" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Principal" <?= (($_POST['edificio'] ?? $localizacao->edificio ?? '') == 'Principal') ? 'selected' : '' ?>>
+                                        Principal
+                                    </option>
+                                    <option value="Bloco B" <?= (($_POST['edificio'] ?? $localizacao->edificio ?? '') == 'Bloco B') ? 'selected' : '' ?>>
+                                        Bloco B
+                                    </option>
+                                    <option value="Bloco C" <?= (($_POST['edificio'] ?? $localizacao->edificio ?? '') == 'Bloco C') ? 'selected' : '' ?>>
+                                        Bloco C
+                                    </option>
+                                </select>
                             </div>
 
-                            <hr>
-
-                            <!-- EQUIPAMENTOS ASSOCIADOS
-                            <h5 class="text-muted mb-3">
-                                <i class="fas fa-stethoscope me-2"></i>
-                                Equipamentos associados
-                            </h5>
-
-                            <div class="row mb-3">
-                                <div class="col-md-9">
-                                    <select class="form-select" name="novo_equipamento">
-                                        <option value="">Selecione um equipamento para associar...</option>
-                                        <option>EQ004 — Desfibrilhador Zoll</option>
-                                        <option>EQ005 — Bomba de infusão</option>
-                                        <option>EQ006 — Monitor IntelliVue MX450</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <button type="button" class="btn btn-primary w-100">
-                                        <i class="fas fa-plus me-1"></i>
-                                        Associar
-                                    </button>
-                                </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Piso <span class="text-danger">*</span></label>
+                                <select class="form-select" name="piso" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="0" <?= (($_POST['piso'] ?? $localizacao->piso ?? '') == '0') ? 'selected' : '' ?>>
+                                        Piso 0
+                                    </option>
+                                    <option value="1" <?= (($_POST['piso'] ?? $localizacao->piso ?? '') == '1') ? 'selected' : '' ?>>
+                                        Piso 1
+                                    </option>
+                                    <option value="2" <?= (($_POST['piso'] ?? $localizacao->piso ?? '') == '2') ? 'selected' : '' ?>>
+                                        Piso 2
+                                    </option>
+                                    <option value="3" <?= (($_POST['piso'] ?? $localizacao->piso ?? '') == '3') ? 'selected' : '' ?>>
+                                        Piso 3
+                                    </option>
+                                </select>
                             </div>
 
-                            <div class="list-group mb-4">
-
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>EQ001 — Monitor IntelliVue MP5</span>
-
-                                    <button type="button"
-                                            class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalRemoverEquipamento">
-                                        <i class="fas fa-trash me-1"></i>
-                                        Remover
-                                    </button>
-                                </div>
-
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>EQ002 — Ventilador Evita V500</span>
-
-
-                                    <button type="button"
-                                            class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalRemoverEquipamento">
-                                        <i class="fas fa-trash me-1"></i>
-                                        Remover
-                                    </button>
-                                </div>
-
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>EQ003 — Bomba de Infusão Space</span>
-
-                                    <button type="button"
-                                            class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalRemoverEquipamento">
-                                        <i class="fas fa-trash me-1"></i>
-                                        Remover
-                                    </button>
-                                </div>
-
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Sala / Gabinete <span class="text-danger">*</span></label>
+                                <input type="text"
+                                    class="form-control"
+                                    name="sala"
+                                    value="<?= htmlspecialchars($_POST['sala'] ?? $localizacao->sala ?? '') ?>"
+                                    required>
                             </div>
 
-                            <small class="text-muted">
-                                Ao associar um equipamento a esta localização, a localização atual desse equipamento será atualizada.
-                            </small>
-                            -->
+                        </div>
 
+                        <hr>
 
-                            <!-- OBSERVAÇÕES -->
-                            <h5 class="text-muted mb-3">
+                        <!-- SERVIÇO -->
+                        <h5 class="text-muted mb-3">
+                            <i class="fas fa-hospital me-2"></i>
+                            Serviço / Departamento
+                        </h5>
 
-                                <i class="fas fa-note-sticky me-2"></i>
-                                Observações
+                        <div class="row mb-4">
 
-                            </h5>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Serviço <span class="text-danger">*</span></label>
+                                <select class="form-select" name="servico_id" required>
+                                    <option value="">Selecione...</option>
 
-                            <div class="mb-4">
+                                    <?php foreach ($servicos_bd as $servico): ?>
+                                        <option value="<?= $servico->id ?>"
+                                            <?= (($_POST['servico_id'] ?? $localizacao->servico_id ?? '') == $servico->id) ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($servico->nome) ?>
+                                        </option>
+                                    <?php endforeach; ?>
 
-                                <textarea class="form-control"
-                                          rows="4">Localização reservada para equipamentos de monitorização intensiva.</textarea>
-
+                                </select>
                             </div>
 
-                            <hr>
+                        </div>
 
-                            <!-- Botões -->
-                            <div class="d-flex justify-content-between">
+                        <hr>
 
-                                <button type="submit"
-                                        class="btn btn-warning">
+                        <!-- OBSERVAÇÕES -->
+                        <h5 class="text-muted mb-3">
+                            <i class="fas fa-note-sticky me-2"></i>
+                            Observações
+                        </h5>
 
-                                    <i class="fas fa-floppy-disk me-1"></i>
-                                    Guardar alterações
+                        <div class="mb-4">
+                            <textarea class="form-control"
+                                name="observacoes"
+                                rows="4"><?= htmlspecialchars($_POST['observacoes'] ?? $localizacao->observacoes ?? '') ?></textarea>
+                        </div>
 
-                                </button>
+                        <p class="text-muted small mb-3">
+                            <span class="text-danger">*</span> Campos obrigatórios
+                        </p>
 
-                            </div>
+                        <!-- Botões -->
+                        <div class="d-flex justify-content-between">
+                            <a href="localizacoes.php" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i>Cancelar
+                            </a>
 
-                        </form>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-floppy-disk me-1"></i>
+                                Guardar alterações
+                            </button>
+                        </div>
 
                     </div>
-
                 </div>
 
-            </main>
+            </form>
 
-        </div>
+        </main>
 
     </div>
-    <!-- Modal remover equipamento associado
-    <div class="modal fade" id="modalRemoverEquipamento" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
+</div>
 
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-triangle-exclamation me-2"></i>
-                        Remover equipamento da localização
-                    </h5>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <p>
-                        Tem a certeza que pretende remover este equipamento desta localização?
-                    </p>
-
-                    <div class="alert alert-light border">
-                        <strong>EQ001 — Monitor IntelliVue MP5</strong><br>
-                        <small class="text-muted">
-                            O equipamento deixará de estar associado à localização LOC001 — UCI Sala 201.
-                        </small>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button"
-                            class="btn btn-outline-secondary"
-                            data-bs-dismiss="modal">
-                        <i class="fas fa-arrow-left me-1"></i>
-                        Cancelar
-                    </button>
-
-                    <button type="button"
-                            class="btn btn-danger">
-                        <i class="fas fa-trash me-1"></i>
-                        Remover associação
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div> -->
-
-<!-- rodapé -->
-<?php include '../../includes/footer.php'; ?>
+<?php include __DIR__ . '/../../includes/footer.php'; ?>

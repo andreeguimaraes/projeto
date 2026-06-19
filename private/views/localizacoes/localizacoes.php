@@ -277,7 +277,7 @@ $ligacao = null;
                                                             class="btn btn-sm btn-outline-primary" title="Ver detalhes">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <a href="editar-localizacoes.php?id=<?= $loc->id ?>"
+                                                        <a href="editar-localizacoes.php?id_localizacao=<?= htmlspecialchars(aes_encrypt($loc->id)) ?>"
                                                             class="btn btn-sm btn-outline-warning" title="Editar">
                                                             <i class="fas fa-pen"></i>
                                                         </a>
