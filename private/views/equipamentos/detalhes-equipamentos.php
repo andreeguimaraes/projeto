@@ -106,7 +106,6 @@ try {
     $stmtDocs->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
     $stmtDocs->execute();
     $documentos_bd = $stmtDocs->fetchAll(PDO::FETCH_OBJ);
-
 } catch (PDOException $err) {
     $erros[] = "Erro na ligação à base de dados.";
     $eq = null;
@@ -142,12 +141,14 @@ $estado_contrato_label = [
     'cancelado' => 'bg-danger',
 ];
 
-function formatar_data($data) {
+function formatar_data($data)
+{
     if (empty($data)) return '—';
     return date('d/m/Y', strtotime($data));
 }
 
-function formatar_euros($valor) {
+function formatar_euros($valor)
+{
     if ($valor === null || $valor === '') return '—';
     return number_format((float)$valor, 2, ',', '.') . ' €';
 }
@@ -285,7 +286,15 @@ function formatar_euros($valor) {
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Criticidade</label>
                                     <p class="form-control-plaintext">
-                                        <span class="badge <?= $criticidadeInfo[1] ?>"><?= htmlspecialchars($criticidadeInfo[0]) ?></span>
+                                        <?php if ($eq->criticidade === 'baixa'): ?>
+                                            <span class="badge bg-secondary">Baixa</span>
+                                        <?php elseif ($eq->criticidade === 'media'): ?>
+                                            <span class="badge bg-info text-dark">Média</span>
+                                        <?php elseif ($eq->criticidade === 'alta'): ?>
+                                            <span class="badge bg-warning text-dark">Alta</span>
+                                        <?php elseif ($eq->criticidade === 'suporte_de_vida'): ?>
+                                            <span class="badge bg-danger">Suporte de vida</span>
+                                        <?php endif; ?>
                                     </p>
                                 </div>
                             </div>
