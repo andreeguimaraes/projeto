@@ -232,7 +232,7 @@ $ligacao = null;
                                                             class="btn btn-sm btn-outline-primary" title="Ver detalhes">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <a href="editar-fornecedor.php?id=<?= $f->id ?>"
+                                                        <a href="editar-fornecedor.php?id_fornecedor=<?= htmlspecialchars(aes_encrypt($f->id)) ?>"
                                                             class="btn btn-sm btn-outline-warning" title="Editar">
                                                             <i class="fas fa-pen"></i>
                                                         </a>
