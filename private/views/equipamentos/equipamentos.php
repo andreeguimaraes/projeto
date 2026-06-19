@@ -19,14 +19,18 @@ if (isset($_GET['eliminar'])) {
             MYSQL_PASSWORD
         );
         $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $ligacao->prepare("DELETE FROM equipamentos WHERE id = :id");
+        $stmt = $ligacao->prepare("UPDATE equipamentos SET estado = 'inativo' WHERE id = :id");
         $stmt->execute([':id' => $id]);
     } catch (PDOException $e) {
         // silencia o erro
     }
     header("Location: equipamentos.php");
     exit;
-} ?>
+}
+
+
+
+?>
 <?php include '../../includes/header.php'; ?>
 <?php include '../../includes/nav.php'; ?>
 
@@ -374,16 +378,16 @@ $ligacao = null;
                                                     </td>
                                                     <td>
                                                         <div style="white-space: nowrap;">
-                                                            <a href="detalhes-equipamentos.php?id_equipamento=<?= $eq->id ?>"
+                                                            <a href="detalhes-equipamentos.php?id_equipamento=<?= aes_encrypt($eq->id) ?>"
                                                                 class="btn btn-sm btn-outline-primary" title="Ver detalhes">
                                                                 <i class="fas fa-eye"></i>
                                                             </a>
                                                             <!-- este link inclui o ID do equipamento na URL.  -->
                                                             <a href="editar-equipamentos.php?id_equipamento=<?= aes_encrypt($eq->id) ?>"
-                                                            class="btn btn-sm btn-outline-warning">
+                                                                class="btn btn-sm btn-outline-warning">
                                                                 <i class="fas fa-pen"></i>
                                                             </a>
-                                                            <button class="btn btn-sm btn-outline-danger" title="Eliminar"
+                                                            <button class="btn btn-sm btn-outline-danger" title="Desativar"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#modalEliminar"
                                                                 data-id="<?= $eq->id ?>"
@@ -402,7 +406,7 @@ $ligacao = null;
                             </div>
                         </div>
                     </div>
-                     <!-- Controlos DataTables fora do card -->
+                    <!-- Controlos DataTables fora do card -->
                     <div id="dt-controlos" class="d-flex justify-content-between align-items-center mt-3 px-1">
                     </div>
                 <?php endif; ?> <!-- Fecha o if (count($resultados) == 0) -->
@@ -480,14 +484,14 @@ $ligacao = null;
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalEliminarLabel">
-                    <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
+                    <i class="fas fa-triangle-exclamation me-2"></i>Confirmar desativação
                 </h5>
-                <button type="button" class="btn-close btn-close-white"
+                <button type="button" class="btn-close btn-close"
                     data-bs-dismiss="modal" aria-label="Fechar"></button>
             </div>
 
             <div class="modal-body">
-                <p>Tem a certeza que pretende eliminar o seguinte equipamento?</p>
+                <p>Tem a certeza que pretende desativar o seguinte equipamento?</p>
                 <div>
                     <!-- Preenchido dinamicamente pelo JavaScript -->
                     <strong id="modalEquipamentoInfo"></strong>
@@ -501,7 +505,7 @@ $ligacao = null;
                 </button>
                 <!-- href preenchido dinamicamente pelo JavaScript -->
                 <a id="btnConfirmarEliminar" href="#" class="btn btn-danger">
-                    <i class="fas fa-trash me-1"></i>Eliminar equipamento
+                    <i class="fas fa-trash me-1"></i>Desativar equipamento
                 </a>
             </div>
         </div>

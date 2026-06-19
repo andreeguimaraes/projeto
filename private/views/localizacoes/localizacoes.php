@@ -273,7 +273,7 @@ $ligacao = null;
                                                 <td><?= (int) $loc->total_equipamentos ?></td>
                                                 <td>
                                                     <div style="white-space: nowrap;">
-                                                        <a href="detalhes-localizacoes.php?id=<?= $loc->id ?>"
+                                                        <a href="detalhes-localizacoes.php?id_localizacao=<?= htmlspecialchars(aes_encrypt($loc->id)) ?>"
                                                             class="btn btn-sm btn-outline-primary" title="Ver detalhes">
                                                             <i class="fas fa-eye"></i>
                                                         </a>

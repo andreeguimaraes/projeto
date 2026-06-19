@@ -228,7 +228,7 @@ $ligacao = null;
                                                 <td><?= (int) $f->total_equipamentos ?></td>
                                                 <td>
                                                     <div style="white-space: nowrap;">
-                                                        <a href="detalhes-fornecedor.php?id=<?= $f->id ?>"
+                                                        <a href="detalhes-fornecedor.php?id_fornecedor=<?= htmlspecialchars(aes_encrypt($f->id)) ?>"
                                                             class="btn btn-sm btn-outline-primary" title="Ver detalhes">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
