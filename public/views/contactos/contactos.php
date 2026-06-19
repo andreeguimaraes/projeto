@@ -1,3 +1,68 @@
+<?php
+require_once __DIR__ . '/../../../config/config.php';
+require_once __DIR__ . '/../../../private/includes/validacoes.php';
+$sucesso = '';
+$erros = [];
+
+$nome = '';
+$email = '';
+$telefone = '';
+$assunto = '';
+$mensagem = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome = trim($_POST['nome'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $telefone = trim($_POST['telefone'] ?? '');
+    $assunto = trim($_POST['assunto'] ?? '');
+    $mensagem = trim($_POST['mensagem'] ?? '');
+
+    $erros = array_merge(
+        validar_nome_contacto($nome),
+        validar_email_contacto_publico($email),
+        validar_telefone_contacto($telefone),
+        validar_assunto_contacto($assunto),
+        validar_mensagem_contacto($mensagem)
+    );
+
+    if (empty($erros)) {
+        try {
+            $ligacao = new PDO(
+                "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+                MYSQL_USERNAME,
+                MYSQL_PASSWORD
+            );
+            $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $ligacao->prepare("
+                INSERT INTO mensagens_contacto (nome, email, telefone, assunto, mensagem)
+                VALUES (:nome, :email, :telefone, :assunto, :mensagem)
+            ");
+
+            $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':telefone', $telefone, PDO::PARAM_STR);
+            $stmt->bindParam(':assunto', $assunto, PDO::PARAM_STR);
+            $stmt->bindParam(':mensagem', $mensagem, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $sucesso = 'Mensagem enviada com sucesso. Entraremos em contacto brevemente.';
+
+            // Limpa os campos depois de enviar com sucesso
+            $nome = '';
+            $email = '';
+            $telefone = '';
+            $assunto = '';
+            $mensagem = '';
+
+        } catch (PDOException $e) {
+            $erros[] = "Erro ao enviar a mensagem. Tente novamente mais tarde.";
+        }
+
+        $ligacao = null;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -7,11 +72,11 @@
 
     <!-- favicon -->
     <link rel="icon" type="image/svg+xml" href="../../../assets/img/logo_medinv_icon.svg">
-    
-    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css"> 
+
+    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
     <!-- estilos de pagina -->
     <link rel="stylesheet" href="../../../assets/css/1240722.css">
-    
+
 </head>
 <body>
     <!-- Navegação -->
@@ -52,7 +117,7 @@
             <!-- Informações de Contacto -->
             <div class="contacto-info">
                 <h3>Informações de Contacto</h3>
-                
+
                 <div class="info-item">
                     <i class="fas fa-map-marker-alt"></i>
                     <div>
@@ -96,37 +161,53 @@
             <!-- Formulário de Contacto -->
             <div class="contacto-form">
                 <h3>Envie-nos uma Mensagem</h3>
-                <form id="contactForm">
+
+                <?php if (!empty($sucesso)): ?>
+                    <div class="form-alert form-alert-success">
+                        <?= htmlspecialchars($sucesso) ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($erros)): ?>
+                    <div class="form-alert form-alert-error">
+                        <?php foreach ($erros as $erro): ?>
+                            <div><?= htmlspecialchars($erro) ?></div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+                <form id="contactForm" method="post" action="contactos.php" novalidate>
                     <div class="form-group">
                         <label for="nome">Nome *</label>
-                        <input type="text" id="nome" name="nome" required>
+                        <input type="text" id="nome" name="nome" value="<?= htmlspecialchars($nome) ?>" required>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" value="<?= htmlspecialchars($email) ?>" required>
                     </div>
 
                     <div class="form-group">
                         <label for="telefone">Telefone</label>
-                        <input type="tel" id="telefone" name="telefone">
+                        <input type="tel" id="telefone" name="telefone" value="<?= htmlspecialchars($telefone) ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="assunto">Assunto *</label>
                         <select id="assunto" name="assunto" required>
-                            <option value="duvida">Dúvida Geral</option>
-                            <option value="demonstracao">Pedido de Demonstração</option>
-                            <option value="orcamento">Pedido de Orçamento</option>
-                            <option value="suporte">Suporte Técnico</option>
-                            <option value="parceria">Parceria</option>
-                            <option value="outro">Outro</option>
+                            <option value="">Selecione...</option>
+                            <option value="duvida" <?= $assunto === 'duvida' ? 'selected' : '' ?>>Dúvida Geral</option>
+                            <option value="demonstracao" <?= $assunto === 'demonstracao' ? 'selected' : '' ?>>Pedido de Demonstração</option>
+                            <option value="orcamento" <?= $assunto === 'orcamento' ? 'selected' : '' ?>>Pedido de Orçamento</option>
+                            <option value="suporte" <?= $assunto === 'suporte' ? 'selected' : '' ?>>Suporte Técnico</option>
+                            <option value="parceria" <?= $assunto === 'parceria' ? 'selected' : '' ?>>Parceria</option>
+                            <option value="outro" <?= $assunto === 'outro' ? 'selected' : '' ?>>Outro</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="mensagem">Mensagem *</label>
-                        <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
+                        <textarea id="mensagem" name="mensagem" rows="5" required><?= htmlspecialchars($mensagem) ?></textarea>
                     </div>
 
                     <button type="submit" class="button">Enviar Mensagem</button>
@@ -150,6 +231,6 @@
             <p>Email: geral@medinv.pt<br>Tel: +351 912 345 678</p>
         </div>
     </footer>
-   
+
 </body>
 </html>

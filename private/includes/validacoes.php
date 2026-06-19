@@ -329,4 +329,57 @@ function validar_servico(string $servico_id): array {
     }
     return $erros;
 }
+// ============================================================
+// CONTACTOS (formulário público)
+// ============================================================
+
+function validar_nome_contacto(string $nome): array {
+    $erros = [];
+    if ($nome === '') {
+        $erros[] = "O nome é obrigatório.";
+    } elseif (strlen($nome) > 100) {
+        $erros[] = "O nome não pode ter mais de 100 caracteres.";
+    }
+    return $erros;
+}
+
+function validar_email_contacto_publico(string $email): array {
+    $erros = [];
+    if ($email === '') {
+        $erros[] = "O email é obrigatório.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erros[] = "O email não é válido.";
+    }
+    return $erros;
+}
+
+function validar_telefone_contacto(string $telefone): array {
+    $erros = [];
+    if ($telefone !== '') {
+        $digitos = preg_replace('/\D/', '', $telefone);
+        if (strlen($digitos) !== 9) {
+            $erros[] = "O telefone deve ter 9 dígitos.";
+        }
+    }
+    return $erros;
+}
+
+function validar_assunto_contacto(string $assunto): array {
+    $erros = [];
+    $assuntos_validos = ['duvida', 'demonstracao', 'orcamento', 'suporte', 'parceria', 'outro'];
+    if ($assunto === '') {
+        $erros[] = "O assunto é obrigatório.";
+    } elseif (!in_array($assunto, $assuntos_validos)) {
+        $erros[] = "O assunto selecionado não é válido.";
+    }
+    return $erros;
+}
+
+function validar_mensagem_contacto(string $mensagem): array {
+    $erros = [];
+    if ($mensagem === '') {
+        $erros[] = "A mensagem é obrigatória.";
+    }
+    return $erros;
+}
 
