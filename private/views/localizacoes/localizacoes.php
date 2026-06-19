@@ -16,7 +16,7 @@ if (isset($_GET['eliminar'])) {
             MYSQL_PASSWORD
         );
         $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $ligacao->prepare("DELETE FROM localizacoes WHERE id = :id");
+        $stmt = $ligacao->prepare("UPDATE localizacoes SET ativo = 0 WHERE id = :id");
         $stmt->execute([':id' => $id]);
     } catch (PDOException $e) {
         // silencia o erro
@@ -122,7 +122,6 @@ try {
     $stmt = $ligacao->prepare($sql);
     $stmt->execute($params);
     $localizacoes = $stmt->fetchAll(PDO::FETCH_OBJ);
-
 } catch (PDOException $e) {
     $erro = "Aconteceu um erro na ligação.";
 }
@@ -216,11 +215,11 @@ $ligacao = null;
 
                             <div class="col-md-3">
                                 <select class="form-select" name="ordenar" onchange="this.form.submit()">
-                                    <option value="codigo_asc"   <?= $ordenar == 'codigo_asc'   ? 'selected' : '' ?>>Código ↑</option>
-                                    <option value="codigo_desc"  <?= $ordenar == 'codigo_desc'  ? 'selected' : '' ?>>Código ↓</option>
+                                    <option value="codigo_asc" <?= $ordenar == 'codigo_asc'   ? 'selected' : '' ?>>Código ↑</option>
+                                    <option value="codigo_desc" <?= $ordenar == 'codigo_desc'  ? 'selected' : '' ?>>Código ↓</option>
                                     <option value="edificio_asc" <?= $ordenar == 'edificio_asc' ? 'selected' : '' ?>>Edifício ↑</option>
-                                    <option value="edificio_desc"<?= $ordenar == 'edificio_desc'? 'selected' : '' ?>>Edifício ↓</option>
-                                    <option value="servico"      <?= $ordenar == 'servico'      ? 'selected' : '' ?>>Serviço</option>
+                                    <option value="edificio_desc" <?= $ordenar == 'edificio_desc' ? 'selected' : '' ?>>Edifício ↓</option>
+                                    <option value="servico" <?= $ordenar == 'servico'      ? 'selected' : '' ?>>Serviço</option>
                                 </select>
                             </div>
 
@@ -271,6 +270,8 @@ $ligacao = null;
                                                 <td><?= htmlspecialchars($loc->servico_nome ?? '—') ?></td>
                                                 <td><?= htmlspecialchars($loc->sala) ?></td>
                                                 <td><?= (int) $loc->total_equipamentos ?></td>
+                                            
+                                                
                                                 <td>
                                                     <div style="white-space: nowrap;">
                                                         <a href="detalhes-localizacoes.php?id_localizacao=<?= htmlspecialchars(aes_encrypt($loc->id)) ?>"
@@ -298,7 +299,7 @@ $ligacao = null;
                             </div>
                         </div>
                     </div>
-                     <!-- Controlos DataTables fora do card -->
+                    <!-- Controlos DataTables fora do card -->
                     <div id="dt-controlos" class="d-flex justify-content-between align-items-center mt-3 px-1">
                     </div>
 
@@ -311,18 +312,19 @@ $ligacao = null;
 
 <!-- Modal de confirmação -->
 <div class="modal fade" id="modalEliminar" tabindex="-1"
-     aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    aria-labelledby="modalEliminarLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalEliminarLabel">
-                    <i class="fas fa-triangle-exclamation me-2"></i>Confirmar eliminação
+                    <i class="fas fa-triangle-exclamation me-2"></i>Confirmar desativação
                 </h5>
                 <button type="button" class="btn-close btn-close-white"
-                        data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    data-bs-dismiss="modal" aria-label="Fechar"></button>
             </div>
             <div class="modal-body">
-                <p>Tem a certeza que pretende eliminar a seguinte localização?</p>
+                <p>Tem a certeza que pretende desativar a seguinte localização?</p>
+
                 <strong id="modalLocalizacaoInfo"></strong>
             </div>
             <div class="modal-footer">
@@ -330,7 +332,7 @@ $ligacao = null;
                     <i class="fas fa-arrow-left me-1"></i>Cancelar
                 </button>
                 <a id="btnConfirmarEliminar" href="#" class="btn btn-danger">
-                    <i class="fas fa-trash me-1"></i>Eliminar localização
+                    <i class="fas fa-trash me-1"></i>Desativar localização
                 </a>
             </div>
         </div>
@@ -338,19 +340,19 @@ $ligacao = null;
 </div>
 
 <script>
-document.getElementById('modalEliminar')
-    .addEventListener('show.bs.modal', function (e) {
-        const btn    = e.relatedTarget;
-        const id     = btn.dataset.id;
-        const codigo = btn.dataset.codigo;
-        const info   = btn.dataset.info;
+    document.getElementById('modalEliminar')
+        .addEventListener('show.bs.modal', function(e) {
+            const btn = e.relatedTarget;
+            const id = btn.dataset.id;
+            const codigo = btn.dataset.codigo;
+            const info = btn.dataset.info;
 
-        document.getElementById('modalLocalizacaoInfo').textContent =
-            codigo + ' — ' + info;
+            document.getElementById('modalLocalizacaoInfo').textContent =
+                codigo + ' — ' + info;
 
-        document.getElementById('btnConfirmarEliminar').href =
-            '/MEDINV/private/views/localizacoes/localizacoes.php?eliminar=' + id;
-    });
+            document.getElementById('btnConfirmarEliminar').href =
+                '/MEDINV/private/views/localizacoes/localizacoes.php?eliminar=' + id;
+        });
 </script>
 <script>
     $(document).ready(function() {

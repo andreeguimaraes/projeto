@@ -52,7 +52,6 @@ try {
     $stmtEq->bindParam(':localizacao_id', $id, PDO::PARAM_INT);
     $stmtEq->execute();
     $equipamentos_bd = $stmtEq->fetchAll(PDO::FETCH_OBJ);
-
 } catch (PDOException $err) {
     $erros[] = "Erro na ligação à base de dados.";
     $localizacao = null;
@@ -110,7 +109,7 @@ require_once '../../includes/header.php'; ?>
                 </div>
 
                 <a href="localizacoes.php"
-                   class="btn btn-outline-secondary">
+                    class="btn btn-outline-secondary">
 
                     <i class="fas fa-arrow-left me-2"></i>
                     Voltar
@@ -125,20 +124,14 @@ require_once '../../includes/header.php'; ?>
                 <div class="card-body">
 
                     <!-- Cabeçalho -->
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-
-                        <div class="d-flex align-items-center gap-3">
-                            <div>
-
-                                <h4 class="mb-2">
-                                    <?= htmlspecialchars($localizacao->servico_nome ?? '') ?>
-                                </h4>
-                            </div>
-
-                        </div>
-
-
-                    </div>
+                    <h4 class="mb-2 d-flex align-items-center gap-2">
+                        <?= htmlspecialchars($localizacao->servico_nome ?? '') ?>
+                        <?php if ($localizacao->ativo == 1): ?>
+                            <span class="badge bg-success">Ativa</span>
+                        <?php else: ?>
+                            <span class="badge bg-secondary">Inativa</span>
+                        <?php endif; ?>
+                    </h4>
 
                     <hr>
 
@@ -280,8 +273,8 @@ require_once '../../includes/header.php'; ?>
 
                                             <td>
                                                 <a href="../equipamentos/detalhes-equipamentos.php?id_equipamento=<?= htmlspecialchars(aes_encrypt($eq->id)) ?>"
-                                                   class="btn btn-sm btn-outline-primary"
-                                                   title="Ver detalhes do equipamento">
+                                                    class="btn btn-sm btn-outline-primary"
+                                                    title="Ver detalhes do equipamento">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                             </td>
@@ -298,7 +291,7 @@ require_once '../../includes/header.php'; ?>
 
                     <?php endif; ?>
 
-                    
+
                 </div>
 
             </div>
