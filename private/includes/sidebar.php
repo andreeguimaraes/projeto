@@ -38,7 +38,7 @@
             <a href="/MEDINV/private/views/localizacoes/localizacoes.php" class="nav-link sidebar-link">
                 <i class="fas fa-location-dot me-2"></i>Localizações
             </a>
-
+<!--
             <a href="/MEDINV/private/views/documentacao/documentacao.php" class="nav-link sidebar-link">
                 <i class="fas fa-folder-open me-2"></i>Documentação
             </a>
@@ -47,7 +47,7 @@
                 <i class="fas fa-file-contract me-2"></i>
                 Garantias e Contratos
             </a>
-
+-->
             <hr>
 
             <h6 class="sidebar-title">

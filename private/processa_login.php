@@ -59,24 +59,37 @@ if (!empty($validation_errors)) {
  // Encerra o script para impedir execução posterior
  return;
 } 
-// --------------------------------------------------------------------
-// SIMULAÇÃO DE RESULTADO DE LOGIN (antes da ligação real à base de dados)
-// --------------------------------------------------------------------
-// Simula o resultado que viria de uma verificação à base de dados
-// Neste caso, assume-se que o login é válido (status = 1)
-// Mais tarde, esta variável será substituída por um resultado real vindo da BD
-$result['status'] = 1; // 1 = login válido, 0 = inválido
-// Verifica se o status retornado indica login inválido
-if (!$result['status']) {
- // Se o login for inválido, guarda uma mensagem de erro na sessão
- $_SESSION['server_error'] = 'Login inválido';
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
- // Redireciona o utilizador novamente para o formulário de login
- header('Location: ../public/login.php'); // ou 'login_form.php'
+    $stmt = $ligacao->prepare("SELECT * FROM utilizadores WHERE email = :email AND ativo = 1");
+    $stmt->bindParam(':email', $username, PDO::PARAM_STR);
+    $stmt->execute();
+    $utilizador = $stmt->fetch(PDO::FETCH_OBJ);
 
- // Encerra o script para não continuar o processamento
- return;
+    if (!$utilizador || $password !== $utilizador->password) {
+        $_SESSION['server_error'] = 'Login inválido';
+        header('Location: ../public/login.php');
+        return;
+    }
+
+} catch (PDOException $e) {
+    $_SESSION['server_error'] = 'Erro ao ligar à base de dados.';
+    header('Location: ../public/login.php');
+    return;
 }
+
+$_SESSION['utilizador'] = $utilizador->nome;
+$_SESSION['utilizador_id'] = $utilizador->id;
+$_SESSION['utilizador_email'] = $utilizador->email;
+
+header('Location: home.php');
+exit;
 // Se o status for 1 (válido), o código continuará — aqui será futuramente criada a sessão
 // do utilizador e o redirecionamento para a área privada
 
