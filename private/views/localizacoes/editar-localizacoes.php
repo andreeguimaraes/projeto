@@ -31,29 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $observacoes = trim($_POST['observacoes'] ?? '');
 
     // Validações
-    if ($edificio === '') {
-        $erros[] = "O edifício é obrigatório.";
-    } elseif (!in_array($edificio, ['Principal', 'Bloco B', 'Bloco C'])) {
-        $erros[] = "O edifício selecionado não é válido.";
-    }
-
-    if ($piso === '') {
-        $erros[] = "O piso é obrigatório.";
-    } elseif (!in_array($piso, ['0', '1', '2', '3'])) {
-        $erros[] = "O piso selecionado não é válido.";
-    }
-
-    if ($sala === '') {
-        $erros[] = "A sala é obrigatória.";
-    } elseif (strlen($sala) > 3) {
-        $erros[] = "A sala deve ter no máximo 3 caracteres.";
-    }
-
-    if ($servico_id === '') {
-        $erros[] = "O serviço é obrigatório.";
-    } elseif (!is_numeric($servico_id)) {
-        $erros[] = "O serviço selecionado não é válido.";
-    }
+    $erros = array_merge(
+        $erros,
+        validar_edificio($edificio),
+        validar_piso($piso),
+        validar_sala($sala),
+        validar_servico($servico_id)
+    );
 
     if (empty($erros)) {
         try {

@@ -36,37 +36,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email_contacto = trim($_POST['email_contacto'] ?? '');
     $observacoes = trim($_POST['observacoes'] ?? '');
 
-    if ($nome === '') {
-        $erros[] = "O nome da empresa é obrigatório.";
-    }
-
-    if ($nif === '') {
-        $erros[] = "O NIF é obrigatório.";
-    } elseif (!preg_match('/^\d{9}$/', $nif)) {
-        $erros[] = "O NIF deve ter 9 dígitos.";
-    }
-
-    if ($tipo_id === '') {
-        $erros[] = "O tipo de fornecedor é obrigatório.";
-    } elseif (!is_numeric($tipo_id)) {
-        $erros[] = "O tipo de fornecedor selecionado não é válido.";
-    }
-
-    if ($telefone === '') {
-        $erros[] = "O telefone é obrigatório.";
-    }
-
-    if ($email === '') {
-        $erros[] = "O email é obrigatório.";
-    }
-
-    if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $erros[] = "O email geral não é válido.";
-    }
-
-    if (!empty($email_contacto) && !filter_var($email_contacto, FILTER_VALIDATE_EMAIL)) {
-        $erros[] = "O email direto não é válido.";
-    }
+    // Validações
+    $erros = array_merge(
+        $erros,
+        validar_nome_empresa($nome),
+        validar_nif($nif),
+        validar_tipo_fornecedor($tipo_id),
+        validar_telefone($telefone),
+        validar_email_geral($email),
+        validar_email_contacto($email_contacto)
+    );
 
     if (empty($erros)) {
         try {

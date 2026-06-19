@@ -229,3 +229,104 @@ function validar_contrato(string $tipo, string $inicio, string $fim, string $ent
     }
     return $erros;
 }
+// ============================================================
+// FORNECEDORES
+// ============================================================
+
+function validar_nome_empresa(string $nome): array {
+    $erros = [];
+    if ($nome === '') {
+        $erros[] = "O nome da empresa é obrigatório.";
+    }
+    return $erros;
+}
+
+function validar_nif(string $nif): array {
+    $erros = [];
+    if ($nif === '') {
+        $erros[] = "O NIF é obrigatório.";
+    } elseif (!preg_match('/^\d{9}$/', $nif)) {
+        $erros[] = "O NIF deve ter 9 dígitos.";
+    }
+    return $erros;
+}
+
+function validar_tipo_fornecedor(string $tipo_id): array {
+    $erros = [];
+    if ($tipo_id === '') {
+        $erros[] = "O tipo de fornecedor é obrigatório.";
+    } elseif (!is_numeric($tipo_id)) {
+        $erros[] = "O tipo de fornecedor selecionado não é válido.";
+    }
+    return $erros;
+}
+
+function validar_telefone(string $telefone): array {
+    $erros = [];
+    if ($telefone === '') {
+        $erros[] = "O telefone é obrigatório.";
+    }
+    return $erros;
+}
+
+function validar_email_geral(string $email): array {
+    $erros = [];
+    if ($email === '') {
+        $erros[] = "O email é obrigatório.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erros[] = "O email geral não é válido.";
+    }
+    return $erros;
+}
+
+function validar_email_contacto(string $email_contacto): array {
+    $erros = [];
+    if (!empty($email_contacto) && !filter_var($email_contacto, FILTER_VALIDATE_EMAIL)) {
+        $erros[] = "O email direto não é válido.";
+    }
+    return $erros;
+}
+// ============================================================
+// LOCALIZAÇÕES
+// ============================================================
+
+function validar_edificio(string $edificio): array {
+    $erros = [];
+    if ($edificio === '') {
+        $erros[] = "O edifício é obrigatório.";
+    } elseif (!in_array($edificio, ['Principal', 'Bloco B', 'Bloco C'])) {
+        $erros[] = "O edifício selecionado não é válido.";
+    }
+    return $erros;
+}
+
+function validar_piso(string $piso): array {
+    $erros = [];
+    if ($piso === '') {
+        $erros[] = "O piso é obrigatório.";
+    } elseif (!in_array($piso, ['0', '1', '2', '3'])) {
+        $erros[] = "O piso selecionado não é válido.";
+    }
+    return $erros;
+}
+
+function validar_sala(string $sala): array {
+    $erros = [];
+    if ($sala === '') {
+        $erros[] = "A sala é obrigatória.";
+    } elseif (strlen($sala) > 3) {
+        $erros[] = "A sala deve ter no máximo 3 caracteres.";
+    }
+    return $erros;
+}
+
+function validar_servico(string $servico_id): array {
+    $erros = [];
+    if ($servico_id === '') {
+        $erros[] = "O serviço é obrigatório.";
+    } elseif (!is_numeric($servico_id)) {
+        $erros[] = "O serviço selecionado não é válido.";
+    }
+    return $erros;
+}
+
