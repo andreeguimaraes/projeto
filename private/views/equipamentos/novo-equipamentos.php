@@ -45,6 +45,7 @@ try {
     ")->fetchAll(PDO::FETCH_OBJ);
     $tipos_garantia_bd  = $ligacao->query("SELECT id, nome FROM tipos_garantia ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
     $tipos_contrato_bd  = $ligacao->query("SELECT id, nome FROM tipos_contrato ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
+    $tipos_fornecedor_bd = $ligacao->query("SELECT id, nome FROM tipos_fornecedor ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
     $maxCodigo = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 3) AS UNSIGNED)), 0) FROM equipamentos")->fetchColumn();
     $codigo_sugerido = 'EQ' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
 } catch (PDOException $e) {
@@ -69,7 +70,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $custo_aquisicao         = $_POST["custo_aquisicao"] ?? "";
     $tipo_entrada  = $_POST["tipo_entrada"] ?? "";
     $localizacao_id = $_POST["localizacao_id"] ?? "";
-    $fornecedor_id  = $_POST["fornecedor_id"] ?? "";
 
     // Garantia
     $tipo_garantia       = $_POST["tipo_garantia"] ?? "";
@@ -105,248 +105,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // ----------------------------------------------------------------
     // 3. VALIDAR
     // ----------------------------------------------------------------
-/*
+    $erros = array_merge(
+        validar_codigo($codigo),
+        validar_designacao($designacao),
+        validar_categoria_nome($categoria),
+        validar_marca($marca),
+        validar_modelo($modelo),
+        validar_numero_serie($numero_serie),
+        validar_fabricante($fabricante),
+        validar_ano_fabrico($ano_fabrico),
+        validar_criticidade($criticidade),
+        validar_estado($estado),
+        validar_data_aquisicao($data_aquisicao),
+        validar_custo_aquisicao($custo_aquisicao),
+        validar_tipo_entrada($tipo_entrada),
+        validar_localizacao($localizacao_id),
+        validar_garantia($tipo_garantia, $data_inicio_garantia, $data_fim_garantia),
+        validar_contrato($tipo_contrato, $data_inicio_contrato, $data_fim_contrato, $entidade_contrato)
+    );
 
-    // === TAB: INFORMAÇÃO GERAL ===
+    // Validações que ficam aqui (dependem de $_FILES ou índice dinâmico)
 
-    if (empty($codigo)) {
-        $erros[] = "O código interno é obrigatório.";
-    } elseif (!preg_match('/^EQ\d{3,}$/', $codigo)) {
-        $erros[] = "O código interno deve começar por 'EQ' seguido de pelo menos 3 dígitos (ex: EQ001).";
-    } elseif (strlen($codigo) > 50) {
-        $erros[] = "O código interno não pode ter mais de 50 caracteres.";
-    }
-
-    if (empty($designacao)) {
-        $erros[] = "A designação é obrigatória.";
-    } elseif (strlen($designacao) < 3) {
-        $erros[] = "A designação deve ter pelo menos 3 caracteres.";
-    } elseif (!preg_match('/[a-zA-ZÀ-ÿ]/', $designacao)) {
-        $erros[] = "A designação deve conter pelo menos uma letra.";
-    } elseif (strlen($designacao) > 150) {
-        $erros[] = "A designação não pode ter mais de 150 caracteres.";
-    }
-
-    if (empty($categoria)) {
-        $erros[] = "A categoria é obrigatória.";
-    }
-
-    if (empty($marca)) {
-        $erros[] = "A marca é obrigatória.";
-    } elseif (strlen($marca) < 2) {
-        $erros[] = "A marca deve ter pelo menos 2 caracteres.";
-    } elseif (!preg_match('/[a-zA-ZÀ-ÿ]/', $marca)) {
-        $erros[] = "A marca deve conter pelo menos uma letra.";
-    } elseif (strlen($marca) > 100) {
-        $erros[] = "A marca não pode ter mais de 100 caracteres.";
-    }
-
-    if (!empty($fabricante)) {
-        if (strlen($fabricante) < 2) {
-            $erros[] = "O fabricante deve ter pelo menos 2 caracteres.";
-        } elseif (!preg_match('/[a-zA-ZÀ-ÿ]/', $fabricante)) {
-            $erros[] = "O fabricante deve conter pelo menos uma letra.";
-        } elseif (strlen($fabricante) > 150) {
-            $erros[] = "O fabricante não pode ter mais de 150 caracteres.";
+    // Ficheiro da garantia
+    if (!empty($_FILES['ficheiro_garantia']['name'])) {
+        $ext = strtolower(pathinfo($_FILES['ficheiro_garantia']['name'], PATHINFO_EXTENSION));
+        if (!in_array($ext, ['pdf', 'doc', 'docx'])) {
+            $erros[] = "O ficheiro da garantia deve ser PDF, DOC ou DOCX.";
+        }
+        if ($_FILES['ficheiro_garantia']['size'] > 5 * 1024 * 1024) {
+            $erros[] = "O ficheiro da garantia não pode exceder 5MB.";
         }
     }
 
-    if (empty($modelo)) {
-        $erros[] = "O modelo é obrigatório.";
-    } elseif (strlen($modelo) < 2) {
-        $erros[] = "O modelo deve ter pelo menos 2 caracteres.";
-    } elseif (strlen($modelo) > 100) {
-        $erros[] = "O modelo não pode ter mais de 100 caracteres.";
-    }
-
-    if (empty($numero_serie)) {
-        $erros[] = "O número de série é obrigatório.";
-    } elseif (strlen($numero_serie) < 2) {
-        $erros[] = "O número de série deve ter pelo menos 2 caracteres.";
-    } elseif (strlen($numero_serie) > 100) {
-        $erros[] = "O número de série não pode ter mais de 100 caracteres.";
-    }
-
-
-    if (!empty($ano_fabrico)) {
-        if (!preg_match('/^\d{4}$/', $ano_fabrico)) {
-            $erros[] = "O ano de fabrico deve ter 4 dígitos (ex: 2022).";
-        } elseif ((int)$ano_fabrico < 1900 || (int)$ano_fabrico > (int)date('Y')) {
-            $erros[] = "O ano de fabrico deve estar entre 1900 e " . date('Y') . ".";
+    // Ficheiro do contrato
+    if (!empty($_FILES['ficheiro_contrato']['name'])) {
+        $ext = strtolower(pathinfo($_FILES['ficheiro_contrato']['name'], PATHINFO_EXTENSION));
+        if (!in_array($ext, ['pdf', 'doc', 'docx'])) {
+            $erros[] = "O ficheiro do contrato deve ser PDF, DOC ou DOCX.";
+        }
+        if ($_FILES['ficheiro_contrato']['size'] > 5 * 1024 * 1024) {
+            $erros[] = "O ficheiro do contrato não pode exceder 5MB.";
         }
     }
 
-    $criticidades_validas = ['baixa', 'média', 'alta', 'suporte de vida'];
-    if (empty($criticidade)) {
-        $erros[] = "A criticidade é obrigatória.";
-    } elseif (!in_array(strtolower($criticidade), $criticidades_validas)) {
-        $erros[] = "O valor de criticidade selecionado não é válido.";
-    }
-
-    $estados_validos = ['ativo', 'em manutenção', 'inativo', 'em calibração', 'em quarentena', 'abatido'];
-    if (empty($estado)) {
-        $erros[] = "O estado é obrigatório.";
-    } elseif (!in_array(strtolower($estado), $estados_validos)) {
-        $erros[] = "O valor de estado selecionado não é válido.";
-    }
-
-    if (!empty($data_aquisicao)) {
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_aquisicao)) {
-            $erros[] = "Formato da data de aquisição inválido.";
-        } else {
-            $partes = explode('-', $data_aquisicao);
-            if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
-                $erros[] = "A data de aquisição não é uma data válida.";
-            } elseif ($data_aquisicao > date('Y-m-d')) {
-                $erros[] = "A data de aquisição não pode ser no futuro.";
-            }
-        }
-    }
-
-    if (!empty($custo_aquisicao)) {
-        if (!is_numeric($custo_aquisicao) || (float)$custo_aquisicao < 0) {
-            $erros[] = "O custo de aquisição deve ser um valor numérico positivo.";
-        } elseif ((float)$custo_aquisicao > 9999999.99) {
-            $erros[] = "O custo de aquisição introduzido é demasiado elevado.";
-        }
-    }
-
-    $tipos_entrada_validos = ['compra', 'doação', 'aluguer', 'empréstimo'];
-    if (!empty($tipo_entrada) && !in_array(strtolower($tipo_entrada), $tipos_entrada_validos)) {
-        $erros[] = "O tipo de entrada selecionado não é válido.";
-    }
-
-    // === TAB: LOCALIZAÇÃO ===
-
-    if (empty($localizacao_id)) {
-        $erros[] = "A localização é obrigatória.";
-    } elseif (!filter_var($localizacao_id, FILTER_VALIDATE_INT) || (int)$localizacao_id <= 0) {
-        $erros[] = "A localização selecionada não é válida.";
-    }
-
-    // === TAB: FORNECEDOR ===
-
-    if (!empty($fornecedor_id)) {
-        if (!filter_var($fornecedor_id, FILTER_VALIDATE_INT) || (int)$fornecedor_id <= 0) {
-            $erros[] = "O fornecedor selecionado não é válido.";
-        }
-    }
-
-    // === TAB: GARANTIA ===
-
-    $tem_garantia = !empty($tipo_garantia)
-        || !empty($data_inicio_garantia)
-        || !empty($data_fim_garantia);
-
-    if ($tem_garantia) {
-        if (empty($tipo_garantia)) {
-            $erros[] = "O tipo de garantia é obrigatório quando a garantia está preenchida.";
-        }
-        if (empty($data_inicio_garantia)) {
-            $erros[] = "A data de início da garantia é obrigatória.";
-        } else {
-            $partes = explode('-', $data_inicio_garantia);
-            if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
-                $erros[] = "A data de início da garantia não é uma data válida.";
-            }
-        }
-        if (empty($data_fim_garantia)) {
-            $erros[] = "A data de fim da garantia é obrigatória.";
-        } else {
-            $partes = explode('-', $data_fim_garantia);
-            if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
-                $erros[] = "A data de fim da garantia não é uma data válida.";
-            }
-        }
-        if (!empty($data_inicio_garantia) && !empty($data_fim_garantia)) {
-            if ($data_fim_garantia <= $data_inicio_garantia) {
-                $erros[] = "A data de fim da garantia deve ser posterior à data de início.";
-            }
-        }
-        // Entidade responsável da garantia (opcional mas se preenchida deve ter pelo menos 2 caracteres e uma letra)
-        if (!empty($_POST['entidade_garantia'])) {
-            $entidade_garantia = trim($_POST['entidade_garantia']);
-            if (strlen($entidade_garantia) < 2) {
-                $erros[] = "A entidade responsável da garantia deve ter pelo menos 2 caracteres.";
-            } elseif (!preg_match('/[a-zA-ZÀ-ÿ]/', $entidade_garantia)) {
-                $erros[] = "A entidade responsável da garantia deve conter pelo menos uma letra.";
-            } elseif (strlen($entidade_garantia) > 150) {
-                $erros[] = "A entidade responsável da garantia não pode ter mais de 150 caracteres.";
-            }
-        }
-        // Validação do ficheiro da garantia
-        if (!empty($_FILES['ficheiro_garantia']['name'])) {
-            $ext = strtolower(pathinfo($_FILES['ficheiro_garantia']['name'], PATHINFO_EXTENSION));
-            $extensoes_permitidas = ['pdf', 'doc', 'docx'];
-            if (!in_array($ext, $extensoes_permitidas)) {
-                $erros[] = "O ficheiro da garantia deve ser PDF, DOC ou DOCX.";
-            }
-            if ($_FILES['ficheiro_garantia']['size'] > 5 * 1024 * 1024) {
-                $erros[] = "O ficheiro da garantia não pode exceder 5MB.";
-            }
-        }
-    }
-
-    // === TAB: CONTRATO ===
-
-    $tem_contrato = !empty($tipo_contrato)
-        || !empty($data_inicio_contrato)
-        || !empty($data_fim_contrato)
-        || !empty($entidade_contrato);
-
-    if ($tem_contrato) {
-        if (empty($tipo_contrato)) {
-            $erros[] = "O tipo de contrato é obrigatório quando o contrato está preenchido.";
-        }
-        if (empty($data_inicio_contrato)) {
-            $erros[] = "A data de início do contrato é obrigatória.";
-        } else {
-            $partes = explode('-', $data_inicio_contrato);
-            if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
-                $erros[] = "A data de início do contrato não é uma data válida.";
-            }
-        }
-        if (empty($data_fim_contrato)) {
-            $erros[] = "A data de fim do contrato é obrigatória.";
-        } else {
-            $partes = explode('-', $data_fim_contrato);
-            if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
-                $erros[] = "A data de fim do contrato não é uma data válida.";
-            }
-        }
-        if (!empty($data_inicio_contrato) && !empty($data_fim_contrato)) {
-            if ($data_fim_contrato <= $data_inicio_contrato) {
-                $erros[] = "A data de fim do contrato deve ser posterior à data de início.";
-            }
-        }
-        $periodicidades_validas = ['mensal', 'trimestral', 'semestral', 'anual'];
-        if (!empty($periodicidade_contrato) && !in_array(strtolower($periodicidade_contrato), $periodicidades_validas)) {
-            $erros[] = "A periodicidade do contrato selecionada não é válida.";
-        }
-        // Entidade responsável do contrato (opcional mas se preenchida deve ter pelo menos 2 caracteres e uma letra)
-        if (!empty($entidade_contrato)) {
-            if (strlen($entidade_contrato) < 2) {
-                $erros[] = "A entidade responsável do contrato deve ter pelo menos 2 caracteres.";
-            } elseif (!preg_match('/[a-zA-ZÀ-ÿ]/', $entidade_contrato)) {
-                $erros[] = "A entidade responsável do contrato deve conter pelo menos uma letra.";
-            } elseif (strlen($entidade_contrato) > 150) {
-                $erros[] = "A entidade responsável do contrato não pode ter mais de 150 caracteres.";
-            }
-        }
-        // Validação do ficheiro do contrato
-        if (!empty($_FILES['ficheiro_contrato']['name'])) {
-            $ext = strtolower(pathinfo($_FILES['ficheiro_contrato']['name'], PATHINFO_EXTENSION));
-            if (!in_array($ext, ['pdf', 'doc', 'docx'])) {
-                $erros[] = "O ficheiro do contrato deve ser PDF, DOC ou DOCX.";
-            }
-            if ($_FILES['ficheiro_contrato']['size'] > 5 * 1024 * 1024) {
-                $erros[] = "O ficheiro do contrato não pode exceder 5MB.";
-            }
-        }
-    }
-
-    // === TAB: DOCUMENTAÇÃO ===
-
+    // Documentação linha a linha
     $documentos = [];
     $i = 1;
     while (isset($_POST["tipo_documento_$i"])) {
@@ -358,12 +160,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $linha_preenchida = !empty($tipo_doc) || !empty($nome_doc) || !empty($data_doc) || !empty($valid_doc);
 
         if ($linha_preenchida) {
-            if (empty($tipo_doc)) {
-                $erros[] = "O tipo do documento na linha $i é obrigatório.";
-            }
-            if (empty($nome_doc)) {
-                $erros[] = "O nome do documento na linha $i é obrigatório.";
-            }
+            if (empty($tipo_doc))  $erros[] = "O tipo do documento na linha $i é obrigatório.";
+            if (empty($nome_doc))  $erros[] = "O nome do documento na linha $i é obrigatório.";
             if (!empty($data_doc)) {
                 $partes = explode('-', $data_doc);
                 if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
@@ -379,13 +177,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!empty($data_doc) && !empty($valid_doc) && $valid_doc < $data_doc) {
                 $erros[] = "A validade do documento na linha $i não pode ser anterior à sua data.";
             }
-            $documentos[] = [
-                'tipo'     => $tipo_doc,
-                'nome'     => $nome_doc,
-                'data'     => !empty($data_doc) ? $data_doc : null,
-                'validade' => !empty($valid_doc) ? $valid_doc : null,
-            ];
-            // Validação dos ficheiros de documentação
             if (!empty($_FILES["ficheiro_documento_$i"]['name'])) {
                 $ext = strtolower(pathinfo($_FILES["ficheiro_documento_$i"]['name'], PATHINFO_EXTENSION));
                 if (!in_array($ext, ['pdf', 'doc', 'docx'])) {
@@ -395,10 +186,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $erros[] = "O ficheiro do documento na linha $i não pode exceder 5MB.";
                 }
             }
+            $documentos[] = [
+                'tipo'     => $tipo_doc,
+                'nome'     => $nome_doc,
+                'data'     => !empty($data_doc) ? $data_doc : null,
+                'validade' => !empty($valid_doc) ? $valid_doc : null,
+            ];
         }
-        $i++; 
+        $i++;
     }
-    // Verificar código duplicado (só se o formato estiver correto)
+    // Fornecedores linha a linha (múltiplos, com tipo de relação)
+    $fornecedores_associar = [];
+    $tipos_usados = [];
+    $i = 1;
+    while (isset($_POST["fornecedor_id_$i"])) {
+        $fornecedor_id_linha = trim($_POST["fornecedor_id_$i"] ?? "");
+        $tipo_relacao = trim($_POST["tipo_relacao_$i"] ?? "");
+
+        $linha_preenchida = !empty($fornecedor_id_linha) || !empty($tipo_relacao);
+
+        if ($linha_preenchida) {
+            if (empty($fornecedor_id_linha)) {
+                $erros[] = "O fornecedor na linha $i é obrigatório.";
+            } elseif (!filter_var($fornecedor_id_linha, FILTER_VALIDATE_INT)) {
+                $erros[] = "O fornecedor selecionado na linha $i não é válido.";
+            }
+
+            if (empty($tipo_relacao)) {
+                $erros[] = "O tipo de relação na linha $i é obrigatório.";
+            } elseif (!filter_var($tipo_relacao, FILTER_VALIDATE_INT)) {
+                $erros[] = "O tipo de relação selecionado na linha $i não é válido.";
+            } elseif (in_array($tipo_relacao, $tipos_usados)) {
+                $erros[] = "Já selecionou este tipo de relação noutra linha — cada tipo só pode ter um fornecedor.";
+            } else {
+                $tipos_usados[] = $tipo_relacao;
+            }
+
+            if (!empty($fornecedor_id_linha) && !empty($tipo_relacao) && filter_var($fornecedor_id_linha, FILTER_VALIDATE_INT) && filter_var($tipo_relacao, FILTER_VALIDATE_INT)) {
+                $fornecedores_associar[] = [
+                    'fornecedor_id' => (int)$fornecedor_id_linha,
+                    'tipo_id' => (int)$tipo_relacao,
+                ];
+            }
+        }
+        $i++;
+    }
+
+    // Verificar código duplicado
     if (empty($erros)) {
         $stmtCod = $ligacao->prepare("SELECT id FROM equipamentos WHERE codigo = :codigo");
         $stmtCod->execute([':codigo' => strtoupper($codigo)]);
@@ -406,8 +240,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $erros[] = "Já existe um equipamento com este código.";
         }
     }
-
-    */
     // ----------------------------------------------------------------
     // 4. NORMALIZAR E GRAVAR (só se não houver erros)
     // Normalizar entrada. independentemente de como o utilizador escreve os dados, o sistema assegura consistência e padronização antes de qualquer registo na base de dados. 
@@ -616,14 +448,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             // INSERT equipamento_fornecedor
-            if (!empty($fornecedor_id)) {
+            // INSERT equipamento_fornecedor (múltiplos, com tipo de relação)
+            foreach ($fornecedores_associar as $fa) {
                 $ligacao->prepare("
-                INSERT INTO equipamento_fornecedor (equipamento_id, fornecedor_id, tipo_id)
-                VALUES (:equipamento_id, :fornecedor_id, :tipo_id)
-            ")->execute([
+        INSERT INTO equipamento_fornecedor (equipamento_id, fornecedor_id, tipo_id)
+        VALUES (:equipamento_id, :fornecedor_id, :tipo_id)
+    ")->execute([
                     ':equipamento_id' => $equipamento_id,
-                    ':fornecedor_id'  => (int)$fornecedor_id,
-                    ':tipo_id'        => 1,
+                    ':fornecedor_id'  => $fa['fornecedor_id'],
+                    ':tipo_id'        => $fa['tipo_id'],
                 ]);
             }
 
@@ -635,111 +468,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $ligacao = null;
-    }
-
-
-    // ----------------------------------------------------------------
-    // 3. VALIDAR
-    // ----------------------------------------------------------------
-    $erros = array_merge(
-        validar_codigo($codigo),
-        validar_designacao($designacao),
-        validar_categoria($categoria),
-        validar_marca($marca),
-        validar_modelo($modelo),
-        validar_numero_serie($numero_serie),
-        validar_fabricante($fabricante),
-        validar_ano_fabrico($ano_fabrico),
-        validar_criticidade($criticidade),
-        validar_estado($estado),
-        validar_data_aquisicao($data_aquisicao),
-        validar_custo_aquisicao($custo_aquisicao),
-        validar_tipo_entrada($tipo_entrada),
-        validar_localizacao($localizacao_id),
-        validar_fornecedor($fornecedor_id),
-        validar_garantia($tipo_garantia, $data_inicio_garantia, $data_fim_garantia),
-        validar_contrato($tipo_contrato, $data_inicio_contrato, $data_fim_contrato, $entidade_contrato)
-    );
-
-    // Validações que ficam aqui (dependem de $_FILES ou índice dinâmico)
-
-    // Ficheiro da garantia
-    if (!empty($_FILES['ficheiro_garantia']['name'])) {
-        $ext = strtolower(pathinfo($_FILES['ficheiro_garantia']['name'], PATHINFO_EXTENSION));
-        if (!in_array($ext, ['pdf', 'doc', 'docx'])) {
-            $erros[] = "O ficheiro da garantia deve ser PDF, DOC ou DOCX.";
-        }
-        if ($_FILES['ficheiro_garantia']['size'] > 5 * 1024 * 1024) {
-            $erros[] = "O ficheiro da garantia não pode exceder 5MB.";
-        }
-    }
-
-    // Ficheiro do contrato
-    if (!empty($_FILES['ficheiro_contrato']['name'])) {
-        $ext = strtolower(pathinfo($_FILES['ficheiro_contrato']['name'], PATHINFO_EXTENSION));
-        if (!in_array($ext, ['pdf', 'doc', 'docx'])) {
-            $erros[] = "O ficheiro do contrato deve ser PDF, DOC ou DOCX.";
-        }
-        if ($_FILES['ficheiro_contrato']['size'] > 5 * 1024 * 1024) {
-            $erros[] = "O ficheiro do contrato não pode exceder 5MB.";
-        }
-    }
-
-    // Documentação linha a linha
-    $documentos = [];
-    $i = 1;
-    while (isset($_POST["tipo_documento_$i"])) {
-        $tipo_doc  = trim($_POST["tipo_documento_$i"] ?? "");
-        $nome_doc  = trim($_POST["nome_documento_$i"] ?? "");
-        $data_doc  = trim($_POST["data_documento_$i"] ?? "");
-        $valid_doc = trim($_POST["validade_documento_$i"] ?? "");
-
-        $linha_preenchida = !empty($tipo_doc) || !empty($nome_doc) || !empty($data_doc) || !empty($valid_doc);
-
-        if ($linha_preenchida) {
-            if (empty($tipo_doc))  $erros[] = "O tipo do documento na linha $i é obrigatório.";
-            if (empty($nome_doc))  $erros[] = "O nome do documento na linha $i é obrigatório.";
-            if (!empty($data_doc)) {
-                $partes = explode('-', $data_doc);
-                if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
-                    $erros[] = "A data do documento na linha $i não é válida.";
-                }
-            }
-            if (!empty($valid_doc)) {
-                $partes = explode('-', $valid_doc);
-                if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
-                    $erros[] = "A data de validade do documento na linha $i não é válida.";
-                }
-            }
-            if (!empty($data_doc) && !empty($valid_doc) && $valid_doc < $data_doc) {
-                $erros[] = "A validade do documento na linha $i não pode ser anterior à sua data.";
-            }
-            if (!empty($_FILES["ficheiro_documento_$i"]['name'])) {
-                $ext = strtolower(pathinfo($_FILES["ficheiro_documento_$i"]['name'], PATHINFO_EXTENSION));
-                if (!in_array($ext, ['pdf', 'doc', 'docx'])) {
-                    $erros[] = "O ficheiro do documento na linha $i deve ser PDF, DOC ou DOCX.";
-                }
-                if ($_FILES["ficheiro_documento_$i"]['size'] > 5 * 1024 * 1024) {
-                    $erros[] = "O ficheiro do documento na linha $i não pode exceder 5MB.";
-                }
-            }
-            $documentos[] = [
-                'tipo'     => $tipo_doc,
-                'nome'     => $nome_doc,
-                'data'     => !empty($data_doc) ? $data_doc : null,
-                'validade' => !empty($valid_doc) ? $valid_doc : null,
-            ];
-        }
-        $i++;
-    }
-
-    // Verificar código duplicado
-    if (empty($erros)) {
-        $stmtCod = $ligacao->prepare("SELECT id FROM equipamentos WHERE codigo = :codigo");
-        $stmtCod->execute([':codigo' => strtoupper($codigo)]);
-        if ($stmtCod->fetch()) {
-            $erros[] = "Já existe um equipamento com este código.";
-        }
     }
 }
 ?>
@@ -1023,82 +751,47 @@ require_once '../../includes/header.php'; ?>
                             <!-- TAB: FORNECEDOR -->
                             <div class="tab-pane fade" id="fornecedor" role="tabpanel">
 
-                                <div class="row mb-4">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Selecionar fornecedor</label>
-                                        <select class="form-select" name="fornecedor_id" id="selectFornecedor"
-                                            onchange="preencherFornecedor()">
-                                            <option value="">Selecione...</option>
-                                            <?php foreach ($fornecedores_bd as $forn) : ?>
-                                                <option value="<?= $forn->id ?>"
-                                                    <?= (isset($fornecedor_id) && $fornecedor_id == $forn->id) ? 'selected' : '' ?>>
-                                                    <?= htmlspecialchars($forn->nome) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
+                                <label class="form-label fw-bold">Selecionar fornecedor</label>
+                                <div class="table-responsive mb-3">
+                                    <table class="table align-middle" id="tabelaFornecedores">
+                                        <thead>
+                                            <tr>
+                                                <th>Fornecedor</th>
+                                                <th>Tipo de relação</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <select class="form-select" name="fornecedor_id_1">
+                                                        <option value="">Selecione...</option>
+                                                        <?php foreach ($fornecedores_bd as $forn) : ?>
+                                                            <option value="<?= $forn->id ?>"><?= htmlspecialchars($forn->nome) ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="form-select" name="tipo_relacao_1">
+                                                        <option value="">Selecione...</option>
+                                                        <?php foreach ($tipos_fornecedor_bd as $tf) : ?>
+                                                            <option value="<?= $tf->id ?>"><?= htmlspecialchars($tf->nome) ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('tr').remove()">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
 
-                                <!-- Painel de informação — só aparece quando um fornecedor é selecionado -->
-                                <div id="infoFornecedor" class="d-none">
-                                    <hr>
-                                    <h6 class="text-muted mb-3"><i class="fas fa-building me-2"></i>Informação do
-                                        fornecedor</h6>
-
-                                    <div class="row mb-3">
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Nome da empresa</label>
-                                            <p class="form-control-plaintext" id="f-nome">—</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">NIF</label>
-                                            <p class="form-control-plaintext" id="f-nif">—</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Tipo de fornecedor</label>
-                                            <p class="form-control-plaintext" id="f-tipo">—</p>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Morada</label>
-                                            <p class="form-control-plaintext" id="f-morada">—</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Website</label>
-                                            <p class="form-control-plaintext" id="f-website">—</p>
-                                        </div>
-                                    </div>
-
-                                    <hr>
-                                    <h6 class="text-muted mb-3"><i class="fas fa-address-book me-2"></i>Contactos
-                                    </h6>
-
-                                    <div class="row mb-3">
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Telefone</label>
-                                            <p class="form-control-plaintext" id="f-telefone">—</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Email</label>
-                                            <p class="form-control-plaintext" id="f-email">—</p>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-4">
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Pessoa de contacto</label>
-                                            <p class="form-control-plaintext" id="f-contacto">—</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Telefone direto</label>
-                                            <p class="form-control-plaintext" id="f-tel-direto">—</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Email direto</label>
-                                            <p class="form-control-plaintext" id="f-email-direto">—</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <button type="button" class="btn btn-outline-secondary btn-sm mb-4" id="btnAddFornecedor">
+                                    <i class="fas fa-plus me-1"></i> Adicionar fornecedor
+                                </button>
 
                                 <div class="d-flex justify-content-between">
                                     <button type="button" class="btn btn-outline-secondary"
@@ -1543,51 +1236,35 @@ require_once '../../includes/header.php'; ?>
     // ----------------------------------------------------------------
     // DADOS DOS FORNECEDORES (carregados da BD via PHP)
     // ----------------------------------------------------------------
-    const fornecedores = {
-        <?php foreach ($fornecedores_bd as $f) : ?>
-            <?= $f->id ?>: {
-                nome: <?= json_encode($f->nome) ?>,
-                nif: <?= json_encode($f->nif) ?>,
-                tipo: <?= json_encode($f->tipo) ?>,
-                morada: <?= json_encode($f->morada) ?>,
-                website: <?= json_encode($f->website ?? '—') ?>,
-                telefone: <?= json_encode($f->telefone) ?>,
-                email: <?= json_encode($f->email) ?>,
-                contacto: <?= json_encode($f->pessoa_contacto) ?>,
-                telDireto: <?= json_encode($f->telefone_contacto) ?>,
-                emailDireto: <?= json_encode($f->email_contacto ?? '—') ?>
-            },
-        <?php endforeach; ?>
-    };
 
-    function preencherFornecedor() {
-        const id = document.getElementById('selectFornecedor').value;
-        const painel = document.getElementById('infoFornecedor');
+    let numFornecedores = 1;
+    const opcoesFornecedor = `
+    <option value="">Selecione...</option>
+    <?php foreach ($fornecedores_bd as $forn) : ?>
+        <option value="<?= $forn->id ?>"><?= htmlspecialchars($forn->nome) ?></option>
+    <?php endforeach; ?>
+`;
+    const opcoesTipoRelacao = `
+    <option value="">Selecione...</option>
+    <?php foreach ($tipos_fornecedor_bd as $tf) : ?>
+        <option value="<?= $tf->id ?>"><?= htmlspecialchars($tf->nome) ?></option>
+    <?php endforeach; ?>
+`;
+    document.getElementById('btnAddFornecedor').addEventListener('click', function() {
+        numFornecedores++;
+        const n = numFornecedores;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+        <td><select class="form-select" name="fornecedor_id_${n}">${opcoesFornecedor}</select></td>
+        <td><select class="form-select" name="tipo_relacao_${n}">${opcoesTipoRelacao}</select></td>
+        <td>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('tr').remove()">
+                <i class="fas fa-trash"></i>
+            </button>
+        </td>`;
+        document.querySelector('#tabelaFornecedores tbody').appendChild(tr);
+    });
 
-        if (!id) {
-            painel.classList.add('d-none');
-            return;
-        }
-
-        const f = fornecedores[id];
-        if (!f) {
-            painel.classList.add('d-none');
-            return;
-        }
-
-        document.getElementById('f-nome').textContent = f.nome;
-        document.getElementById('f-nif').textContent = f.nif;
-        document.getElementById('f-tipo').textContent = f.tipo;
-        document.getElementById('f-morada').textContent = f.morada;
-        document.getElementById('f-website').textContent = f.website;
-        document.getElementById('f-telefone').textContent = f.telefone;
-        document.getElementById('f-email').textContent = f.email;
-        document.getElementById('f-contacto').textContent = f.contacto;
-        document.getElementById('f-tel-direto').textContent = f.telDireto;
-        document.getElementById('f-email-direto').textContent = f.emailDireto;
-
-        painel.classList.remove('d-none');
-    }
 
     // ----------------------------------------------------------------
     // DADOS DAS LOCALIZAÇÕES (carregados da BD via PHP)

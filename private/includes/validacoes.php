@@ -229,6 +229,13 @@ function validar_contrato(string $tipo, string $inicio, string $fim, string $ent
     }
     return $erros;
 }
+function validar_categoria_nome(string $categoria): array {
+    $erros = [];
+    if (empty($categoria)) {
+        $erros[] = "A categoria é obrigatória.";
+    }
+    return $erros;
+}
 // ============================================================
 // FORNECEDORES
 // ============================================================
