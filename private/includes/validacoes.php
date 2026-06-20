@@ -293,6 +293,65 @@ function validar_email_contacto(string $email_contacto): array {
     }
     return $erros;
 }
+function validar_morada($morada)
+{
+    $erros = [];
+    $morada = trim($morada ?? '');
+
+    if (empty($morada)) {
+        $erros[] = "A morada é obrigatória.";
+    } elseif (strlen($morada) < 5) {
+        $erros[] = "A morada deve ter pelo menos 5 caracteres.";
+    } elseif (strlen($morada) > 255) {
+        $erros[] = "A morada não pode ter mais de 255 caracteres.";
+    }
+
+    return $erros;
+}
+
+function validar_website($website)
+{
+    $erros = [];
+    $website = trim($website ?? '');
+
+    if (!empty($website) && !filter_var($website, FILTER_VALIDATE_URL)) {
+        $erros[] = "O website não é válido.";
+    }
+
+    return $erros;
+}
+
+function validar_pessoa_contacto($pessoa_contacto)
+{
+    $erros = [];
+    $pessoa_contacto = trim($pessoa_contacto ?? '');
+
+    if (empty($pessoa_contacto)) {
+        $erros[] = "O nome da pessoa de contacto é obrigatório.";
+    } elseif (strlen($pessoa_contacto) < 2) {
+        $erros[] = "O nome da pessoa de contacto deve ter pelo menos 2 caracteres.";
+    } elseif (!preg_match('/[a-zA-ZÀ-ÿ]/', $pessoa_contacto)) {
+        $erros[] = "O nome da pessoa de contacto deve conter pelo menos uma letra.";
+    } elseif (strlen($pessoa_contacto) > 100) {
+        $erros[] = "O nome da pessoa de contacto não pode ter mais de 100 caracteres.";
+    }
+
+    return $erros;
+}
+
+function validar_telefone_contacto2($telefone_contacto)
+{
+    $erros = [];
+    $telefone_contacto = trim($telefone_contacto ?? '');
+
+    if (empty($telefone_contacto)) {
+        $erros[] = "O telefone direto é obrigatório.";
+    } elseif (!preg_match('/^\+?[0-9\s]{9,20}$/', $telefone_contacto)) {
+        $erros[] = "O telefone direto não é válido.";
+    }
+
+    return $erros;
+}
 // ============================================================
 // LOCALIZAÇÕES
 // ============================================================

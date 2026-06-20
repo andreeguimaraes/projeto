@@ -9,7 +9,6 @@ redirect_if_not_logged();
 
 $erros        = [];
 $erro_sistema = '';
-$sucesso      = false;
 $tipos_fornecedor = [];
 $codigo = ''; // necessário porque é gerado fora do bloco POST
 
@@ -85,6 +84,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
         $erros[] = "O tipo de fornecedor selecionado não é válido.";
     }
 
+    if (!empty($tipo_id) && ctype_digit($tipo_id)) {
+        $stmtTipo = $ligacao->prepare("SELECT id FROM tipos_fornecedor WHERE id = :id");
+        $stmtTipo->execute([':id' => (int)$tipo_id]);
+
+        if (!$stmtTipo->fetch()) {
+            $erros[] = "O tipo de fornecedor selecionado não existe.";
+        }
+    }
+
     if (empty($morada)) {
         $erros[] = "A morada é obrigatória.";
     } elseif (strlen($morada) < 5) {
@@ -129,13 +137,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
         $erros[] = "O website não é válido.";
     }
 
-    // Normalizar entrada. independentemente de como o utilizador escreve os dados, o sistema assegura consistência e padronização antes de qualquer registo na base de dados. 
-    $nome            = ucwords(strtolower($nome));           // philips healthcare → Philips Healthcare
-    $morada          = ucwords(strtolower($morada));         // av. da liberdade → Av. Da Liberdade
-    $pessoa_contacto = ucwords(strtolower($pessoa_contacto)); // joão ferreira → João Ferreira
-    $email           = strtolower($email);                   // Geral@Empresa.PT → geral@empresa.pt
-    $email_contacto  = !empty($email_contacto) ? strtolower($email_contacto) : null;
-    $website         = !empty($website) ? strtolower($website) : null;
+    // Normalizar entrada
+    // Remove espaços repetidos no início, no fim e no meio, mas não altera maiúsculas/minúsculas dos nomes das empresas
+    $nome = preg_replace('/\s+/', ' ', trim($nome));
+    $morada = preg_replace('/\s+/', ' ', trim($morada));
+    $pessoa_contacto = preg_replace('/\s+/', ' ', trim($pessoa_contacto));
+
+    // Emails em minúsculas
+    $email = strtolower(trim($email));
+    $email_contacto = !empty($email_contacto) ? strtolower(trim($email_contacto)) : null;
+
+    // Website: mantém maiúsculas/minúsculas do URL, só remove espaços
+    $website = !empty($website) ? trim($website) : null;
     
     // 3. GRAVAR NA BASE DE DADOS
     // Só corre se não houver erros de validação
@@ -178,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
                 ]);
 
                 $ligacao = null;
-                header("Location: fornecedor.php");
+                header("Location: fornecedor.php?sucesso=fornecedor_criado");
                 exit;
             }
         } catch (PDOException $e) {
@@ -218,12 +231,7 @@ $ligacao = null;
                 </div>
             <?php endif; ?>
 
-            <!-- Sucesso -->
-            <?php if ($sucesso) : ?>
-                <div class="alert alert-success">
-                    <i class="fas fa-circle-check me-2"></i>Fornecedor registado com sucesso!
-                </div>
-            <?php endif; ?>
+                
 
             <!-- Erros de validação -->
             <?php if (!empty($erros)) : ?>

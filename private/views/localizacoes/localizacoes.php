@@ -302,14 +302,20 @@ $ligacao = null;
                                                             class="btn btn-sm btn-outline-warning" title="Editar">
                                                             <i class="fas fa-pen"></i>
                                                         </a>
-                                                        <button class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalEliminar"
-                                                            data-id="<?= $loc->id ?>"
-                                                            data-codigo="<?= htmlspecialchars($loc->codigo) ?>"
-                                                            data-info="<?= htmlspecialchars('Edifício ' . $loc->edificio . ', Piso ' . $loc->piso . ', Sala ' . $loc->sala) ?>">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
+                                                        <?php if ($loc->ativo) : ?>
+                                                            <button class="btn btn-sm btn-outline-danger" title="Eliminar"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#modalEliminar"
+                                                                data-id="<?= $loc->id ?>"
+                                                                data-codigo="<?= htmlspecialchars($loc->codigo) ?>"
+                                                                data-info="<?= htmlspecialchars('Edifício ' . $loc->edificio . ', Piso ' . $loc->piso . ', Sala ' . $loc->sala) ?>">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        <?php else : ?>
+                                                            <button class="btn btn-sm btn-outline-secondary" disabled title="Localização inativa">
+                                                                <i class="fas fa-ban"></i>
+                                                            </button>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </td>
                                             </tr>

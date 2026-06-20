@@ -41,10 +41,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         validar_nome_empresa($nome),
         validar_nif($nif),
         validar_tipo_fornecedor($tipo_id),
+        validar_morada($morada),
+        validar_website($website),
         validar_telefone($telefone),
         validar_email_geral($email),
+        validar_pessoa_contacto($pessoa_contacto),
+        validar_telefone_contacto2($telefone_contacto),
         validar_email_contacto($email_contacto)
     );
+
+    // normalizar
+    $nome = preg_replace('/\s+/', ' ', trim($nome));
+    $morada = preg_replace('/\s+/', ' ', trim($morada));
+    $pessoa_contacto = preg_replace('/\s+/', ' ', trim($pessoa_contacto));
+
+    $email = strtolower(trim($email));
+    $email_contacto = !empty($email_contacto) ? strtolower(trim($email_contacto)) : null;
+    $website = !empty($website) ? trim($website) : null;
+
 
     if (empty($erros)) {
         try {
@@ -55,7 +69,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $stmt = $ligacao->prepare("
+            // Verificar se já existe outro fornecedor com o mesmo NIF
+            $stmtNif = $ligacao->prepare("
+            SELECT id 
+            FROM fornecedores 
+            WHERE nif = :nif AND id <> :id
+        ");
+            $stmtNif->execute([
+                ':nif' => $nif,
+                ':id' => $id
+            ]);
+
+            if ($stmtNif->fetch()) {
+                $erros[] = "Já existe outro fornecedor com este NIF.";
+            }
+
+            // Só atualiza se não encontrou NIF duplicado
+            if (empty($erros)) {
+                $stmt = $ligacao->prepare("
                 UPDATE fornecedores
                 SET nome = :nome,
                     nif = :nif,
@@ -66,26 +97,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     pessoa_contacto = :pessoa_contacto,
                     telefone_contacto = :telefone_contacto,
                     email_contacto = :email_contacto,
-                    tipo_id = :tipo_id,
+                    tipo_id = :tipo_id
                 WHERE id = :id
             ");
 
-            $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
-            $stmt->bindParam(':nif', $nif, PDO::PARAM_STR);
-            $stmt->bindParam(':telefone', $telefone, PDO::PARAM_STR);
-            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-            $stmt->bindParam(':morada', $morada, PDO::PARAM_STR);
-            $stmt->bindParam(':website', $website, PDO::PARAM_STR);
-            $stmt->bindParam(':pessoa_contacto', $pessoa_contacto, PDO::PARAM_STR);
-            $stmt->bindParam(':telefone_contacto', $telefone_contacto, PDO::PARAM_STR);
-            $stmt->bindParam(':email_contacto', $email_contacto, PDO::PARAM_STR);
-            $stmt->bindParam(':tipo_id', $tipo_id, PDO::PARAM_INT);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
+                $stmt->bindParam(':nif', $nif, PDO::PARAM_STR);
+                $stmt->bindParam(':telefone', $telefone, PDO::PARAM_STR);
+                $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+                $stmt->bindParam(':morada', $morada, PDO::PARAM_STR);
+                $stmt->bindParam(':website', $website, PDO::PARAM_STR);
+                $stmt->bindParam(':pessoa_contacto', $pessoa_contacto, PDO::PARAM_STR);
+                $stmt->bindParam(':telefone_contacto', $telefone_contacto, PDO::PARAM_STR);
+                $stmt->bindParam(':email_contacto', $email_contacto, PDO::PARAM_STR);
+                $stmt->bindParam(':tipo_id', $tipo_id, PDO::PARAM_INT);
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-            $stmt->execute();
+                $stmt->execute();
 
-            header('Location: fornecedor.php');
-            exit;
+                header('Location: fornecedor.php');
+                exit;
+            }
         } catch (PDOException $err) {
             if ($err->getCode() == 23000) {
                 $erros[] = "Já existe um fornecedor com esse NIF ou outro campo único repetido.";
@@ -204,9 +236,9 @@ $ligacao = null;
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label fw-bold">Morada</label>
+                                <label class="form-label fw-bold">Morada <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="morada"
-                                    value="<?= htmlspecialchars($_POST['morada'] ?? $fornecedor->morada ?? '') ?>">
+                                    value="<?= htmlspecialchars($_POST['morada'] ?? $fornecedor->morada ?? '') ?>" required>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Website</label>
@@ -241,15 +273,15 @@ $ligacao = null;
 
                         <div class="row mb-4">
                             <div class="col-md-4">
-                                <label class="form-label fw-bold">Nome</label>
+                                <label class="form-label fw-bold">Nome <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="pessoa_contacto"
-                                    value="<?= htmlspecialchars($_POST['pessoa_contacto'] ?? $fornecedor->pessoa_contacto ?? '') ?>">
+                                    value="<?= htmlspecialchars($_POST['pessoa_contacto'] ?? $fornecedor->pessoa_contacto ?? '') ?>" required>
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label fw-bold">Telefone direto</label>
+                                <label class="form-label fw-bold">Telefone direto <span class="text-danger">*</span></label>
                                 <input type="tel" class="form-control" name="telefone_contacto"
-                                    value="<?= htmlspecialchars($_POST['telefone_contacto'] ?? $fornecedor->telefone_contacto ?? '') ?>">
+                                    value="<?= htmlspecialchars($_POST['telefone_contacto'] ?? $fornecedor->telefone_contacto ?? '') ?>" required>
                             </div>
 
                             <div class="col-md-4">
@@ -260,7 +292,7 @@ $ligacao = null;
                         </div>
 
 
-                        
+
 
                         <!-- Nota campos obrigatórios -->
                         <p class="text-muted small mb-3">

@@ -10,6 +10,7 @@ redirect_if_not_logged();
 
 if (isset($_GET['eliminar'])) {
     $id = (int) $_GET['eliminar'];
+
     try {
         $ligacao = new PDO(
             "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
@@ -17,11 +18,28 @@ if (isset($_GET['eliminar'])) {
             MYSQL_PASSWORD
         );
         $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // Verifica se o fornecedor tem equipamentos associados
+        $stmtCheck = $ligacao->prepare("
+            SELECT COUNT(*) 
+            FROM equipamento_fornecedor 
+            WHERE fornecedor_id = :id
+        ");
+        $stmtCheck->execute([':id' => $id]);
+        $totalEquip = (int) $stmtCheck->fetchColumn();
+
+        if ($totalEquip > 0) {
+            header("Location: fornecedor.php?erro=tem_equipamentos");
+            exit;
+        }
+
+        // Desativa o fornecedor
         $stmt = $ligacao->prepare("UPDATE fornecedores SET ativo = 0 WHERE id = :id");
         $stmt->execute([':id' => $id]);
     } catch (PDOException $e) {
         // silencia o erro
     }
+
     header("Location: fornecedor.php");
     exit;
 }
@@ -33,6 +51,11 @@ if (isset($_GET['eliminar'])) {
 $erro = '';
 $fornecedores = [];
 $tipos = [];
+$mensagem_bloqueio = '';
+
+if (($_GET['erro'] ?? '') === 'tem_equipamentos') {
+    $mensagem_bloqueio = 'Não é possível desativar este fornecedor porque ainda tem equipamentos associados. Remova ou altere primeiro a associação desses equipamentos.';
+}
 
 try {
     $ligacao = new PDO(
@@ -78,7 +101,7 @@ try {
     /* Filtro por tipo */
     if (!empty($tipo)) {
         $sql .= " AND f.tipo_id = :tipo";
-        $params[':tipo'] = $tipo;
+        $params[':tipo'] = (int) $tipo;
     }
 
     $sql .= " GROUP BY f.id";
@@ -184,6 +207,12 @@ $ligacao = null;
                 </div>
             </div>
 
+            <?php if (!empty($mensagem_bloqueio)) : ?>
+                <div class="alert alert-warning">
+                    <i class="fas fa-triangle-exclamation me-2"></i>
+                    <?= htmlspecialchars($mensagem_bloqueio) ?>
+                </div>
+            <?php endif; ?>
             <!-- Erros / Resultados -->
             <?php if (!empty($erro)) : ?>
                 <p class="text-center text-danger"><?= $erro ?></p>
@@ -235,14 +264,20 @@ $ligacao = null;
                                                             class="btn btn-sm btn-outline-warning" title="Editar">
                                                             <i class="fas fa-pen"></i>
                                                         </a>
-                                                        <button class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalEliminar"
-                                                            data-id="<?= $f->id ?>"
-                                                            data-codigo="<?= htmlspecialchars($f->codigo) ?>"
-                                                            data-nome="<?= htmlspecialchars($f->nome) ?>">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
+                                                        <?php if ($f->ativo) : ?>
+                                                            <button class="btn btn-sm btn-outline-danger" title="Eliminar"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#modalEliminar"
+                                                                data-id="<?= $f->id ?>"
+                                                                data-codigo="<?= htmlspecialchars($f->codigo) ?>"
+                                                                data-nome="<?= htmlspecialchars($f->nome) ?>">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        <?php else : ?>
+                                                            <button class="btn btn-sm btn-outline-secondary" disabled title="Fornecedor inativo">
+                                                                <i class="fas fa-ban"></i>
+                                                            </button>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </td>
                                             </tr>

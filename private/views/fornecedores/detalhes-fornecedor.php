@@ -107,7 +107,7 @@ $estados_label = [
 
                     <h4 class="mb-3 d-flex align-items-center gap-2">
                         <?= htmlspecialchars($fornecedor->nome ?? '') ?>
-                        <?php if ($fornecedor->ativo == 1): ?>
+                        <?php if (($fornecedor->ativo ?? 0) == 1): ?>
                             <span class="badge bg-success">Ativo</span>
                         <?php else: ?>
                             <span class="badge bg-secondary">Inativo</span>
