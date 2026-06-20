@@ -27,6 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $edificio = trim($_POST['edificio'] ?? '');
     $piso = trim($_POST['piso'] ?? '');
     $sala = trim($_POST['sala'] ?? '');
+    $sala = preg_replace('/\s+/', ' ', $sala);
+    $sala = strtoupper($sala);
     $servico_id = trim($_POST['servico_id'] ?? '');
 
     // Validações
@@ -84,9 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: localizacoes.php');
                 exit;
             }
-
         } catch (PDOException $err) {
-            $erros[] = "Erro ao atualizar localização: " . $err->getMessage();
+            $erros[] = "Erro ao atualizar localização. Por favor tente novamente.";
         }
     }
 }
@@ -117,6 +118,12 @@ try {
         exit;
     }
 
+    // Verificar se há equipamentos associados, para avisar o utilizador
+    $stmtCount = $ligacao->prepare("SELECT COUNT(*) FROM equipamentos WHERE localizacao_id = :id");
+    $stmtCount->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmtCount->execute();
+    $totalEquipamentos = (int) $stmtCount->fetchColumn();
+
     // Buscar serviços para o select
     $stmtServicos = $ligacao->prepare("
         SELECT *
@@ -125,10 +132,10 @@ try {
     ");
     $stmtServicos->execute();
     $servicos_bd = $stmtServicos->fetchAll(PDO::FETCH_OBJ);
-
 } catch (PDOException $err) {
     $erros[] = "Erro na ligação à base de dados.";
     $localizacao = null;
+    $totalEquipamentos = 0;
 }
 
 $ligacao = null;
@@ -161,6 +168,13 @@ $ligacao = null;
                     <i class="fas fa-arrow-left me-2"></i>Voltar
                 </a>
             </div>
+            <?php if ($totalEquipamentos > 0): ?>
+                <div class="alert alert-info mb-3">
+                    <i class="fas fa-circle-info me-2"></i>
+                    Esta localização tem <strong><?= $totalEquipamentos ?></strong> equipamento<?= $totalEquipamentos > 1 ? 's' : '' ?> associado<?= $totalEquipamentos > 1 ? 's' : '' ?>.
+                    Alterar o edifício, piso ou sala atualiza apenas o registo da localização — os equipamentos continuam associados a esta mesma localização (com os novos dados).
+                </div>
+            <?php endif; ?>
 
             <form action="editar-localizacoes.php?id_localizacao=<?= htmlspecialchars($idEncriptado) ?>" method="post" novalidate>
 

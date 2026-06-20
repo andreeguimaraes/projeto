@@ -16,7 +16,7 @@ if (!$id || !is_numeric($id)) {
 
 $eq = null;
 $localizacao = null;
-$fornecedor = null;
+$fornecedores_associados = [];
 $garantia = null;
 $contrato = null;
 $documentos_bd = [];
@@ -57,7 +57,7 @@ try {
     $stmtLoc->execute();
     $localizacao = $stmtLoc->fetch(PDO::FETCH_OBJ);
 
-    // Fornecedor associado (o primeiro, conforme o modelo atual)
+    // Fornecedores associados (múltiplos, com tipo de relação)
     $stmtForn = $ligacao->prepare("
         SELECT f.*, tf.nome AS tipo_nome
         FROM equipamento_fornecedor ef
@@ -65,11 +65,10 @@ try {
         JOIN tipos_fornecedor tf ON tf.id = f.tipo_id
         WHERE ef.equipamento_id = :equipamento_id
         ORDER BY ef.id
-        LIMIT 1
     ");
     $stmtForn->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
     $stmtForn->execute();
-    $fornecedor = $stmtForn->fetch(PDO::FETCH_OBJ);
+    $fornecedores_associados = $stmtForn->fetchAll(PDO::FETCH_OBJ);
 
     // Garantia
     $stmtGarantia = $ligacao->prepare("
@@ -367,87 +366,102 @@ function formatar_euros($valor)
                             <?php endif; ?>
                         </div>
 
-                        <!-- TAB 3 — Fornecedor -->
+                        <!-- TAB 3 — Fornecedor (múltiplos) -->
                         <div class="tab-pane fade" id="tab-fornecedor">
-                            <?php if (!$fornecedor): ?>
-                                <p class="text-muted">Sem fornecedor associado.</p>
+                            <?php if (empty($fornecedores_associados)): ?>
+                                <p class="text-muted">Sem fornecedores associados.</p>
                             <?php else: ?>
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Nome da empresa</label>
-                                        <p class="form-control-plaintext"><?= htmlspecialchars($fornecedor->nome ?? '') ?></p>
+                                <?php foreach ($fornecedores_associados as $index => $fornecedor): ?>
+
+                                    <div class="d-flex align-items-center gap-2 mb-3">
+                                        <h6 class="text-muted mb-0">
+                                            <i class="fas fa-building me-2"></i><?= htmlspecialchars($fornecedor->nome) ?>
+                                        </h6>
+                                        <span class="badge bg-primary"><?= htmlspecialchars($fornecedor->tipo_nome ?? '') ?></span>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">NIF</label>
-                                        <p class="form-control-plaintext"><?= htmlspecialchars($fornecedor->nif ?? '') ?></p>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Nome da empresa</label>
+                                            <p class="form-control-plaintext"><?= htmlspecialchars($fornecedor->nome ?? '') ?></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">NIF</label>
+                                            <p class="form-control-plaintext"><?= htmlspecialchars($fornecedor->nif ?? '') ?></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Tipo de fornecedor</label>
+                                            <p class="form-control-plaintext">
+                                                <span class="badge bg-primary"><?= htmlspecialchars($fornecedor->tipo_nome ?? '') ?></span>
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Tipo de fornecedor</label>
-                                        <p class="form-control-plaintext">
-                                            <span class="badge bg-primary"><?= htmlspecialchars($fornecedor->tipo_nome ?? '') ?></span>
-                                        </p>
+                                    <div class="row mb-4">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Website</label>
+                                            <p class="form-control-plaintext">
+                                                <?php if (!empty($fornecedor->website)): ?>
+                                                    <a href="<?= htmlspecialchars($fornecedor->website) ?>" target="_blank">
+                                                        <?= htmlspecialchars($fornecedor->website) ?>
+                                                        <i class="fas fa-external-link-alt ms-1 small"></i>
+                                                    </a>
+                                                <?php else: ?>
+                                                    <span class="text-muted">—</span>
+                                                <?php endif; ?>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Morada</label>
+                                            <p class="form-control-plaintext"><?= htmlspecialchars($fornecedor->morada ?? '—') ?></p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row mb-4">
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Website</label>
-                                        <p class="form-control-plaintext">
-                                            <?php if (!empty($fornecedor->website)): ?>
-                                                <a href="<?= htmlspecialchars($fornecedor->website) ?>" target="_blank">
-                                                    <?= htmlspecialchars($fornecedor->website) ?>
-                                                    <i class="fas fa-external-link-alt ms-1 small"></i>
-                                                </a>
-                                            <?php else: ?>
-                                                <span class="text-muted">—</span>
-                                            <?php endif; ?>
-                                        </p>
+                                    <h6 class="text-muted mb-3">
+                                        <i class="fas fa-address-book me-2"></i>Contactos
+                                    </h6>
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Telefone</label>
+                                            <p class="form-control-plaintext">
+                                                <i class="fas fa-phone me-1 text-muted"></i><?= htmlspecialchars($fornecedor->telefone ?? '') ?>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Email</label>
+                                            <p class="form-control-plaintext">
+                                                <i class="fas fa-envelope me-1 text-muted"></i><?= htmlspecialchars($fornecedor->email ?? '') ?>
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Morada</label>
-                                        <p class="form-control-plaintext"><?= htmlspecialchars($fornecedor->morada ?? '—') ?></p>
+                                    <div class="row mb-4">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Pessoa de contacto</label>
+                                            <p class="form-control-plaintext"><?= htmlspecialchars($fornecedor->pessoa_contacto ?? '—') ?></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Telefone direto</label>
+                                            <p class="form-control-plaintext">
+                                                <?= !empty($fornecedor->telefone_contacto) ? htmlspecialchars($fornecedor->telefone_contacto) : '<span class="text-muted">—</span>' ?>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Email direto</label>
+                                            <p class="form-control-plaintext">
+                                                <?= !empty($fornecedor->email_contacto) ? htmlspecialchars($fornecedor->email_contacto) : '<span class="text-muted">—</span>' ?>
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                                <hr>
-                                <h5 class="text-muted mb-3">
-                                    <i class="fas fa-address-book me-2"></i>Contactos
-                                </h5>
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Telefone</label>
-                                        <p class="form-control-plaintext">
-                                            <i class="fas fa-phone me-1 text-muted"></i><?= htmlspecialchars($fornecedor->telefone ?? '') ?>
-                                        </p>
+
+                                    <div class="d-flex justify-content-end gap-2 mb-4">
+                                        <a href="../fornecedores/detalhes-fornecedor.php?id_fornecedor=<?= htmlspecialchars(aes_encrypt($fornecedor->id)) ?>" class="btn btn-outline-primary btn-sm">
+                                            Ver Fornecedor
+                                        </a>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Email</label>
-                                        <p class="form-control-plaintext">
-                                            <i class="fas fa-envelope me-1 text-muted"></i><?= htmlspecialchars($fornecedor->email ?? '') ?>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="row mb-4">
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Pessoa de contacto</label>
-                                        <p class="form-control-plaintext"><?= htmlspecialchars($fornecedor->pessoa_contacto ?? '—') ?></p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Telefone direto</label>
-                                        <p class="form-control-plaintext">
-                                            <?= !empty($fornecedor->telefone_contacto) ? htmlspecialchars($fornecedor->telefone_contacto) : '<span class="text-muted">—</span>' ?>
-                                        </p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">Email direto</label>
-                                        <p class="form-control-plaintext">
-                                            <?= !empty($fornecedor->email_contacto) ? htmlspecialchars($fornecedor->email_contacto) : '<span class="text-muted">—</span>' ?>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-end gap-2 mt-4">
-                                    <a href="../fornecedores/detalhes-fornecedor.php?id_fornecedor=<?= htmlspecialchars(aes_encrypt($fornecedor->id)) ?>" class="btn btn-primary">
-                                        Ver Fornecedor
-                                    </a>
-                                </div>
+
+                                    <?php if ($index < count($fornecedores_associados) - 1): ?>
+                                        <hr class="mb-4">
+                                    <?php endif; ?>
+
+                                <?php endforeach; ?>
                             <?php endif; ?>
                         </div>
 

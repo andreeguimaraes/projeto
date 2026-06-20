@@ -93,208 +93,211 @@ require_once '../../includes/header.php'; ?>
                 </div>
             <?php endif; ?>
 
-            <!-- Cabeçalho -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <?php if ($localizacao): ?>
 
-                <div>
+                <!-- Cabeçalho -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
 
-                    <h2 class="mb-0">
-                        Detalhes da localização
-                    </h2>
+                    <div>
 
-                    <p class="text-muted mb-0">
-                        <?= htmlspecialchars($localizacao->servico_nome ?? '') ?> — Sala <?= htmlspecialchars($localizacao->sala ?? '') ?>
-                    </p>
+                        <h2 class="mb-0">
+                            Detalhes da localização
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            <?= htmlspecialchars($localizacao->servico_nome ?? '') ?> — Sala <?= htmlspecialchars($localizacao->sala ?? '') ?>
+                        </p>
+
+                    </div>
+
+                    <a href="localizacoes.php"
+                        class="btn btn-outline-secondary">
+
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Voltar
+
+                    </a>
 
                 </div>
 
-                <a href="localizacoes.php"
-                    class="btn btn-outline-secondary">
+                <!-- Card principal -->
+                <div class="card shadow rounded">
 
-                    <i class="fas fa-arrow-left me-2"></i>
-                    Voltar
+                    <div class="card-body">
 
-                </a>
+                        <!-- Cabeçalho -->
+                        <h4 class="mb-2 d-flex align-items-center gap-2">
+                            <?= htmlspecialchars($localizacao->servico_nome ?? '') ?>
+                            <?php if ($localizacao->ativo == 1): ?>
+                                <span class="badge bg-success">Ativa</span>
+                            <?php else: ?>
+                                <span class="badge bg-secondary">Inativa</span>
+                            <?php endif; ?>
+                        </h4>
 
-            </div>
+                        <hr>
 
-            <!-- Card principal -->
-            <div class="card shadow rounded">
+                        <!-- Dados da localização -->
+                        <h5 class="text-muted mb-3">
 
-                <div class="card-body">
+                            <i class="fas fa-building me-2"></i>
+                            Informações da localização
 
-                    <!-- Cabeçalho -->
-                    <h4 class="mb-2 d-flex align-items-center gap-2">
-                        <?= htmlspecialchars($localizacao->servico_nome ?? '') ?>
-                        <?php if ($localizacao->ativo == 1): ?>
-                            <span class="badge bg-success">Ativa</span>
+                        </h5>
+
+                        <div class="row mb-4">
+
+                            <div class="col-md-3">
+
+                                <label class="form-label fw-bold">
+                                    Código
+                                </label>
+
+                                <p class="form-control-plaintext">
+                                    <?= htmlspecialchars($localizacao->codigo ?? '') ?>
+                                </p>
+
+                            </div>
+
+                            <div class="col-md-3">
+
+                                <label class="form-label fw-bold">
+                                    Edifício
+                                </label>
+
+                                <p class="form-control-plaintext">
+                                    <?= htmlspecialchars($localizacao->edificio ?? '') ?>
+                                </p>
+
+                            </div>
+
+                            <div class="col-md-3">
+
+                                <label class="form-label fw-bold">
+                                    Piso
+                                </label>
+
+                                <p class="form-control-plaintext">
+                                    Piso <?= htmlspecialchars($localizacao->piso ?? '') ?>
+                                </p>
+
+                            </div>
+
+                            <div class="col-md-3">
+
+                                <label class="form-label fw-bold">
+                                    Sala
+                                </label>
+
+                                <p class="form-control-plaintext">
+                                    Sala <?= htmlspecialchars($localizacao->sala ?? '') ?>
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Serviço -->
+                        <h5 class="text-muted mb-3">
+
+                            <i class="fas fa-hospital me-2"></i>
+                            Serviço / Departamento
+
+                        </h5>
+
+                        <div class="row mb-4">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-bold">
+                                    Serviço
+                                </label>
+
+                                <p class="form-control-plaintext">
+                                    <?= htmlspecialchars($localizacao->servico_nome ?? '') ?>
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Equipamentos associados -->
+                        <h5 class="text-muted mb-3">
+                            <i class="fas fa-stethoscope me-2"></i>
+                            Equipamentos associados (<?= count($equipamentos_bd) ?>)
+                        </h5>
+
+                        <?php if (empty($equipamentos_bd)): ?>
+
+                            <p class="text-muted mb-4">
+                                Sem equipamentos associados a esta localização.
+                            </p>
+
                         <?php else: ?>
-                            <span class="badge bg-secondary">Inativa</span>
-                        <?php endif; ?>
-                    </h4>
 
-                    <hr>
+                            <div class="table-responsive mb-4">
 
-                    <!-- Dados da localização -->
-                    <h5 class="text-muted mb-3">
+                                <table class="table table-hover align-middle">
 
-                        <i class="fas fa-building me-2"></i>
-                        Informações da localização
-
-                    </h5>
-
-                    <div class="row mb-4">
-
-                        <div class="col-md-3">
-
-                            <label class="form-label fw-bold">
-                                Código
-                            </label>
-
-                            <p class="form-control-plaintext">
-                                <?= htmlspecialchars($localizacao->codigo ?? '') ?>
-                            </p>
-
-                        </div>
-
-                        <div class="col-md-3">
-
-                            <label class="form-label fw-bold">
-                                Edifício
-                            </label>
-
-                            <p class="form-control-plaintext">
-                                <?= htmlspecialchars($localizacao->edificio ?? '') ?>
-                            </p>
-
-                        </div>
-
-                        <div class="col-md-3">
-
-                            <label class="form-label fw-bold">
-                                Piso
-                            </label>
-
-                            <p class="form-control-plaintext">
-                                Piso <?= htmlspecialchars($localizacao->piso ?? '') ?>
-                            </p>
-
-                        </div>
-
-                        <div class="col-md-3">
-
-                            <label class="form-label fw-bold">
-                                Sala
-                            </label>
-
-                            <p class="form-control-plaintext">
-                                Sala <?= htmlspecialchars($localizacao->sala ?? '') ?>
-                            </p>
-
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <!-- Serviço -->
-                    <h5 class="text-muted mb-3">
-
-                        <i class="fas fa-hospital me-2"></i>
-                        Serviço / Departamento
-
-                    </h5>
-
-                    <div class="row mb-4">
-
-                        <div class="col-md-6">
-
-                            <label class="form-label fw-bold">
-                                Serviço
-                            </label>
-
-                            <p class="form-control-plaintext">
-                                <?= htmlspecialchars($localizacao->servico_nome ?? '') ?>
-                            </p>
-
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <!-- Equipamentos associados -->
-                    <h5 class="text-muted mb-3">
-                        <i class="fas fa-stethoscope me-2"></i>
-                        Equipamentos associados (<?= count($equipamentos_bd) ?>)
-                    </h5>
-
-                    <?php if (empty($equipamentos_bd)): ?>
-
-                        <p class="text-muted mb-4">
-                            Sem equipamentos associados a esta localização.
-                        </p>
-
-                    <?php else: ?>
-
-                        <div class="table-responsive mb-4">
-
-                            <table class="table table-hover align-middle">
-
-                                <thead class="table-light">
-
-                                    <tr>
-
-                                        <th>Código</th>
-                                        <th>Equipamento</th>
-                                        <th>Marca</th>
-                                        <th>Estado</th>
-                                        <th>Ações</th>
-
-                                    </tr>
-
-                                </thead>
-
-                                <tbody>
-
-                                    <?php foreach ($equipamentos_bd as $eq): ?>
+                                    <thead class="table-light">
 
                                         <tr>
 
-                                            <td><?= htmlspecialchars($eq->codigo) ?></td>
-
-                                            <td><?= htmlspecialchars($eq->designacao) ?></td>
-
-                                            <td><?= htmlspecialchars($eq->marca) ?></td>
-
-                                            <td>
-                                                <span>
-                                                    <?= htmlspecialchars($estados_label[$eq->estado] ?? $eq->estado) ?>
-                                                </span>
-                                            </td>
-
-                                            <td>
-                                                <a href="../equipamentos/detalhes-equipamentos.php?id_equipamento=<?= htmlspecialchars(aes_encrypt($eq->id)) ?>"
-                                                    class="btn btn-sm btn-outline-primary"
-                                                    title="Ver detalhes do equipamento">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                            </td>
+                                            <th>Código</th>
+                                            <th>Equipamento</th>
+                                            <th>Marca</th>
+                                            <th>Estado</th>
+                                            <th>Ações</th>
 
                                         </tr>
 
-                                    <?php endforeach; ?>
+                                    </thead>
 
-                                </tbody>
+                                    <tbody>
 
-                            </table>
+                                        <?php foreach ($equipamentos_bd as $eq): ?>
 
-                        </div>
+                                            <tr>
 
-                    <?php endif; ?>
+                                                <td><?= htmlspecialchars($eq->codigo) ?></td>
 
+                                                <td><?= htmlspecialchars($eq->designacao) ?></td>
+
+                                                <td><?= htmlspecialchars($eq->marca) ?></td>
+
+                                                <td>
+                                                    <span>
+                                                        <?= htmlspecialchars($estados_label[$eq->estado] ?? $eq->estado) ?>
+                                                    </span>
+                                                </td>
+
+                                                <td>
+                                                    <a href="../equipamentos/detalhes-equipamentos.php?id_equipamento=<?= htmlspecialchars(aes_encrypt($eq->id)) ?>"
+                                                        class="btn btn-sm btn-outline-primary"
+                                                        title="Ver detalhes do equipamento">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </td>
+
+                                            </tr>
+
+                                        <?php endforeach; ?>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        <?php endif; ?>
+
+                    </div>
 
                 </div>
 
-            </div>
+            <?php endif; ?>
 
         </main>
 
@@ -302,80 +305,5 @@ require_once '../../includes/header.php'; ?>
 
 </div>
 
-<!-- Modal eliminar 
-<div class="modal fade"
-     id="modalEliminar"
-     tabindex="-1"
-     aria-hidden="true">
-
-    <div class="modal-dialog">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h5 class="modal-title">
-
-                    <i class="fas fa-triangle-exclamation me-2"></i>
-                    Confirmar eliminação
-
-                </h5>
-
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal">
-                </button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <p>
-                    Tem a certeza que pretende eliminar esta localização?
-                </p>
-
-                <div class="alert alert-light border">
-
-                    <strong>
-                        <?= htmlspecialchars($localizacao->codigo ?? '') ?> — <?= htmlspecialchars($localizacao->servico_nome ?? '') ?> Sala <?= htmlspecialchars($localizacao->sala ?? '') ?>
-                    </strong>
-
-                    <br>
-
-                    <small class="text-muted">
-                        Esta ação não pode ser revertida.
-                    </small>
-
-                </div>
-
-            </div>
-
-            <div class="modal-footer">
-
-                <button type="button"
-                        class="btn btn-outline-secondary"
-                        data-bs-dismiss="modal">
-
-                    <i class="fas fa-arrow-left me-1"></i>
-                    Cancelar
-
-                </button>
-
-                <a href="localizacoes.php"
-                   class="btn btn-danger">
-
-                    <i class="fas fa-trash me-1"></i>
-                    Eliminar
-
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-   -->
 <!-- rodapé -->
 <?php include '../../includes/footer.php'; ?>

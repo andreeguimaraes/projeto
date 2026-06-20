@@ -16,12 +16,23 @@ if (isset($_GET['eliminar'])) {
             MYSQL_PASSWORD
         );
         $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // Verifica se a localização tem equipamentos associados
+        $stmtCheck = $ligacao->prepare("SELECT COUNT(*) FROM equipamentos WHERE localizacao_id = :id");
+        $stmtCheck->execute([':id' => $id]);
+        $totalEquip = (int) $stmtCheck->fetchColumn();
+
+        if ($totalEquip > 0) {
+            header("Location: localizacoes.php?erro=tem_equipamentos");
+            exit;
+        }
+
         $stmt = $ligacao->prepare("UPDATE localizacoes SET ativo = 0 WHERE id = :id");
         $stmt->execute([':id' => $id]);
     } catch (PDOException $e) {
         // silencia o erro
     }
-    header("Location: /MEDINV/private/views/localizacoes/localizacoes.php");
+    header("Location: localizacoes.php");
     exit;
 }
 ?>
@@ -34,6 +45,11 @@ $localizacoes = [];
 $servicos  = [];
 $edificios = [];
 $pisos     = [];
+
+$mensagem_bloqueio = '';
+if (($_GET['erro'] ?? '') === 'tem_equipamentos') {
+    $mensagem_bloqueio = 'Não é possível desativar esta localização porque ainda tem equipamentos associados. Associe os equipamentos a outra localização primeiro.';
+}
 
 try {
     $ligacao = new PDO(
@@ -150,8 +166,7 @@ $ligacao = null;
             <!-- Filtros -->
             <div class="card mb-3">
                 <div class="card-body">
-                    <form method="GET" action="/MEDINV/private/views/localizacoes/localizacoes.php">
-
+                    <form method="GET" action="localizacoes.php">
                         <!-- Pesquisa -->
                         <div class="row g-2 mb-3">
                             <div class="col-12">
@@ -165,7 +180,7 @@ $ligacao = null;
                                     <button class="btn btn-primary" type="submit">
                                         <i class="fas fa-search"></i>
                                     </button>
-                                    <a href="/MEDINV/private/views/localizacoes/localizacoes.php"
+                                    <a href="localizacoes.php"
                                         class="btn btn-outline-secondary"
                                         title="Limpar filtros">
                                         <i class="fas fa-filter-circle-xmark"></i>
@@ -229,6 +244,11 @@ $ligacao = null;
                 </div>
             </div>
 
+            <?php if (!empty($mensagem_bloqueio)) : ?>
+                <div class="alert alert-warning">
+                    <i class="fas fa-triangle-exclamation me-2"></i><?= htmlspecialchars($mensagem_bloqueio) ?>
+                </div>
+            <?php endif; ?>
             <!-- Erros / Resultados -->
             <?php if (!empty($erro)) : ?>
                 <p class="text-center text-danger"><?= $erro ?></p>
@@ -270,8 +290,8 @@ $ligacao = null;
                                                 <td><?= htmlspecialchars($loc->servico_nome ?? '—') ?></td>
                                                 <td><?= htmlspecialchars($loc->sala) ?></td>
                                                 <td><?= (int) $loc->total_equipamentos ?></td>
-                                            
-                                                
+
+
                                                 <td>
                                                     <div style="white-space: nowrap;">
                                                         <a href="detalhes-localizacoes.php?id_localizacao=<?= htmlspecialchars(aes_encrypt($loc->id)) ?>"
@@ -351,7 +371,7 @@ $ligacao = null;
                 codigo + ' — ' + info;
 
             document.getElementById('btnConfirmarEliminar').href =
-                '/MEDINV/private/views/localizacoes/localizacoes.php?eliminar=' + id;
+                'localizacoes.php?eliminar=' + id;
         });
 </script>
 <script>

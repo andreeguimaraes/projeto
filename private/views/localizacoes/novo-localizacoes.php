@@ -22,12 +22,11 @@ try {
 
     // Carregar serviços da BD
     $servicos = $ligacao->query("SELECT id, nome FROM servicos ORDER BY nome")
-                        ->fetchAll(PDO::FETCH_OBJ);
+        ->fetchAll(PDO::FETCH_OBJ);
 
     // Gerar próximo código (LOC001, LOC002, ...)
     $maxCodigo = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)), 0) FROM localizacoes")->fetchColumn();
     $codigo = 'LOC' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
-
 } catch (PDOException $e) {
     $erro_sistema = "Erro ao ligar à base de dados.";
 }
@@ -68,16 +67,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
 
     if (empty($servico_id)) {
         $erros[] = "O serviço é obrigatório.";
-    } elseif (!ctype_digit($servico_id)) {
+    } elseif (!filter_var($servico_id, FILTER_VALIDATE_INT) || (int)$servico_id <= 0) {
         $erros[] = "O serviço selecionado não é válido.";
     }
 
 
-
     // 3. NORMALIZAR
-    $sala        = strtoupper(trim($sala));           // sala 201 → SALA 201
+    $sala = preg_replace('/\s+/', ' ', trim($sala));  // remove espaços a mais no meio
+    $sala = strtoupper($sala);                         // sala  201 → SALA 201
 
-    
+
     // 3. GRAVAR NA BASE DE DADOS
     if (empty($erros)) {
         try {
@@ -182,8 +181,8 @@ $ligacao = null;
                                 <select class="form-select" name="edificio" required>
                                     <option value="" disabled <?= empty($edificio) ? 'selected' : '' ?>>Selecionar edifício</option>
                                     <option value="Principal" <?= ($edificio ?? '') == 'Principal' ? 'selected' : '' ?>>Principal</option>
-                                    <option value="Bloco B"   <?= ($edificio ?? '') == 'Bloco B'   ? 'selected' : '' ?>>Bloco B</option>
-                                    <option value="Bloco C"   <?= ($edificio ?? '') == 'Bloco C'   ? 'selected' : '' ?>>Bloco C</option>
+                                    <option value="Bloco B" <?= ($edificio ?? '') == 'Bloco B'   ? 'selected' : '' ?>>Bloco B</option>
+                                    <option value="Bloco C" <?= ($edificio ?? '') == 'Bloco C'   ? 'selected' : '' ?>>Bloco C</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -227,7 +226,7 @@ $ligacao = null;
                         </div>
 
 
-                        
+
 
                         <p class="text-muted small mb-3">
                             <span class="text-danger">*</span> Campos obrigatórios
