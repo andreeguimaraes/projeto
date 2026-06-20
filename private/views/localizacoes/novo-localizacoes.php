@@ -42,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
     $piso        = trim($_POST['piso']        ?? '');
     $sala        = trim($_POST['sala']        ?? '');
     $servico_id  = trim($_POST['servico_id']  ?? '');
-    $observacoes = trim($_POST['observacoes'] ?? '');
 
     // 2. VALIDAR
     $edificios_validos = ['Principal', 'Bloco B', 'Bloco C'];
@@ -73,13 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
         $erros[] = "O serviço selecionado não é válido.";
     }
 
-    if (!empty($observacoes) && strlen($observacoes) > 1000) {
-        $erros[] = "As observações não podem ter mais de 1000 caracteres.";
-    }
+
 
     // 3. NORMALIZAR
     $sala        = strtoupper(trim($sala));           // sala 201 → SALA 201
-    $observacoes = !empty($observacoes) ? trim($observacoes) : null;
 
     
     // 3. GRAVAR NA BASE DE DADOS
@@ -103,8 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
                 $codigo = 'LOC' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
 
                 $stmt = $ligacao->prepare("
-                    INSERT INTO localizacoes (codigo, edificio, piso, servico_id, sala, observacoes)
-                    VALUES (:codigo, :edificio, :piso, :servico_id, :sala, :observacoes)
+                    INSERT INTO localizacoes (codigo, edificio, piso, servico_id, sala)
+                    VALUES (:codigo, :edificio, :piso, :servico_id, :sala)
                 ");
                 $stmt->execute([
                     ':codigo'      => $codigo,
@@ -112,7 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
                     ':piso'        => $piso,
                     ':servico_id'  => (int)$servico_id,
                     ':sala'        => $sala,
-                    ':observacoes' => $observacoes ?: null,
                 ]);
 
                 $ligacao = null;
@@ -231,16 +226,8 @@ $ligacao = null;
                             </div>
                         </div>
 
-                        <hr>
 
-                        <!-- OBSERVAÇÕES -->
-                        <h5 class="text-muted mb-3">
-                            <i class="fas fa-note-sticky me-2"></i>Observações
-                        </h5>
-                        <div class="mb-4">
-                            <textarea class="form-control" name="observacoes" rows="4"
-                                placeholder="Informações adicionais sobre a localização..."><?= htmlspecialchars($observacoes ?? '') ?></textarea>
-                        </div>
+                        
 
                         <p class="text-muted small mb-3">
                             <span class="text-danger">*</span> Campos obrigatórios

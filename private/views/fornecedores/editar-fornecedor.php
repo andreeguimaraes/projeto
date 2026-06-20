@@ -34,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pessoa_contacto = trim($_POST['pessoa_contacto'] ?? '');
     $telefone_contacto = trim($_POST['telefone_contacto'] ?? '');
     $email_contacto = trim($_POST['email_contacto'] ?? '');
-    $observacoes = trim($_POST['observacoes'] ?? '');
 
     // Validações
     $erros = array_merge(
@@ -68,7 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     telefone_contacto = :telefone_contacto,
                     email_contacto = :email_contacto,
                     tipo_id = :tipo_id,
-                    observacoes = :observacoes
                 WHERE id = :id
             ");
 
@@ -82,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bindParam(':telefone_contacto', $telefone_contacto, PDO::PARAM_STR);
             $stmt->bindParam(':email_contacto', $email_contacto, PDO::PARAM_STR);
             $stmt->bindParam(':tipo_id', $tipo_id, PDO::PARAM_INT);
-            $stmt->bindParam(':observacoes', $observacoes, PDO::PARAM_STR);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
             $stmt->execute();
@@ -262,16 +259,8 @@ $ligacao = null;
                             </div>
                         </div>
 
-                        <hr>
 
-                        <!-- OBSERVAÇÕES -->
-                        <h5 class="text-muted mb-3">
-                            <i class="fas fa-note-sticky me-2"></i>Observações
-                        </h5>
-
-                        <div class="mb-4">
-                            <textarea class="form-control" name="observacoes" rows="4"><?= htmlspecialchars($_POST['observacoes'] ?? $fornecedor->observacoes ?? '') ?></textarea>
-                        </div>
+                        
 
                         <!-- Nota campos obrigatórios -->
                         <p class="text-muted small mb-3">

@@ -61,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
     $pessoa_contacto    = trim($_POST['pessoa_contacto']    ?? '');
     $telefone_contacto  = trim($_POST['telefone_contacto']  ?? '');
     $email_contacto     = trim($_POST['email_contacto']     ?? '');
-    $observacoes        = trim($_POST['observacoes']        ?? '');
 
     // 2. VALIDAR
     if (empty($nome)) {
@@ -158,13 +157,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
                     INSERT INTO fornecedores
                         (codigo, nome, nif, tipo_id, morada, website,
                          telefone, email,
-                         pessoa_contacto, telefone_contacto, email_contacto,
-                         observacoes)
+                         pessoa_contacto, telefone_contacto, email_contacto)
                     VALUES
                         (:codigo, :nome, :nif, :tipo_id, :morada, :website,
                          :telefone, :email,
-                         :pessoa_contacto, :telefone_contacto, :email_contacto,
-                         :observacoes)
+                         :pessoa_contacto, :telefone_contacto, :email_contacto)
                 ");
                 $stmt->execute([
                     ':codigo'            => $codigo,
@@ -178,7 +175,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
                     ':pessoa_contacto'   => $pessoa_contacto,
                     ':telefone_contacto' => $telefone_contacto,
                     ':email_contacto'    => $email_contacto    ?: null,
-                    ':observacoes'       => $observacoes       ?: null,
                 ]);
 
                 $ligacao = null;
@@ -346,17 +342,8 @@ $ligacao = null;
                             </div>
                         </div>
 
-                        <hr>
 
-                        <!-- OBSERVAÇÕES -->
-                        <h5 class="text-muted mb-3">
-                            <i class="fas fa-note-sticky me-2"></i>Observações
-                        </h5>
-                        <div class="mb-4">
-                            <textarea class="form-control" name="observacoes" rows="4"
-                                placeholder="Informações adicionais sobre o fornecedor..."><?= htmlspecialchars($observacoes ?? '') ?></textarea>
-                        </div>
-
+                        
                         <p class="text-muted small mb-3">
                             <span class="text-danger">*</span> Campos obrigatórios
                         </p>

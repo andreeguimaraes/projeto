@@ -27,11 +27,11 @@ $tipos_garantia_bd = [];
 $tipos_contrato_bd = [];
 $tipos_documento_bd = [];
 $documentos_bd = [];
+$fornecedores_associados = [];
+$tipos_fornecedor_bd = [];
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-
 
     // recolher os dados do formulário
     //$codigo = trim($_POST['codigo'] ?? '');
@@ -49,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tipo_entrada     = trim($_POST['tipo_entrada']     ?? '');
     $observacoes      = trim($_POST['observacoes']      ?? '');
     $localizacao_id      = trim($_POST['localizacao_id']      ?? '');
-    $fornecedor_id       = trim($_POST['fornecedor_id']       ?? '');
     $tipo_garantia       = trim($_POST['tipo_garantia']       ?? '');
     $data_inicio_garantia = trim($_POST['data_inicio_garantia'] ?? '');
     $data_fim_garantia   = trim($_POST['data_fim_garantia']   ?? '');
@@ -115,7 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         validar_custo_aquisicao($custo_aquisicao),
         validar_tipo_entrada($tipo_entrada),
         validar_localizacao($localizacao_id),
-        validar_fornecedor($fornecedor_id),
         validar_garantia($tipo_garantia, $data_inicio_garantia, $data_fim_garantia),
         validar_contrato($tipo_contrato, $data_inicio_contrato, $data_fim_contrato, $entidade_contrato)
     );
@@ -170,50 +168,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $stmt->execute();
 
-            if (!empty($fornecedor_id)) {
+            // ----------------------------------------------------------------
+            // Processar fornecedores associados (múltiplos, com tipo de relação)
+            // ----------------------------------------------------------------
+            foreach ($_POST as $chave => $valor) {
+                if (strpos($chave, 'fornecedor_id_') === 0) {
+                    $nf = substr($chave, strlen('fornecedor_id_'));
 
-                $stmtAtual = $ligacao->prepare("
-                    SELECT id
-                    FROM equipamento_fornecedor
-                    WHERE equipamento_id = :equipamento_id
-                    LIMIT 1
-                ");
-                $stmtAtual->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
-                $stmtAtual->execute();
-                $fornecedorAtual = $stmtAtual->fetch(PDO::FETCH_OBJ);
+                    $fornecedor_id_linha = trim($_POST["fornecedor_id_{$nf}"] ?? '');
+                    $tipo_relacao = trim($_POST["tipo_relacao_{$nf}"] ?? '');
+                    $associacao_id = trim($_POST["fornecedor_associacao_id_{$nf}"] ?? '');
 
-                // buscar o tipo_id real do fornecedor escolhido
-                $stmtTipoForn = $ligacao->prepare("SELECT tipo_id FROM fornecedores WHERE id = :fornecedor_id");
-                $stmtTipoForn->bindParam(':fornecedor_id', $fornecedor_id, PDO::PARAM_INT);
-                $stmtTipoForn->execute();
-                $tipo_fornecedor_id = $stmtTipoForn->fetchColumn();
+                    // linha vazia (adicionada mas não preenchida) - ignora
+                    if ($fornecedor_id_linha === '' || $tipo_relacao === '') {
+                        continue;
+                    }
 
-                if ($fornecedorAtual) {
-                    $stmtForn = $ligacao->prepare("
-                        UPDATE equipamento_fornecedor
-                        SET fornecedor_id = :fornecedor_id,
-                            tipo_id = :tipo_id
-                        WHERE id = :id
+                    // valida que não há outro fornecedor com o mesmo tipo já gravado para este equipamento
+                    $stmtTipoExistente = $ligacao->prepare("
+                        SELECT id FROM equipamento_fornecedor
+                        WHERE equipamento_id = :equipamento_id
+                          AND tipo_id = :tipo_id
+                          AND id != :associacao_id
                     ");
+                    $idParaExcluir = !empty($associacao_id) ? $associacao_id : 0;
+                    $stmtTipoExistente->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+                    $stmtTipoExistente->bindParam(':tipo_id', $tipo_relacao, PDO::PARAM_INT);
+                    $stmtTipoExistente->bindParam(':associacao_id', $idParaExcluir, PDO::PARAM_INT);
+                    $stmtTipoExistente->execute();
 
-                    $stmtForn->bindParam(':fornecedor_id', $fornecedor_id, PDO::PARAM_INT);
-                    $stmtForn->bindParam(':tipo_id', $tipo_fornecedor_id, PDO::PARAM_INT);
-                    $stmtForn->bindParam(':id', $fornecedorAtual->id, PDO::PARAM_INT);
-                    $stmtForn->execute();
-                } else {
-                    $stmtForn = $ligacao->prepare("
-                        INSERT INTO equipamento_fornecedor 
-                            (equipamento_id, fornecedor_id, tipo_id)
-                        VALUES 
-                            (:equipamento_id, :fornecedor_id, :tipo_id)
-                    ");
+                    if ($stmtTipoExistente->fetch()) {
+                        $erros[] = "Já existe um fornecedor com este tipo de relação para o equipamento.";
+                        continue;
+                    }
 
-                    $stmtForn->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
-                    $stmtForn->bindParam(':fornecedor_id', $fornecedor_id, PDO::PARAM_INT);
-                    $stmtForn->bindParam(':tipo_id', $tipo_fornecedor_id, PDO::PARAM_INT);
-                    $stmtForn->execute();
+                    if (!empty($associacao_id)) {
+                        // já existe - UPDATE
+                        $stmtForn = $ligacao->prepare("
+                            UPDATE equipamento_fornecedor
+                            SET fornecedor_id = :fornecedor_id, tipo_id = :tipo_id
+                            WHERE id = :id
+                        ");
+                        $stmtForn->bindParam(':fornecedor_id', $fornecedor_id_linha, PDO::PARAM_INT);
+                        $stmtForn->bindParam(':tipo_id', $tipo_relacao, PDO::PARAM_INT);
+                        $stmtForn->bindParam(':id', $associacao_id, PDO::PARAM_INT);
+                        $stmtForn->execute();
+                    } else {
+                        // nova - INSERT
+                        $stmtForn = $ligacao->prepare("
+                            INSERT INTO equipamento_fornecedor (equipamento_id, fornecedor_id, tipo_id)
+                            VALUES (:equipamento_id, :fornecedor_id, :tipo_id)
+                        ");
+                        $stmtForn->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+                        $stmtForn->bindParam(':fornecedor_id', $fornecedor_id_linha, PDO::PARAM_INT);
+                        $stmtForn->bindParam(':tipo_id', $tipo_relacao, PDO::PARAM_INT);
+                        $stmtForn->execute();
+                    }
                 }
             }
+
             if (!empty($tipo_garantia) && !empty($data_inicio_garantia) && !empty($data_fim_garantia)) {
 
                 $stmtGarantiaAtual = $ligacao->prepare("
@@ -257,7 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtGarantia->bindParam(':estado', $estado_garantia, PDO::PARAM_STR);
                     $stmtGarantia->bindParam(':id', $garantiaAtual->id, PDO::PARAM_INT);
                     $stmtGarantia->execute();
-                
+
                 } else {
                     $codigo_garantia = 'GAR' . str_pad($id, 5, '0', STR_PAD_LEFT);
 
@@ -442,8 +455,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            header('Location: equipamentos.php');
-            exit;
+            if (empty($erros)) {
+                header('Location: equipamentos.php');
+                exit;
+            }
         } catch (PDOException $err) {
             $erros[] = "Erro ao atualizar: " . $err->getMessage();
         }
@@ -467,23 +482,11 @@ try {
     $stmt->execute();
     $eq = $stmt->fetch(PDO::FETCH_OBJ);
 
-
-
-
     if (!$eq) {
         header('Location: equipamentos.php');
         exit;
     }
-        $stmtFornAtual = $ligacao->prepare("
-        SELECT fornecedor_id, tipo_id
-        FROM equipamento_fornecedor
-        WHERE equipamento_id = :equipamento_id
-        ORDER BY id
-        LIMIT 1
-    ");
-    $stmtFornAtual->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
-    $stmtFornAtual->execute();
-    $fornecedorAssociado = $stmtFornAtual->fetch(PDO::FETCH_OBJ);
+
     $stmtCat = $ligacao->prepare("SELECT * FROM categorias_equipamento ORDER BY nome");
     $stmtCat->execute();
     $categorias = $stmtCat->fetchAll(PDO::FETCH_OBJ);
@@ -508,6 +511,22 @@ try {
     ");
     $stmtForn->execute();
     $fornecedores_bd = $stmtForn->fetchAll(PDO::FETCH_OBJ);
+
+    // Fornecedores já associados a este equipamento (múltiplos, com tipo de relação)
+    $stmtFornecedoresAssociados = $ligacao->prepare("
+        SELECT ef.id AS associacao_id, ef.fornecedor_id, ef.tipo_id, f.nome AS fornecedor_nome
+        FROM equipamento_fornecedor ef
+        JOIN fornecedores f ON f.id = ef.fornecedor_id
+        WHERE ef.equipamento_id = :equipamento_id
+        ORDER BY ef.id
+    ");
+    $stmtFornecedoresAssociados->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
+    $stmtFornecedoresAssociados->execute();
+    $fornecedores_associados = $stmtFornecedoresAssociados->fetchAll(PDO::FETCH_OBJ);
+
+    // Tipos de fornecedor (para o select de "tipo de relação")
+    $stmtTiposForn = $ligacao->query("SELECT * FROM tipos_fornecedor ORDER BY nome");
+    $tipos_fornecedor_bd = $stmtTiposForn->fetchAll(PDO::FETCH_OBJ);
 
     $stmtGarantia = $ligacao->prepare("
         SELECT *
@@ -803,74 +822,54 @@ $ligacao = null;
 
                             <!-- TAB: FORNECEDOR -->
                             <div class="tab-pane fade" id="fornecedor" role="tabpanel">
-                                <div class="row mb-4">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Selecionar fornecedor</label>
-                                        <select class="form-select" name="fornecedor_id" id="selectFornecedor" onchange="preencherFornecedor()">
-                                            <option value="">Selecione...</option>
-                                            <?php foreach ($fornecedores_bd as $f): ?>
-                                                <option value="<?= $f->id ?>"
-                                                    <?= (($_POST['fornecedor_id'] ?? $fornecedorAssociado->fornecedor_id ?? '') == $f->id) ? 'selected' : '' ?>>
-                                                    <?= htmlspecialchars($f->nome) ?>
-                                                </option>
+                                <div class="table-responsive mb-3">
+                                    <table class="table align-middle" id="tabelaFornecedores">
+                                        <thead>
+                                            <tr>
+                                                <th>Fornecedor</th>
+                                                <th>Tipo de relação</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php $nf = 0; foreach ($fornecedores_associados as $fa): $nf++; ?>
+                                                <tr>
+                                                    <td>
+                                                        <input type="hidden" name="fornecedor_associacao_id_<?= $nf ?>" value="<?= $fa->associacao_id ?>">
+                                                        <select class="form-select" name="fornecedor_id_<?= $nf ?>">
+                                                            <option value="">Selecione...</option>
+                                                            <?php foreach ($fornecedores_bd as $f): ?>
+                                                                <option value="<?= $f->id ?>" <?= $fa->fornecedor_id == $f->id ? 'selected' : '' ?>>
+                                                                    <?= htmlspecialchars($f->nome) ?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-select" name="tipo_relacao_<?= $nf ?>">
+                                                            <option value="">Selecione...</option>
+                                                            <?php foreach ($tipos_fornecedor_bd as $tf): ?>
+                                                                <option value="<?= $tf->id ?>" <?= $fa->tipo_id == $tf->id ? 'selected' : '' ?>>
+                                                                    <?= htmlspecialchars($tf->nome) ?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('tr').remove()">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
                                             <?php endforeach; ?>
-                                        </select>
-                                    </div>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div id="infoFornecedor" class="d-none">
-                                    <hr>
-                                    <h6 class="text-muted mb-3"><i class="fas fa-building me-2"></i>Informação do fornecedor</h6>
-                                    <div class="row mb-3">
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Nome da empresa</label>
-                                            <p class="form-control-plaintext" id="f-nome">Philips Healthcare Portugal</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">NIF</label>
-                                            <p class="form-control-plaintext" id="f-nif">500 123 456</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Tipo de fornecedor</label>
-                                            <p class="form-control-plaintext" id="f-tipo">Fabricante</p>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Morada</label>
-                                            <p class="form-control-plaintext" id="f-morada">Av. da Liberdade, 110, Lisboa</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Website</label>
-                                            <p class="form-control-plaintext" id="f-website">www.philips.pt</p>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <h6 class="text-muted mb-3"><i class="fas fa-address-book me-2"></i>Contactos</h6>
-                                    <div class="row mb-3">
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Telefone</label>
-                                            <p class="form-control-plaintext" id="f-telefone">+351 210 000 000</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Email</label>
-                                            <p class="form-control-plaintext" id="f-email">geral@philips.pt</p>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-4">
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Pessoa de contacto</label>
-                                            <p class="form-control-plaintext" id="f-contacto">João Ferreira</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Telefone direto</label>
-                                            <p class="form-control-plaintext" id="f-tel-direto">+351 962 000 000</p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold">Email direto</label>
-                                            <p class="form-control-plaintext" id="f-email-direto">joao.ferreira@philips.pt</p>
-                                        </div>
-                                    </div>
-                                </div>
+
+                                <button type="button" class="btn btn-outline-secondary btn-sm mb-4" id="btnAddFornecedor">
+                                    <i class="fas fa-plus me-1"></i> Adicionar fornecedor
+                                </button>
+
                                 <div class="d-flex justify-content-between">
                                     <button type="button" class="btn btn-outline-secondary"
                                         onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-geral')).show()">
@@ -1007,7 +1006,7 @@ $ligacao = null;
                                         <input type="file" class="form-control" name="ficheiro_contrato" accept=".pdf,.doc,.docx">
                                         <?php if (!empty($contrato->ficheiro_path)): ?>
                                             <small class="text-muted">Atual: <?= htmlspecialchars(basename($contrato->ficheiro_path)) ?></small>
-                                        <?php endif; ?>                                    
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                                 <div class="row mb-4">
@@ -1132,32 +1131,33 @@ $ligacao = null;
         document.querySelector('#tabelaDocs tbody').appendChild(tr);
     });
 
-
-    function preencherFornecedor() {
-        const id = document.getElementById('selectFornecedor').value;
-        const painel = document.getElementById('infoFornecedor');
-
-        if (!id || !fornecedores[id]) {
-            painel.classList.add('d-none');
-            return;
-        }
-
-        const f = fornecedores[id];
-
-        document.getElementById('f-nome').textContent = f.nome ?? '—';
-        document.getElementById('f-nif').textContent = f.nif ?? '—';
-        document.getElementById('f-tipo').textContent = f.tipo ?? '—';
-        document.getElementById('f-morada').textContent = f.morada ?? '—';
-        document.getElementById('f-website').textContent = f.website ?? '—';
-        document.getElementById('f-telefone').textContent = f.telefone ?? '—';
-        document.getElementById('f-email').textContent = f.email ?? '—';
-        document.getElementById('f-contacto').textContent = f.contacto ?? '—';
-        document.getElementById('f-tel-direto').textContent = f.telDireto ?? '—';
-        document.getElementById('f-email-direto').textContent = f.emailDireto ?? '—';
-
-        painel.classList.remove('d-none');
-    }
-
+    let numFornecedores = <?= $nf ?? 0 ?>;
+    const opcoesFornecedor = `
+        <option value="">Selecione...</option>
+        <?php foreach ($fornecedores_bd as $f): ?>
+            <option value="<?= $f->id ?>"><?= htmlspecialchars($f->nome) ?></option>
+        <?php endforeach; ?>
+    `;
+    const opcoesTipoRelacao = `
+        <option value="">Selecione...</option>
+        <?php foreach ($tipos_fornecedor_bd as $tf): ?>
+            <option value="<?= $tf->id ?>"><?= htmlspecialchars($tf->nome) ?></option>
+        <?php endforeach; ?>
+    `;
+    document.getElementById('btnAddFornecedor').addEventListener('click', function() {
+        numFornecedores++;
+        const n = numFornecedores;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><select class="form-select" name="fornecedor_id_${n}">${opcoesFornecedor}</select></td>
+            <td><select class="form-select" name="tipo_relacao_${n}">${opcoesTipoRelacao}</select></td>
+            <td>
+                <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('tr').remove()">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>`;
+        document.querySelector('#tabelaFornecedores tbody').appendChild(tr);
+    });
 
     function preencherLocalizacao() {
         const id = document.getElementById('selectLocalizacao').value;
@@ -1177,22 +1177,6 @@ $ligacao = null;
 
         painel.classList.remove('d-none');
     }
-    const fornecedores = {
-        <?php foreach ($fornecedores_bd as $f): ?>
-            <?= $f->id ?>: {
-                nome: <?= json_encode($f->nome) ?>,
-                nif: <?= json_encode($f->nif) ?>,
-                tipo: <?= json_encode($f->tipo) ?>,
-                morada: <?= json_encode($f->morada) ?>,
-                website: <?= json_encode($f->website ?? '—') ?>,
-                telefone: <?= json_encode($f->telefone) ?>,
-                email: <?= json_encode($f->email) ?>,
-                contacto: <?= json_encode($f->pessoa_contacto) ?>,
-                telDireto: <?= json_encode($f->telefone_contacto) ?>,
-                emailDireto: <?= json_encode($f->email_contacto ?? '—') ?>
-            },
-        <?php endforeach; ?>
-    };
 
     const localizacoes = {
         <?php foreach ($localizacoes_bd as $l): ?>
@@ -1206,7 +1190,6 @@ $ligacao = null;
     };
 
     document.addEventListener('DOMContentLoaded', function() {
-        preencherFornecedor();
         preencherLocalizacao();
     });
 </script>

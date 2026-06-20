@@ -406,6 +406,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $erros[] = "Já existe um equipamento com este código.";
         }
     }
+
+    */
     // ----------------------------------------------------------------
     // 4. NORMALIZAR E GRAVAR (só se não houver erros)
     // Normalizar entrada. independentemente de como o utilizador escreve os dados, o sistema assegura consistência e padronização antes de qualquer registo na base de dados. 
@@ -635,7 +637,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ligacao = null;
     }
 
-    */
+
     // ----------------------------------------------------------------
     // 3. VALIDAR
     // ----------------------------------------------------------------

@@ -254,17 +254,8 @@ $estados_label = [
                         </div>
 
                     <?php endif; ?>
-                    <hr>
 
-                    <!-- OBSERVAÇÕES -->
-                    <h5 class="text-muted mb-3">
-                        <i class="fas fa-note-sticky me-2"></i>Observações
-                    </h5>
-                    <div class="mb-4">
-                        <p class="form-control-plaintext">
-                            <?= htmlspecialchars($fornecedor->observacoes ?? 'Sem observações.') ?>
-                        </p>
-                    </div>
+    
                 </div>
             </div>
 

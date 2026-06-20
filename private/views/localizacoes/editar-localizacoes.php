@@ -28,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $piso = trim($_POST['piso'] ?? '');
     $sala = trim($_POST['sala'] ?? '');
     $servico_id = trim($_POST['servico_id'] ?? '');
-    $observacoes = trim($_POST['observacoes'] ?? '');
 
     // Validações
     $erros = array_merge(
@@ -48,27 +47,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $stmt = $ligacao->prepare("
-                UPDATE localizacoes
-                SET edificio = :edificio,
-                    piso = :piso,
-                    servico_id = :servico_id,
-                    sala = :sala,
-                    observacoes = :observacoes
-                WHERE id = :id
+            // Verifica se já existe outra localização com o mesmo edifício/piso/sala
+            $stmtDuplicado = $ligacao->prepare("
+                SELECT id FROM localizacoes
+                WHERE edificio = :edificio
+                AND piso = :piso
+                AND sala = :sala
+                AND id != :id
             ");
+            $stmtDuplicado->bindParam(':edificio', $edificio, PDO::PARAM_STR);
+            $stmtDuplicado->bindParam(':piso', $piso, PDO::PARAM_STR);
+            $stmtDuplicado->bindParam(':sala', $sala, PDO::PARAM_STR);
+            $stmtDuplicado->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmtDuplicado->execute();
 
-            $stmt->bindParam(':edificio', $edificio, PDO::PARAM_STR);
-            $stmt->bindParam(':piso', $piso, PDO::PARAM_STR);
-            $stmt->bindParam(':servico_id', $servico_id, PDO::PARAM_INT);
-            $stmt->bindParam(':sala', $sala, PDO::PARAM_STR);
-            $stmt->bindParam(':observacoes', $observacoes, PDO::PARAM_STR);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            if ($stmtDuplicado->fetch()) {
+                $erros[] = "Já existe uma localização com este edifício, piso e sala.";
+            } else {
+                $stmt = $ligacao->prepare("
+                    UPDATE localizacoes
+                    SET edificio = :edificio,
+                        piso = :piso,
+                        servico_id = :servico_id,
+                        sala = :sala
+                    WHERE id = :id
+                ");
 
-            $stmt->execute();
+                $stmt->bindParam(':edificio', $edificio, PDO::PARAM_STR);
+                $stmt->bindParam(':piso', $piso, PDO::PARAM_STR);
+                $stmt->bindParam(':servico_id', $servico_id, PDO::PARAM_INT);
+                $stmt->bindParam(':sala', $sala, PDO::PARAM_STR);
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-            header('Location: localizacoes.php');
-            exit;
+                $stmt->execute();
+
+                header('Location: localizacoes.php');
+                exit;
+            }
 
         } catch (PDOException $err) {
             $erros[] = "Erro ao atualizar localização: " . $err->getMessage();
@@ -249,19 +264,9 @@ $ligacao = null;
 
                         </div>
 
-                        <hr>
 
-                        <!-- OBSERVAÇÕES -->
-                        <h5 class="text-muted mb-3">
-                            <i class="fas fa-note-sticky me-2"></i>
-                            Observações
-                        </h5>
 
-                        <div class="mb-4">
-                            <textarea class="form-control"
-                                name="observacoes"
-                                rows="4"><?= htmlspecialchars($_POST['observacoes'] ?? $localizacao->observacoes ?? '') ?></textarea>
-                        </div>
+
 
                         <p class="text-muted small mb-3">
                             <span class="text-danger">*</span> Campos obrigatórios
@@ -273,7 +278,7 @@ $ligacao = null;
                                 <i class="fas fa-arrow-left me-1"></i>Cancelar
                             </a>
 
-                            <button type="submit" class="btn btn-warning">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-floppy-disk me-1"></i>
                                 Guardar alterações
                             </button>
