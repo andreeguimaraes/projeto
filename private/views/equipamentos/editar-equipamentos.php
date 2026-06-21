@@ -76,14 +76,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (empty($erros)) {
             $nomeFicheiro = uniqid('garantia_') . '.' . $extensao;
-            $dirUploads = __DIR__ . '/../../../uploads/';
+            $dirUploads = __DIR__ . '/../../../uploads/garantias/';
 
             if (!is_dir($dirUploads)) {
                 mkdir($dirUploads, 0755, true);
             }
 
             if (move_uploaded_file($_FILES['ficheiro_garantia']['tmp_name'], $dirUploads . $nomeFicheiro)) {
-                $ficheiro_garantia_path = 'uploads/' . $nomeFicheiro;
+                $ficheiro_garantia_path = 'uploads/garantias/' . $nomeFicheiro;
             }
         }
     }
@@ -103,14 +103,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (empty($erros)) {
             $nomeFicheiro = uniqid('contrato_') . '.' . $extensao;
-            $dirUploads = __DIR__ . '/../../../uploads/';
+            $dirUploads = __DIR__ . '/../../../uploads/contratos/';
 
             if (!is_dir($dirUploads)) {
                 mkdir($dirUploads, 0755, true);
             }
 
             if (move_uploaded_file($_FILES['ficheiro_contrato']['tmp_name'], $dirUploads . $nomeFicheiro)) {
-                $ficheiro_contrato_path = 'uploads/' . $nomeFicheiro;
+                $ficheiro_contrato_path = 'uploads/contratos/' . $nomeFicheiro;
             }
         }
     }
@@ -401,7 +401,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Processar documentos
             // Apaga os documentos antigos e volta a inserir os documentos submetidos
             // ----------------------------------------------------------------
-            $dirUploads = __DIR__ . '/../../../uploads/';
+            $dirUploads = __DIR__ . '/../../../uploads/documentos/';
 
             if (!is_dir($dirUploads)) {
                 mkdir($dirUploads, 0755, true);
@@ -481,7 +481,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $destino = $dirUploads . $nomeFicheiro;
 
                         if (move_uploaded_file($_FILES["ficheiro_documento_{$n}"]['tmp_name'], $destino)) {
-                            $ficheiro_path = 'uploads/' . $nomeFicheiro;
+                            $ficheiro_path = 'uploads/documentos/' . $nomeFicheiro;
                         }
                     }
 

@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+redirect_if_not_allowed(['administrador']);
+require_once __DIR__ . '/../../includes/validacoes.php';
 
 $erros = [];
 $sucesso = '';
@@ -26,21 +28,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
         $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $stmt = $ligacao->prepare("
-            INSERT INTO conteudos_site (chave, valor)
-            VALUES (:chave, :valor)
-            ON DUPLICATE KEY UPDATE valor = :valor2
-        ");
+        $email_post = trim($_POST['email'] ?? '');
+        $codigo_postal_post = trim($_POST['codigo_postal'] ?? '');
+        $telefone_post = trim($_POST['telefone'] ?? '');
 
-        foreach (array_keys($chaves_default) as $chave) {
-            $valor = trim($_POST[$chave] ?? '');
-            $stmt->bindParam(':chave', $chave, PDO::PARAM_STR);
-            $stmt->bindParam(':valor', $valor, PDO::PARAM_STR);
-            $stmt->bindParam(':valor2', $valor, PDO::PARAM_STR);
-            $stmt->execute();
+        $erros = array_merge(
+            $erros,
+            validar_email_conteudo($email_post),
+            validar_codigo_postal($codigo_postal_post),
+            validar_telefone_conteudo($telefone_post)
+        );
+
+        if (empty($erros)) {
+            $stmt = $ligacao->prepare("
+                INSERT INTO conteudos_site (chave, valor)
+                VALUES (:chave, :valor)
+                ON DUPLICATE KEY UPDATE valor = :valor2
+            ");
+
+            foreach (array_keys($chaves_default) as $chave) {
+                $valor = trim($_POST[$chave] ?? '');
+                $stmt->bindParam(':chave', $chave, PDO::PARAM_STR);
+                $stmt->bindParam(':valor', $valor, PDO::PARAM_STR);
+                $stmt->bindParam(':valor2', $valor, PDO::PARAM_STR);
+                $stmt->execute();
+            }
+
+            $sucesso = 'Conteúdos atualizados com sucesso.';
         }
-
-        $sucesso = 'Conteúdos atualizados com sucesso.';
     } catch (PDOException $e) {
         $erros[] = "Erro ao guardar alterações: " . $e->getMessage();
     }

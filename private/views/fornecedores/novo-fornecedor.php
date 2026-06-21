@@ -7,6 +7,8 @@
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
 redirect_if_not_allowed(['administrador', 'tecnico']);
+require_once __DIR__ . '/../../includes/validacoes.php';
+
 
 $erros        = [];
 $erro_sistema = '';
@@ -63,28 +65,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
     $email_contacto     = trim($_POST['email_contacto']     ?? '');
 
     // 2. VALIDAR
-    if (empty($nome)) {
-        $erros[] = "O nome da empresa é obrigatório.";
-    } elseif (strlen($nome) < 2) {
-        $erros[] = "O nome da empresa deve ter pelo menos 2 caracteres.";
-    } elseif (!preg_match('/[a-zA-ZÀ-ÿ]/', $nome)) {
-        $erros[] = "O nome da empresa deve conter pelo menos uma letra.";
-    } elseif (strlen($nome) > 150) {
-        $erros[] = "O nome da empresa não pode ter mais de 150 caracteres.";
-    }
+    $erros = array_merge(
+        $erros,
+        validar_nome_empresa($nome),
+        validar_nif($nif),
+        validar_tipo_fornecedor($tipo_id),
+        validar_morada($morada),
+        validar_website($website),
+        validar_telefone($telefone),
+        validar_email_geral($email),
+        validar_pessoa_contacto($pessoa_contacto),
+        validar_telefone_contacto2($telefone_contacto),
+        validar_email_contacto($email_contacto)
+    );
 
-    if (empty($nif)) {
-        $erros[] = "O NIF é obrigatório.";
-    } elseif (!preg_match('/^[0-9]{9}$/', $nif)) {
-        $erros[] = "O NIF deve ter exatamente 9 dígitos.";
-    }
-
-    if (empty($tipo_id)) {
-        $erros[] = "O tipo de fornecedor é obrigatório.";
-    } elseif (!ctype_digit($tipo_id)) {
-        $erros[] = "O tipo de fornecedor selecionado não é válido.";
-    }
-
+    // Validação extra (precisa de ligação à BD, por isso fica fora de validacoes.php)
     if (!empty($tipo_id) && ctype_digit($tipo_id)) {
         $stmtTipo = $ligacao->prepare("SELECT id FROM tipos_fornecedor WHERE id = :id");
         $stmtTipo->execute([':id' => (int)$tipo_id]);
@@ -92,50 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
         if (!$stmtTipo->fetch()) {
             $erros[] = "O tipo de fornecedor selecionado não existe.";
         }
-    }
-
-    if (empty($morada)) {
-        $erros[] = "A morada é obrigatória.";
-    } elseif (strlen($morada) < 5) {
-        $erros[] = "A morada deve ter pelo menos 5 caracteres.";
-    } elseif (strlen($morada) > 255) {
-        $erros[] = "A morada não pode ter mais de 255 caracteres.";
-    }
-
-    if (empty($telefone)) {
-        $erros[] = "O telefone é obrigatório.";
-    } elseif (!preg_match('/^\+?[0-9\s]{9,20}$/', $telefone)) {
-        $erros[] = "O telefone não é válido.";
-    }
-
-    if (empty($email)) {
-        $erros[] = "O email é obrigatório.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $erros[] = "O email geral não é válido.";
-    }
-
-    if (empty($pessoa_contacto)) {
-        $erros[] = "O nome da pessoa de contacto é obrigatório.";
-    } elseif (strlen($pessoa_contacto) < 2) {
-        $erros[] = "O nome da pessoa de contacto deve ter pelo menos 2 caracteres.";
-    } elseif (!preg_match('/[a-zA-ZÀ-ÿ]/', $pessoa_contacto)) {
-        $erros[] = "O nome da pessoa de contacto deve conter pelo menos uma letra.";
-    } elseif (strlen($pessoa_contacto) > 100) {
-        $erros[] = "O nome não pode ter mais de 100 caracteres.";
-    }
-
-    if (empty($telefone_contacto)) {
-        $erros[] = "O telefone direto é obrigatório.";
-    } elseif (!preg_match('/^\+?[0-9\s]{9,20}$/', $telefone_contacto)) {
-        $erros[] = "O telefone direto não é válido.";
-    }
-
-    if (!empty($email_contacto) && !filter_var($email_contacto, FILTER_VALIDATE_EMAIL)) {
-        $erros[] = "O email direto não é válido.";
-    }
-
-    if (!empty($website) && !filter_var($website, FILTER_VALIDATE_URL)) {
-        $erros[] = "O website não é válido.";
     }
 
     // Normalizar entrada

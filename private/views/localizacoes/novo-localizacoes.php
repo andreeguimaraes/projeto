@@ -7,6 +7,7 @@
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
 redirect_if_not_allowed(['administrador', 'tecnico']);
+require_once __DIR__ . '/../../includes/validacoes.php';
 
 
 $erros        = [];
@@ -45,33 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($erro_sistema)) {
     $servico_id  = trim($_POST['servico_id']  ?? '');
 
     // 2. VALIDAR
-    $edificios_validos = ['Principal', 'Bloco B', 'Bloco C'];
-    if (empty($edificio)) {
-        $erros[] = "O edifício é obrigatório.";
-    } elseif (!in_array($edificio, $edificios_validos)) {
-        $erros[] = "O edifício selecionado não é válido.";
-    }
-
-    $pisos_validos = ['0', '1', '2', '3'];
-    if (empty($piso)) {
-        $erros[] = "O piso é obrigatório.";
-    } elseif (!in_array($piso, $pisos_validos)) {
-        $erros[] = "O piso selecionado não é válido.";
-    }
-
-    if (empty($sala)) {
-        $erros[] = "A sala/gabinete é obrigatória.";
-    } elseif (strlen($sala) < 2) {
-        $erros[] = "A sala/gabinete deve ter pelo menos 2 caracteres.";
-    } elseif (strlen($sala) > 50) {
-        $erros[] = "A sala/gabinete não pode ter mais de 50 caracteres.";
-    }
-
-    if (empty($servico_id)) {
-        $erros[] = "O serviço é obrigatório.";
-    } elseif (!filter_var($servico_id, FILTER_VALIDATE_INT) || (int)$servico_id <= 0) {
-        $erros[] = "O serviço selecionado não é válido.";
-    }
+    $erros = array_merge(
+        $erros,
+        validar_edificio($edificio),
+        validar_piso($piso),
+        validar_sala($sala),
+        validar_servico($servico_id)
+    );
 
 
     // 3. NORMALIZAR

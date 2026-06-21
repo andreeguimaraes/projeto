@@ -577,3 +577,42 @@ function validar_mensagem_contacto(string $mensagem): array {
     }
     return $erros;
 }
+// ============================================================
+// CONTEÚDOS DO SITE (área pública, editável pelo administrador)
+// ============================================================
+
+// Valida o email de contacto apresentado no site público.
+// Campo opcional: só valida o formato se preenchido.
+function validar_email_conteudo(string $email): array {
+    $erros = [];
+    if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erros[] = "O email não é válido.";
+    }
+    return $erros;
+}
+
+// Valida o código postal apresentado no site público.
+// Campo opcional: só valida o formato (XXXX-XXX, padrão português)
+// se preenchido.
+function validar_codigo_postal(string $codigo_postal): array {
+    $erros = [];
+    if (!empty($codigo_postal) && !preg_match('/^\d{4}-\d{3}$/', $codigo_postal)) {
+        $erros[] = "O código postal deve seguir o formato XXXX-XXX (ex: 4200-072).";
+    }
+    return $erros;
+}
+// Valida o telefone de contacto apresentado no site público.
+// Campo opcional: só valida se preenchido. Remove tudo o que não for
+// dígito (espaços, traços, etc.) e confirma que restam exatamente
+// 9 dígitos (formato de número português), mesma lógica de
+// validar_telefone_contacto() usada no formulário de contacto público.
+function validar_telefone_conteudo(string $telefone): array {
+    $erros = [];
+    if (!empty($telefone)) {
+        $digitos = preg_replace('/\D/', '', $telefone);
+        if (strlen($digitos) !== 9) {
+            $erros[] = "O telefone deve ter 9 dígitos.";
+        }
+    }
+    return $erros;
+}
