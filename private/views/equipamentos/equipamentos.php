@@ -238,6 +238,18 @@ $ligacao = null;
                             </div>
 
                             <div class="col-md-2">
+                                <select class="form-select" name="estado">
+                                    <option value="">Estado</option>
+                                    <option value="ativo" <?= $estado == 'ativo' ? 'selected' : '' ?>>Ativo</option>
+                                    <option value="em_manutencao" <?= $estado == 'em_manutencao' ? 'selected' : '' ?>>Em manutenção</option>
+                                    <option value="inativo" <?= $estado == 'inativo' ? 'selected' : '' ?>>Inativo</option>
+                                    <option value="em_calibracao" <?= $estado == 'em_calibracao' ? 'selected' : '' ?>>Em calibração</option>
+                                    <option value="em_quarentena" <?= $estado == 'em_quarentena' ? 'selected' : '' ?>>Em quarentena</option>
+                                    <option value="abatido" <?= $estado == 'abatido' ? 'selected' : '' ?>>Abatido</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
                                 <select class="form-select" name="criticidade">
                                     <option value="">Criticidade</option>
                                     <option value="baixa" <?= $criticidade == 'baixa' ? 'selected' : '' ?>>Baixa</option>
@@ -378,23 +390,29 @@ $ligacao = null;
                                                     </td>
                                                     <td>
                                                         <div style="white-space: nowrap;">
-                                                            <a href="detalhes-equipamentos.php?id_equipamento=<?= aes_encrypt($eq->id) ?>"
+                                                            <a href="detalhes-equipamentos.php?id_equipamento=<?= htmlspecialchars(aes_encrypt($eq->id)) ?>"
                                                                 class="btn btn-sm btn-outline-primary" title="Ver detalhes">
                                                                 <i class="fas fa-eye"></i>
                                                             </a>
                                                             <!-- este link inclui o ID do equipamento na URL.  -->
-                                                            <a href="editar-equipamentos.php?id_equipamento=<?= aes_encrypt($eq->id) ?>"
+                                                            <a href="editar-equipamentos.php?id_equipamento=<?= htmlspecialchars(aes_encrypt($eq->id)) ?>"
                                                                 class="btn btn-sm btn-outline-warning">
                                                                 <i class="fas fa-pen"></i>
                                                             </a>
-                                                            <button class="btn btn-sm btn-outline-danger" title="Desativar"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#modalEliminar"
-                                                                data-id="<?= $eq->id ?>"
-                                                                data-codigo="<?= htmlspecialchars($eq->codigo) ?>"
-                                                                data-designacao="<?= htmlspecialchars($eq->designacao) ?>">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
+                                                            <?php if (!in_array($eq->estado, ['inativo', 'abatido'])) : ?>
+                                                                <button class="btn btn-sm btn-outline-danger" title="Desativar"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#modalEliminar"
+                                                                    data-id="<?= $eq->id ?>"
+                                                                    data-codigo="<?= htmlspecialchars($eq->codigo) ?>"
+                                                                    data-designacao="<?= htmlspecialchars($eq->designacao) ?>">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            <?php else : ?>
+                                                                <button class="btn btn-sm btn-outline-secondary" disabled title="Equipamento inativo/abatido">
+                                                                    <i class="fas fa-ban"></i>
+                                                                </button>
+                                                            <?php endif; ?>
                                                         </div>
                                                     </td>
                                                 </tr>

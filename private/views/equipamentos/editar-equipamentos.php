@@ -60,28 +60,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $estado_garantia = trim($_POST['estado_garantia'] ?? '');
 
     $ficheiro_garantia_path = null;
+
     if (!empty($_FILES['ficheiro_garantia']['name']) && $_FILES['ficheiro_garantia']['error'] === UPLOAD_ERR_OK) {
-        $extensao = pathinfo($_FILES['ficheiro_garantia']['name'], PATHINFO_EXTENSION);
-        $nomeFicheiro = uniqid('garantia_') . '.' . $extensao;
-        $dirUploads = __DIR__ . '/../../../uploads/';
-        if (!is_dir($dirUploads)) {
-            mkdir($dirUploads, 0755, true);
+        $extensao = strtolower(pathinfo($_FILES['ficheiro_garantia']['name'], PATHINFO_EXTENSION));
+
+        if (!in_array($extensao, ['pdf', 'doc', 'docx'])) {
+            $erros[] = "O ficheiro da garantia deve ser PDF, DOC ou DOCX.";
         }
-        if (move_uploaded_file($_FILES['ficheiro_garantia']['tmp_name'], $dirUploads . $nomeFicheiro)) {
-            $ficheiro_garantia_path = 'uploads/' . $nomeFicheiro;
+
+        if ($_FILES['ficheiro_garantia']['size'] > 5 * 1024 * 1024) {
+            $erros[] = "O ficheiro da garantia não pode exceder 5MB.";
+        }
+
+        if (empty($erros)) {
+            $nomeFicheiro = uniqid('garantia_') . '.' . $extensao;
+            $dirUploads = __DIR__ . '/../../../uploads/';
+
+            if (!is_dir($dirUploads)) {
+                mkdir($dirUploads, 0755, true);
+            }
+
+            if (move_uploaded_file($_FILES['ficheiro_garantia']['tmp_name'], $dirUploads . $nomeFicheiro)) {
+                $ficheiro_garantia_path = 'uploads/' . $nomeFicheiro;
+            }
         }
     }
 
     $ficheiro_contrato_path = null;
+
     if (!empty($_FILES['ficheiro_contrato']['name']) && $_FILES['ficheiro_contrato']['error'] === UPLOAD_ERR_OK) {
-        $extensao = pathinfo($_FILES['ficheiro_contrato']['name'], PATHINFO_EXTENSION);
-        $nomeFicheiro = uniqid('contrato_') . '.' . $extensao;
-        $dirUploads = __DIR__ . '/../../../uploads/';
-        if (!is_dir($dirUploads)) {
-            mkdir($dirUploads, 0755, true);
+        $extensao = strtolower(pathinfo($_FILES['ficheiro_contrato']['name'], PATHINFO_EXTENSION));
+
+        if (!in_array($extensao, ['pdf', 'doc', 'docx'])) {
+            $erros[] = "O ficheiro do contrato deve ser PDF, DOC ou DOCX.";
         }
-        if (move_uploaded_file($_FILES['ficheiro_contrato']['tmp_name'], $dirUploads . $nomeFicheiro)) {
-            $ficheiro_contrato_path = 'uploads/' . $nomeFicheiro;
+
+        if ($_FILES['ficheiro_contrato']['size'] > 5 * 1024 * 1024) {
+            $erros[] = "O ficheiro do contrato não pode exceder 5MB.";
+        }
+
+        if (empty($erros)) {
+            $nomeFicheiro = uniqid('contrato_') . '.' . $extensao;
+            $dirUploads = __DIR__ . '/../../../uploads/';
+
+            if (!is_dir($dirUploads)) {
+                mkdir($dirUploads, 0755, true);
+            }
+
+            if (move_uploaded_file($_FILES['ficheiro_contrato']['tmp_name'], $dirUploads . $nomeFicheiro)) {
+                $ficheiro_contrato_path = 'uploads/' . $nomeFicheiro;
+            }
         }
     }
     $periodicidade_contrato = trim($_POST['periodicidade_contrato'] ?? '');
@@ -100,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 3. VALIDAR
     // ----------------------------------------------------------------
     $erros = array_merge(
-        //validar_codigo($codigo),
+        $erros,
         validar_designacao($designacao),
         validar_categoria($categoria_id),
         validar_marca($marca),
@@ -126,6 +154,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 MYSQL_PASSWORD
             );
             $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $ligacao->beginTransaction();
 
             $stmt = $ligacao->prepare("
     UPDATE equipamentos
@@ -169,61 +199,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
 
             // ----------------------------------------------------------------
-            // Processar fornecedores associados (múltiplos, com tipo de relação)
+            // Processar fornecedores associados
+            // Apaga as associações antigas e volta a inserir as linhas submetidas
             // ----------------------------------------------------------------
+            $stmtDelForn = $ligacao->prepare("
+    DELETE FROM equipamento_fornecedor
+    WHERE equipamento_id = :equipamento_id
+");
+            $stmtDelForn->execute([':equipamento_id' => $id]);
+
+            $tipos_usados = [];
+
             foreach ($_POST as $chave => $valor) {
                 if (strpos($chave, 'fornecedor_id_') === 0) {
                     $nf = substr($chave, strlen('fornecedor_id_'));
 
                     $fornecedor_id_linha = trim($_POST["fornecedor_id_{$nf}"] ?? '');
                     $tipo_relacao = trim($_POST["tipo_relacao_{$nf}"] ?? '');
-                    $associacao_id = trim($_POST["fornecedor_associacao_id_{$nf}"] ?? '');
 
-                    // linha vazia (adicionada mas não preenchida) - ignora
+                    // Linha vazia: ignora
+                    if ($fornecedor_id_linha === '' && $tipo_relacao === '') {
+                        continue;
+                    }
+
+                    // Linha parcialmente preenchida: erro
                     if ($fornecedor_id_linha === '' || $tipo_relacao === '') {
+                        $erros[] = "Na linha $nf dos fornecedores, preencha o fornecedor e o tipo de relação.";
                         continue;
                     }
 
-                    // valida que não há outro fornecedor com o mesmo tipo já gravado para este equipamento
-                    $stmtTipoExistente = $ligacao->prepare("
-                        SELECT id FROM equipamento_fornecedor
-                        WHERE equipamento_id = :equipamento_id
-                          AND tipo_id = :tipo_id
-                          AND id != :associacao_id
-                    ");
-                    $idParaExcluir = !empty($associacao_id) ? $associacao_id : 0;
-                    $stmtTipoExistente->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
-                    $stmtTipoExistente->bindParam(':tipo_id', $tipo_relacao, PDO::PARAM_INT);
-                    $stmtTipoExistente->bindParam(':associacao_id', $idParaExcluir, PDO::PARAM_INT);
-                    $stmtTipoExistente->execute();
-
-                    if ($stmtTipoExistente->fetch()) {
-                        $erros[] = "Já existe um fornecedor com este tipo de relação para o equipamento.";
+                    if (!filter_var($fornecedor_id_linha, FILTER_VALIDATE_INT)) {
+                        $erros[] = "O fornecedor selecionado na linha $nf não é válido.";
                         continue;
                     }
 
-                    if (!empty($associacao_id)) {
-                        // já existe - UPDATE
-                        $stmtForn = $ligacao->prepare("
-                            UPDATE equipamento_fornecedor
-                            SET fornecedor_id = :fornecedor_id, tipo_id = :tipo_id
-                            WHERE id = :id
-                        ");
-                        $stmtForn->bindParam(':fornecedor_id', $fornecedor_id_linha, PDO::PARAM_INT);
-                        $stmtForn->bindParam(':tipo_id', $tipo_relacao, PDO::PARAM_INT);
-                        $stmtForn->bindParam(':id', $associacao_id, PDO::PARAM_INT);
-                        $stmtForn->execute();
-                    } else {
-                        // nova - INSERT
-                        $stmtForn = $ligacao->prepare("
-                            INSERT INTO equipamento_fornecedor (equipamento_id, fornecedor_id, tipo_id)
-                            VALUES (:equipamento_id, :fornecedor_id, :tipo_id)
-                        ");
-                        $stmtForn->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
-                        $stmtForn->bindParam(':fornecedor_id', $fornecedor_id_linha, PDO::PARAM_INT);
-                        $stmtForn->bindParam(':tipo_id', $tipo_relacao, PDO::PARAM_INT);
-                        $stmtForn->execute();
+                    if (!filter_var($tipo_relacao, FILTER_VALIDATE_INT)) {
+                        $erros[] = "O tipo de relação selecionado na linha $nf não é válido.";
+                        continue;
                     }
+
+                    if (in_array($tipo_relacao, $tipos_usados)) {
+                        $erros[] = "Já selecionou este tipo de relação noutra linha — cada tipo só pode ter um fornecedor.";
+                        continue;
+                    }
+
+                    $tipos_usados[] = $tipo_relacao;
+
+                    $stmtForn = $ligacao->prepare("
+            INSERT INTO equipamento_fornecedor (equipamento_id, fornecedor_id, tipo_id)
+            VALUES (:equipamento_id, :fornecedor_id, :tipo_id)
+        ");
+                    $stmtForn->execute([
+                        ':equipamento_id' => $id,
+                        ':fornecedor_id' => (int)$fornecedor_id_linha,
+                        ':tipo_id' => (int)$tipo_relacao
+                    ]);
                 }
             }
 
@@ -270,7 +300,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtGarantia->bindParam(':estado', $estado_garantia, PDO::PARAM_STR);
                     $stmtGarantia->bindParam(':id', $garantiaAtual->id, PDO::PARAM_INT);
                     $stmtGarantia->execute();
-
                 } else {
                     $codigo_garantia = 'GAR' . str_pad($id, 5, '0', STR_PAD_LEFT);
 
@@ -366,12 +395,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtContrato->execute();
                 }
             }
+            // ----------------------------------------------------------------
             // Processar documentos
+            // Apaga os documentos antigos e volta a inserir os documentos submetidos
+            // ----------------------------------------------------------------
             $dirUploads = __DIR__ . '/../../../uploads/';
+
             if (!is_dir($dirUploads)) {
                 mkdir($dirUploads, 0755, true);
             }
-            $documentosNovosNestaSubmissao = 0;
+
+            // Buscar ficheiros antigos para manter quando não for enviado ficheiro novo
+            $stmtDocsAtuais = $ligacao->prepare("
+                SELECT id, ficheiro_path
+                FROM documentos
+                WHERE equipamento_id = :equipamento_id
+            ");
+            $stmtDocsAtuais->execute([':equipamento_id' => $id]);
+
+            $ficheirosAntigos = [];
+            foreach ($stmtDocsAtuais->fetchAll(PDO::FETCH_OBJ) as $docAtual) {
+                $ficheirosAntigos[$docAtual->id] = $docAtual->ficheiro_path;
+            }
+
+            // Apaga documentos antigos da BD
+            $stmtDelDocs = $ligacao->prepare("
+                DELETE FROM documentos
+                WHERE equipamento_id = :equipamento_id
+            ");
+            $stmtDelDocs->execute([':equipamento_id' => $id]);
+
+            $numeroDoc = 0;
 
             foreach ($_POST as $chave => $valor) {
                 if (strpos($chave, 'nome_documento_') === 0) {
@@ -383,18 +437,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $validade_doc = trim($_POST["validade_documento_{$n}"] ?? '');
                     $documento_id = trim($_POST["documento_id_{$n}"] ?? '');
 
-                    // linha vazia (adicionada mas não preenchida) - ignora
+                    // Linha vazia: ignora
+                    if ($nome_doc === '' && $tipo_doc === '' && $data_doc === '' && $validade_doc === '') {
+                        continue;
+                    }
+
+                    // Linha parcialmente preenchida: erro
                     if ($nome_doc === '' || $tipo_doc === '') {
+                        $erros[] = "Na linha $n dos documentos, preencha o tipo e o nome do documento.";
+                        continue;
+                    }
+
+                    if (!filter_var($tipo_doc, FILTER_VALIDATE_INT)) {
+                        $erros[] = "O tipo de documento na linha $n não é válido.";
                         continue;
                     }
 
                     $data_doc = $data_doc !== '' ? $data_doc : null;
                     $validade_doc = $validade_doc !== '' ? $validade_doc : null;
 
-                    // upload do ficheiro, se foi enviado um novo
-                    $ficheiro_path = null;
+                    // Mantém ficheiro antigo, se existir
+                    $ficheiro_path = !empty($documento_id) && isset($ficheirosAntigos[$documento_id])
+                        ? $ficheirosAntigos[$documento_id]
+                        : null;
+
+                    // Upload de novo ficheiro, se enviado
                     if (!empty($_FILES["ficheiro_documento_{$n}"]['name']) && $_FILES["ficheiro_documento_{$n}"]['error'] === UPLOAD_ERR_OK) {
-                        $extensao = pathinfo($_FILES["ficheiro_documento_{$n}"]['name'], PATHINFO_EXTENSION);
+                        $extensao = strtolower(pathinfo($_FILES["ficheiro_documento_{$n}"]['name'], PATHINFO_EXTENSION));
+
+                        if (!in_array($extensao, ['pdf', 'doc', 'docx'])) {
+                            $erros[] = "O ficheiro do documento na linha $n deve ser PDF, DOC ou DOCX.";
+                            continue;
+                        }
+
+                        if ($_FILES["ficheiro_documento_{$n}"]['size'] > 5 * 1024 * 1024) {
+                            $erros[] = "O ficheiro do documento na linha $n não pode exceder 5MB.";
+                            continue;
+                        }
+
                         $nomeFicheiro = uniqid('doc_') . '.' . $extensao;
                         $destino = $dirUploads . $nomeFicheiro;
 
@@ -403,63 +483,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     }
 
-                    if (!empty($documento_id)) {
-                        // documento já existe - UPDATE
-                        if ($ficheiro_path !== null) {
-                            $stmtDoc = $ligacao->prepare("
-                    UPDATE documentos
-                    SET tipo_id = :tipo_id, nome = :nome, data_documento = :data_documento,
-                        data_validade = :data_validade, ficheiro_path = :ficheiro_path
-                    WHERE id = :id
-                ");
-                            $stmtDoc->bindParam(':ficheiro_path', $ficheiro_path, PDO::PARAM_STR);
-                        } else {
-                            $stmtDoc = $ligacao->prepare("
-                    UPDATE documentos
-                    SET tipo_id = :tipo_id, nome = :nome, data_documento = :data_documento,
-                        data_validade = :data_validade
-                    WHERE id = :id
-                ");
-                        }
-                        $stmtDoc->bindParam(':tipo_id', $tipo_doc, PDO::PARAM_INT);
-                        $stmtDoc->bindParam(':nome', $nome_doc, PDO::PARAM_STR);
-                        $stmtDoc->bindParam(':data_documento', $data_doc, PDO::PARAM_STR);
-                        $stmtDoc->bindParam(':data_validade', $validade_doc, PDO::PARAM_STR);
-                        $stmtDoc->bindParam(':id', $documento_id, PDO::PARAM_INT);
-                        $stmtDoc->execute();
-                    } else {
-                        // documento novo - INSERT
-                        $stmtCountDoc = $ligacao->prepare("SELECT COUNT(*) FROM documentos WHERE equipamento_id = :equipamento_id");
-                        $stmtCountDoc->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
-                        $stmtCountDoc->execute();
-                        $proximoNumero = $stmtCountDoc->fetchColumn() + 1 + $documentosNovosNestaSubmissao;
-                        $documentosNovosNestaSubmissao++;
+                    $numeroDoc++;
+                    $codigo_doc = 'DOC' . str_pad($id, 3, '0', STR_PAD_LEFT) . '-' . str_pad($numeroDoc, 2, '0', STR_PAD_LEFT);
 
-                        $codigo_doc = 'DOC' . str_pad($id, 3, '0', STR_PAD_LEFT) . '-' . str_pad($proximoNumero, 2, '0', STR_PAD_LEFT);
+                    $stmtDoc = $ligacao->prepare("
+                        INSERT INTO documentos
+                            (codigo, equipamento_id, tipo_id, nome, data_documento, data_validade, ficheiro_path)
+                        VALUES
+                            (:codigo, :equipamento_id, :tipo_id, :nome, :data_documento, :data_validade, :ficheiro_path)
+                    ");
 
-                        $stmtDoc = $ligacao->prepare("
-                INSERT INTO documentos
-                    (codigo, equipamento_id, tipo_id, nome, data_documento, data_validade, ficheiro_path)
-                VALUES
-                    (:codigo, :equipamento_id, :tipo_id, :nome, :data_documento, :data_validade, :ficheiro_path)
-            ");
-                        $stmtDoc->bindParam(':codigo', $codigo_doc, PDO::PARAM_STR);
-                        $stmtDoc->bindParam(':equipamento_id', $id, PDO::PARAM_INT);
-                        $stmtDoc->bindParam(':tipo_id', $tipo_doc, PDO::PARAM_INT);
-                        $stmtDoc->bindParam(':nome', $nome_doc, PDO::PARAM_STR);
-                        $stmtDoc->bindParam(':data_documento', $data_doc, PDO::PARAM_STR);
-                        $stmtDoc->bindParam(':data_validade', $validade_doc, PDO::PARAM_STR);
-                        $stmtDoc->bindParam(':ficheiro_path', $ficheiro_path, PDO::PARAM_STR);
-                        $stmtDoc->execute();
-                    }
+                    $stmtDoc->execute([
+                        ':codigo' => $codigo_doc,
+                        ':equipamento_id' => $id,
+                        ':tipo_id' => (int)$tipo_doc,
+                        ':nome' => $nome_doc,
+                        ':data_documento' => $data_doc,
+                        ':data_validade' => $validade_doc,
+                        ':ficheiro_path' => $ficheiro_path
+                    ]);
                 }
             }
 
             if (empty($erros)) {
+                $ligacao->commit();
                 header('Location: equipamentos.php');
                 exit;
+            } else {
+                $ligacao->rollBack();
             }
         } catch (PDOException $err) {
+            if (isset($ligacao) && $ligacao->inTransaction()) {
+                $ligacao->rollBack();
+            }
+
             $erros[] = "Erro ao atualizar: " . $err->getMessage();
         }
     }
@@ -790,19 +847,22 @@ $ligacao = null;
                                     <div class="row mb-3">
                                         <div class="col-md-3">
                                             <label class="form-label fw-bold">Edifício</label>
-                                            <p class="form-control-plaintext" id="l-edificio">Principal</p>
+                                            <p class="form-control-plaintext" id="l-edificio">—</p>
+
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label fw-bold">Piso</label>
-                                            <p class="form-control-plaintext" id="l-piso">2</p>
+                                            <p class="form-control-plaintext" id="l-piso">—</p>
+
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label fw-bold">Serviço</label>
-                                            <p class="form-control-plaintext" id="l-servico">UCI</p>
+                                            <p class="form-control-plaintext" id="l-servico">—</p>
+
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label fw-bold">Sala</label>
-                                            <p class="form-control-plaintext" id="l-sala">201</p>
+                                            <p class="form-control-plaintext" id="l-sala">—</p>
                                         </div>
                                     </div>
                                 </div>
@@ -832,7 +892,8 @@ $ligacao = null;
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php $nf = 0; foreach ($fornecedores_associados as $fa): $nf++; ?>
+                                            <?php $nf = 0;
+                                            foreach ($fornecedores_associados as $fa): $nf++; ?>
                                                 <tr>
                                                     <td>
                                                         <input type="hidden" name="fornecedor_associacao_id_<?= $nf ?>" value="<?= $fa->associacao_id ?>">
@@ -872,7 +933,7 @@ $ligacao = null;
 
                                 <div class="d-flex justify-content-between">
                                     <button type="button" class="btn btn-outline-secondary"
-                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-geral')).show()">
+                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-localizacao')).show()">
                                         <i class="fas fa-arrow-left me-1"></i> Anterior
                                     </button>
                                     <div class="d-flex gap-2">
@@ -936,7 +997,7 @@ $ligacao = null;
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <button type="button" class="btn btn-outline-secondary"
-                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-geral')).show()">
+                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-fornecedor')).show()">
                                         <i class="fas fa-arrow-left me-1"></i> Anterior
                                     </button>
                                     <div class="d-flex gap-2">
@@ -1017,7 +1078,7 @@ $ligacao = null;
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <button type="button" class="btn btn-outline-secondary"
-                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-geral')).show()">
+                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-garantia')).show()">
                                         <i class="fas fa-arrow-left me-1"></i> Anterior
                                     </button>
                                     <div class="d-flex gap-2">
@@ -1084,7 +1145,7 @@ $ligacao = null;
 
                                 <div class="d-flex justify-content-between">
                                     <button type="button" class="btn btn-outline-secondary"
-                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-geral')).show()">
+                                        onclick="bootstrap.Tab.getOrCreateInstance(document.querySelector('#tab-contrato')).show()">
                                         <i class="fas fa-arrow-left me-1"></i> Anterior
                                     </button>
                                     <div class="d-flex gap-2">

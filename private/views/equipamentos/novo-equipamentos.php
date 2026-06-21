@@ -11,6 +11,7 @@ require_once __DIR__ . '/../../includes/validacoes.php';
 $localizacoes_bd = [];
 $fornecedores_bd = [];
 $categorias_bd   = [];
+$tipos_documento_bd = [];
 $erros        = [];
 $erro_sistema = '';
 $sucesso      = false;
@@ -46,6 +47,7 @@ try {
     $tipos_garantia_bd  = $ligacao->query("SELECT id, nome FROM tipos_garantia ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
     $tipos_contrato_bd  = $ligacao->query("SELECT id, nome FROM tipos_contrato ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
     $tipos_fornecedor_bd = $ligacao->query("SELECT id, nome FROM tipos_fornecedor ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
+    $tipos_documento_bd = $ligacao->query("SELECT id, nome, tem_validade FROM tipos_documento ORDER BY nome")->fetchAll(PDO::FETCH_OBJ);
     $maxCodigo = $ligacao->query("SELECT COALESCE(MAX(CAST(SUBSTRING(codigo, 3) AS UNSIGNED)), 0) FROM equipamentos")->fetchColumn();
     $codigo_sugerido = 'EQ' . str_pad($maxCodigo + 1, 3, '0', STR_PAD_LEFT);
 } catch (PDOException $e) {
@@ -164,13 +166,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (empty($nome_doc))  $erros[] = "O nome do documento na linha $i é obrigatório.";
             if (!empty($data_doc)) {
                 $partes = explode('-', $data_doc);
-                if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
+
+                if (count($partes) !== 3 || !checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
                     $erros[] = "A data do documento na linha $i não é válida.";
                 }
             }
             if (!empty($valid_doc)) {
                 $partes = explode('-', $valid_doc);
-                if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
+
+                if (count($partes) !== 3 || !checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
                     $erros[] = "A data de validade do documento na linha $i não é válida.";
                 }
             }
@@ -289,7 +293,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 MYSQL_USERNAME,
                 MYSQL_PASSWORD
             );
-
+            $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // 1. UPLOADS
             $pasta_base = $_SERVER['DOCUMENT_ROOT'] . '/MEDINV/uploads/';
 
@@ -578,7 +582,7 @@ require_once '../../includes/header.php'; ?>
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="designacao"
                                             placeholder="Ex: Monitor multiparamétrico" required
-                                            value="<?= $_POST['designacao'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($_POST['designacao'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Categoria <span class="text-danger">*</span></label>
@@ -599,21 +603,21 @@ require_once '../../includes/header.php'; ?>
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="marca"
                                             placeholder="Ex: Philips" required
-                                            value="<?= $_POST['marca'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($_POST['marca'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Modelo <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="modelo"
                                             placeholder="Ex: IntelliVue MP5" required
-                                            value="<?= $_POST['modelo'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($_POST['modelo'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Número de série <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="numero_serie"
                                             placeholder="Ex: MP5-2022-45873" required
-                                            value="<?= $_POST['numero_serie'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($_POST['numero_serie'] ?? '') ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-4">
@@ -621,13 +625,13 @@ require_once '../../includes/header.php'; ?>
                                         <label class="form-label fw-bold">Fabricante</label>
                                         <input type="text" class="form-control" name="fabricante"
                                             placeholder="Ex: Philips Healthcare"
-                                            value="<?= $_POST['fabricante'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($_POST['fabricante'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Ano de fabrico</label>
                                         <input type="number" class="form-control" name="ano_fabrico"
                                             placeholder="Ex: 2022" min="1900" max="2026"
-                                            value="<?= $_POST['ano_fabrico'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($_POST['ano_fabrico'] ?? '') ?>">
 
                                     </div>
                                     <div class="col-md-4">
@@ -664,13 +668,13 @@ require_once '../../includes/header.php'; ?>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Data de aquisição</label>
                                         <input type="date" class="form-control" name="data_aquisicao"
-                                            value="<?= $_POST['data_aquisicao'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($_POST['data_aquisicao'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Custo de aquisição (€)</label>
                                         <input type="number" class="form-control" name="custo_aquisicao"
                                             placeholder="Ex: 12500" step="0.01" min="0"
-                                            value="<?= $_POST['custo_aquisicao'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($_POST['custo_aquisicao'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Tipo de entrada</label>
@@ -827,12 +831,12 @@ require_once '../../includes/header.php'; ?>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Data de início</label>
                                         <input type="date" class="form-control" name="data_inicio"
-                                            value="<?= $_POST['data_inicio'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($_POST['data_inicio'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Data de fim</label>
                                         <input type="date" class="form-control" name="data_fim"
-                                            value="<?= $_POST['data_fim'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($_POST['data_fim'] ?? '') ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-4">
@@ -894,14 +898,14 @@ require_once '../../includes/header.php'; ?>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Data de início</label>
                                         <input type="date" class="form-control" name="data_inicio_contrato"
-                                            value="<?= $_POST['data_inicio_contrato'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($_POST['data_inicio_contrato'] ?? '') ?>">
                                     </div>
                                 </div>
                                 <div class="row mb-4">
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Data de fim</label>
                                         <input type="date" class="form-control" name="data_fim_contrato"
-                                            value="<?= $_POST['data_fim_contrato'] ?? '' ?>">
+                                            value="<?= htmlspecialchars($_POST['data_fim_contrato'] ?? '') ?>">
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label fw-bold">Periodicidade</label>
@@ -931,7 +935,7 @@ require_once '../../includes/header.php'; ?>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Observações</label>
                                         <textarea class="form-control" name="observacoes" rows="4"
-                                            placeholder="Informações adicionais sobre o equipamento..."><?= $_POST['observacoes'] ?? '' ?></textarea>
+                                            placeholder="Informações adicionais sobre o equipamento..."><?= htmlspecialchars($_POST['observacoes'] ?? '') ?></textarea>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between">
@@ -960,13 +964,14 @@ require_once '../../includes/header.php'; ?>
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <select class="form-select" name="tipo_documento_1">
+                                                    <select class="form-select tipo-documento" name="tipo_documento_1" data-linha="1">
                                                         <option value="">Selecione...</option>
-                                                        <option>Manual de utilizador</option>
-                                                        <option>Manual de serviço</option>
-                                                        <option>Certificado de calibração</option>
-                                                        <option>Contrato de manutenção</option>
-                                                        <option>Fatura de aquisição</option>
+                                                        <?php foreach ($tipos_documento_bd as $td) : ?>
+                                                            <option value="<?= htmlspecialchars($td->nome) ?>"
+                                                                data-tem-validade="<?= (int)$td->tem_validade ?>">
+                                                                <?= htmlspecialchars($td->nome) ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
                                                     </select>
                                                 </td>
                                                 <td><input type="text" class="form-control" name="nome_documento_1"
@@ -989,11 +994,6 @@ require_once '../../includes/header.php'; ?>
                                     <i class="fas fa-plus me-1"></i> Adicionar linha
                                 </button>
 
-                                <h6 class="text-muted mb-3"><i class="fas fa-note-sticky me-2"></i>Observações</h6>
-                                <div class="mb-4">
-                                    <textarea class="form-control" name="observacoes" rows="4"
-                                        placeholder="Informações adicionais sobre o equipamento..."></textarea>
-                                </div>
 
                                 <p class="text-muted small mb-3"><span class="text-danger">*</span> Campos
                                     obrigatórios</p>
@@ -1212,25 +1212,29 @@ require_once '../../includes/header.php'; ?>
     // ----------------------------------------------------------------
     // ADICIONAR LINHAS NA TABELA DE DOCUMENTAÇÃO
     // ----------------------------------------------------------------
+    const opcoesTiposDocumento = `
+    <option value="">Selecione...</option>
+    <?php foreach ($tipos_documento_bd as $td) : ?>
+        <option value="<?= htmlspecialchars($td->nome) ?>" data-tem-validade="<?= (int)$td->tem_validade ?>">
+            <?= htmlspecialchars($td->nome) ?>
+        </option>
+    <?php endforeach; ?>
+`;
+
     let numLinhas = 1;
+
     document.getElementById('btnAddLinha').addEventListener('click', function() {
         numLinhas++;
         const n = numLinhas;
-        const opcoes = `
-            <option value="">Selecione...</option>
-            <option>Manual de utilizador</option>
-            <option>Manual de serviço</option>
-            <option>Certificado de calibração</option>
-            <option>Contrato de manutenção</option>
-            <option>Fatura de aquisição</option>`;
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td><select class="form-select" name="tipo_documento_${n}">${opcoes}</select></td>
+            <td><select class="form-select tipo-documento" name="tipo_documento_${n}" data-linha="${n}">${opcoesTiposDocumento}</select></td>
             <td><input type="text" class="form-control" name="nome_documento_${n}"></td>
             <td><input type="date" class="form-control" name="data_documento_${n}"></td>
             <td><input type="date" class="form-control" name="validade_documento_${n}"></td>
             <td><input type="file" class="form-control form-control-sm" name="ficheiro_documento_${n}" accept=".pdf,.doc,.docx"></td>`;
         document.querySelector('#tabelaDocs tbody').appendChild(tr);
+        tr.querySelector('.tipo-documento').dispatchEvent(new Event('change'));
     });
 
     // ----------------------------------------------------------------
@@ -1302,6 +1306,26 @@ require_once '../../includes/header.php'; ?>
 
         painel.classList.remove('d-none');
     }
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('tipo-documento')) {
+            const linha = e.target.dataset.linha;
+            const option = e.target.options[e.target.selectedIndex];
+            const temValidade = option.dataset.temValidade === '1';
+
+            const inputValidade = document.querySelector(`[name="validade_documento_${linha}"]`);
+
+            if (inputValidade) {
+                inputValidade.disabled = !temValidade;
+
+                if (!temValidade) {
+                    inputValidade.value = '';
+                }
+            }
+        }
+    });
+    document.querySelectorAll('.tipo-documento').forEach(select => {
+        select.dispatchEvent(new Event('change'));
+    });
 </script>
 
 

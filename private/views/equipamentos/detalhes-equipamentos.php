@@ -59,10 +59,12 @@ try {
 
     // Fornecedores associados (múltiplos, com tipo de relação)
     $stmtForn = $ligacao->prepare("
-        SELECT f.*, tf.nome AS tipo_nome
+        SELECT 
+            f.*,
+            tf.nome AS tipo_relacao_nome
         FROM equipamento_fornecedor ef
         JOIN fornecedores f ON f.id = ef.fornecedor_id
-        JOIN tipos_fornecedor tf ON tf.id = f.tipo_id
+        JOIN tipos_fornecedor tf ON tf.id = ef.tipo_id
         WHERE ef.equipamento_id = :equipamento_id
         ORDER BY ef.id
     ");
@@ -114,12 +116,6 @@ $ligacao = null;
 
 
 
-$criticidade_label = [
-    'baixa' => ['Baixa', 'bg-secondary'],
-    'media' => ['Média', 'bg-info text-dark'],
-    'alta' => ['Alta', 'bg-warning text-dark'],
-    'suporte_de_vida' => ['Suporte de vida', 'bg-danger'],
-];
 
 $tipo_entrada_label = [
     'compra' => 'Compra',
@@ -150,6 +146,16 @@ function formatar_euros($valor)
 {
     if ($valor === null || $valor === '') return '—';
     return number_format((float)$valor, 2, ',', '.') . ' €';
+}
+function caminho_ficheiro($path)
+{
+    if (empty($path)) return '#';
+
+    if (str_starts_with($path, '/MEDINV/')) {
+        return $path;
+    }
+
+    return '../../../' . ltrim($path, '/');
 }
 
 ?>
@@ -377,7 +383,7 @@ function formatar_euros($valor)
                                         <h6 class="text-muted mb-0">
                                             <i class="fas fa-building me-2"></i><?= htmlspecialchars($fornecedor->nome) ?>
                                         </h6>
-                                        <span class="badge bg-primary"><?= htmlspecialchars($fornecedor->tipo_nome ?? '') ?></span>
+                                        <span class="badge bg-primary"><?= htmlspecialchars($fornecedor->tipo_relacao_nome ?? '') ?></span>
                                     </div>
 
                                     <div class="row mb-3">
@@ -390,9 +396,9 @@ function formatar_euros($valor)
                                             <p class="form-control-plaintext"><?= htmlspecialchars($fornecedor->nif ?? '') ?></p>
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="form-label fw-bold">Tipo de fornecedor</label>
+                                            <label class="form-label fw-bold">Tipo de relação</label>
                                             <p class="form-control-plaintext">
-                                                <span class="badge bg-primary"><?= htmlspecialchars($fornecedor->tipo_nome ?? '') ?></span>
+                                                <span class="badge bg-primary"><?= htmlspecialchars($fornecedor->tipo_relacao_nome ?? '') ?></span>
                                             </p>
                                         </div>
                                     </div>
@@ -505,7 +511,7 @@ function formatar_euros($valor)
                                         <label class="form-label fw-bold">Ficheiro</label>
                                         <p class="form-control-plaintext">
                                             <?php if (!empty($garantia->ficheiro_path)): ?>
-                                                <a href="../../../<?= htmlspecialchars($garantia->ficheiro_path) ?>" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                <a href="<?= htmlspecialchars(caminho_ficheiro($garantia->ficheiro_path)) ?>" target="_blank" class="btn btn-sm btn-outline-primary">
                                                     <i class="fas fa-file-pdf me-1 text-danger"></i>Ver documento
                                                 </a>
                                             <?php else: ?>
@@ -561,7 +567,7 @@ function formatar_euros($valor)
                                         <label class="form-label fw-bold">Ficheiro</label>
                                         <p class="form-control-plaintext">
                                             <?php if (!empty($contrato->ficheiro_path)): ?>
-                                                <a href="../../../<?= htmlspecialchars($contrato->ficheiro_path) ?>" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                <a href="<?= htmlspecialchars(caminho_ficheiro($contrato->ficheiro_path)) ?>" target="_blank" class="btn btn-sm btn-outline-primary">
                                                     <i class="fas fa-file-pdf me-1 text-danger"></i>Ver documento
                                                 </a>
                                             <?php else: ?>
@@ -593,7 +599,7 @@ function formatar_euros($valor)
                                                 <small class="text-muted ms-2"><?= htmlspecialchars($doc->tipo_nome) ?> — <?= formatar_data($doc->data_documento) ?></small>
                                             </div>
                                             <?php if (!empty($doc->ficheiro_path)): ?>
-                                                <a href="../../../<?= htmlspecialchars($doc->ficheiro_path) ?>" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                <a href="<?= htmlspecialchars(caminho_ficheiro($doc->ficheiro_path)) ?>" target="_blank" class="btn btn-sm btn-outline-primary">
                                                     <i class="fas fa-file-pdf me-1"></i>Ver
                                                 </a>
                                             <?php else: ?>
