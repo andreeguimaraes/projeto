@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../includes/validacoes.php';
 
 // Só aceita GET e POST
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
-    header('Location: ' . BASE_URL . '/MEDINV/public/login.php');
+    header('Location: ' . BASE_URL . '/sibdas/1240722/medinv/public/login.php');
     exit;
 }
 

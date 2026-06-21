@@ -151,7 +151,7 @@ function caminho_ficheiro($path)
 {
     if (empty($path)) return '#';
 
-    if (str_starts_with($path, '/MEDINV/')) {
+    if (str_starts_with($path, '/sibdas/1240722/medinv/')) {
         return $path;
     }
 

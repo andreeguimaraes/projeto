@@ -297,7 +297,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             );
             $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // 1. UPLOADS
-            $pasta_base = $_SERVER['DOCUMENT_ROOT'] . '/MEDINV/uploads/';
+            $pasta_base = $_SERVER['DOCUMENT_ROOT'] . '/sibdas/1240722/medinv/uploads/';
 
             $path_garantia = null;
             if (!empty($_FILES['ficheiro_garantia']['name'])) {
@@ -305,7 +305,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $nome    = 'GAR_' . time() . '.' . $ext;
                 $destino = $pasta_base . 'garantias/' . $nome;
                 if (move_uploaded_file($_FILES['ficheiro_garantia']['tmp_name'], $destino)) {
-                    $path_garantia = '/MEDINV/uploads/garantias/' . $nome;
+                    $path_garantia = '/sibdas/1240722/medinv/uploads/garantias/' . $nome;
                 }
             }
 
@@ -315,7 +315,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $nome    = 'CON_' . time() . '.' . $ext;
                 $destino = $pasta_base . 'contratos/' . $nome;
                 if (move_uploaded_file($_FILES['ficheiro_contrato']['tmp_name'], $destino)) {
-                    $path_contrato = '/MEDINV/uploads/contratos/' . $nome;
+                    $path_contrato = '/sibdas/1240722/medinv/uploads/contratos/' . $nome;
                 }
             }
 
@@ -328,7 +328,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $nome    = 'DOC_' . $j . '_' . time() . '.' . $ext;
                     $destino = $pasta_base . 'documentos/' . $nome;
                     if (move_uploaded_file($_FILES["ficheiro_documento_$j"]['tmp_name'], $destino)) {
-                        $path_doc = '/MEDINV/uploads/documentos/' . $nome;
+                        $path_doc = '/sibdas/1240722/medinv/uploads/documentos/' . $nome;
                     }
                 }
                 $documentos[$idx]['ficheiro_path'] = $path_doc;

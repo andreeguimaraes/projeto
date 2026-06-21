@@ -4,7 +4,7 @@
 
 // Caminho base (raiz) da aplicação no servidor. Usado em redirecionamentos
 // e em links absolutos (ex: header('Location: ' . BASE_URL . '/public/login.php')).
-define('BASE_URL', '/MEDINV');
+define('BASE_URL', '/sibdas/1240722/medinv');
 
 // Nome da aplicação, usado por exemplo no <title> das páginas (ex: header.php).
 define('APP_NAME', 'MEDINV');

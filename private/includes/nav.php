@@ -21,8 +21,8 @@ $nome = $_SESSION['utilizador'];
                 data-bs-target="#sidebarOffcanvas" data-bs-backdrop="false">
                 <i class="fas fa-bars"></i>
             </button>
-            <a href="/MEDINV/private/home.php" class="text-decoration-none">
-                <img src="/MEDINV/assets/img/logo_medinv.svg" alt="Logo da empresa">
+            <a href="/sibdas/1240722/medinv/private/home.php" class="text-decoration-none">
+                <img src="/sibdas/1240722/medinv/assets/img/logo_medinv.svg" alt="Logo da empresa">
             </a>
         </div>
         <div class="col-6 text-end p-3">
@@ -31,7 +31,7 @@ $nome = $_SESSION['utilizador'];
                     <i class="fa-regular fa-user me-2"></i> <?= htmlspecialchars($nome) ?>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item text-danger" href="/MEDINV/public/logout.php">
+                    <li><a class="dropdown-item text-danger" href="/sibdas/1240722/medinv/public/logout.php">
                             <i class="fa-solid fa-right-from-bracket me-2"></i>Sair
                         </a></li>
                 </ul>

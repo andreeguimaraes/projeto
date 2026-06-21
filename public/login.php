@@ -34,7 +34,7 @@ include '../private/includes/header.php';
             <div class="card">
                 <div class="card-header-custom">
                     <!-- Imagem do ginásio + texto -->
-                    <img src="/MEDINV/assets/img/logo_medinv.svg" alt="Logo da empresa">
+                    <img src="/sibdas/1240722/medinv/assets/img/logo_medinv.svg" alt="Logo da empresa">
                 </div>
                 <div class="card-body-custom">
                     <form action="../private/processa_login.php" method="post"> 
