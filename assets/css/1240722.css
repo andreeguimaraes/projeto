@@ -422,7 +422,7 @@ section {
  background-color: #edf0f4; /* Fundo suave para maior contraste */
  border: 1px solid rgba(29, 92, 127, 0.08);
  border-radius: 10px; /* Bordas arredondadas maiores */
- text-align: justified;
+ text-align: justify;
  box-shadow: 0 30px 22px rgba(0, 0, 0, 0.06);
  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
@@ -457,12 +457,20 @@ flex-direction: column; /* Organiza os elementos na vertical */max-width: 500px;
  border: 1px solid #ddd; /* Borda cinzenta clara */
  border-radius: 5px; /* Bordas arredondadas */
 }
+/*
 #contacto button {
- background-color: #ddd; /* Cor de fundo do botão (cinzento claro) */ color: #fff; /* Cor do texto do botão (branco) */ padding: 10px 20px; /* Espaçamento interno do botão */
- border: none; /* Remove a borda padrão */
-border-radius: 5px; /* Bordas arredondadas */
- cursor: pointer; /* Cursor tipo "mão" ao passar por cima */
+ background-color: #ddd; /* Cor de fundo do botão (cinzento claro)
+ color: #fff; /* Cor do texto do botão (branco) 
+ padding: 10px 20px; /* Espaçamento interno do botão
+ border: none; /* Remove a borda padrão
+ border-radius: 5px; /* Bordas arredondadas 
+ cursor: pointer; /* Cursor tipo "mão" ao passar por cima 
 }
+*/
+
+
+
+
 
 /* SECÇÃO "CONVITE" — final da página*/
 

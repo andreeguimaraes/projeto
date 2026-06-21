@@ -41,7 +41,7 @@
 
     <!-- Seção Banner/Hero com Foto -->
     <section class="hero-banner">
-        <img src="" alt="Banner Quem Somos - MEDINV" class="hero-image">
+        <img src="../../../assets/img/hospital_corridor.png" alt="Banner Quem Somos - MEDINV" class="hero-image">
         <div class="hero-overlay">
             <h2>Quem Somos</h2>
             <p>Conheça a nossa história e missão</p>
@@ -70,7 +70,7 @@
         <h2>Os Nossos Valores</h2>
         <div class="values-container">
             <div class="value-card">
-                <i class="fas fa-heart fa-2x"></i>
+                <i class="fas fa-bullseye fa-2x"></i>
                 <h3>Rigor</h3>
                 <p>Desenvolvemos software pensado para ambientes críticos, onde a precisão da informação pode fazer a diferença.</p>
             </div>

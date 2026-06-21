@@ -41,7 +41,7 @@
     <section class="hero-banner">
         <img src="../../../assets/img/equipamentos.oticos.jpg" alt="Banner Serviços - MEDINV" class="hero-image">
         <div class="hero-overlay">
-            <h2>Nossos Serviços</h2>
+            <h2>Os Nossos Serviços</h2>
             <p>Gestão inteligente do inventário hospitalar</p>
         </div>
     </section>
@@ -113,16 +113,15 @@
             <div class="servico-2">
                 <i class="fas fa-file-contract fa-3x"></i>
                 <h3>Garantias e contratos</h3>
-                <p>Consulte datas de início e fim de garantia, tipo de contrato de manutenção e entidade responsável. Receba
-                    alertas automáticos para prazos a expirar e evite lapsos contratuais que possam comprometer a operação.
+                <p>Consulte datas de início e fim de garantia, tipo de contrato de manutenção e entidade responsável. Visualize
+                    de forma destacada as garantias e contratos já expirados, e evite lapsos contratuais que possam comprometer a operação.
                 </p>
             </div>
             <div class="servico-2">
                 <i class="fas fa-chart-line fa-3x"></i>
                 <h3>Dashboard e Indicadores</h3>
-                <p>Aceda a uma visão global e em tempo real do estado do parque tecnológico. O dashboard apresenta indicadores
-                    como equipamentos ativos, em manutenção ou sem documentação associada, apoiando a
-                    tomada de decisão técnica e administrativa.</p>
+                <p>Aceda a uma visão global do estado do parque tecnológico, com indicadores como equipamentos ativos, em
+                    manutenção ou sem documentação associada — apoiando a tomada de decisão.</p>
             </div>
         </div>
     </section>

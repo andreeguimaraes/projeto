@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <i class="fas fa-map-marker-alt"></i>
                     <div>
                         <h4>Morada</h4>
-                        <p>Rua de António Bernardino, 431, Porto<br>4000-000 Porto<br>Portugal</p>
+                        <p>Rua de António Bernardino, 431, Porto<br>4000-009, Porto<br>Portugal</p>
                     </div>
                 </div>
 

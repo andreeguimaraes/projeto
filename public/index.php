@@ -46,7 +46,6 @@
         </div>
     </section>
 
-    <!-- Seção "Conteudo da pagina" -->
     
     <!-- Seção "Quem Somos" -->
     <section class="container-texto-generico" id="quem-somos">
@@ -68,7 +67,7 @@
                     </article>
                     <article class="quem-somos-card">
                         <h2>A resposta</h2>
-                        <p>Desenvolvemos soluções web intuitivas e centralizadas, pensadas para a realidade hospitalar portuguesa. A nossa plataforma permite organizar, consultar e atualizar toda a informação relativa ao parque tecnológico de uma instituição de saúde — desde a aquisição de um equipamento até ao seu abate.</p>
+                        <p>Desenvolvemos soluções web intuitivas pensadas para a realidade hospitalar portuguesa. A nossa plataforma permite organizar, consultar e atualizar toda a informação relativa ao parque tecnológico de uma instituição de saúde — desde a aquisição de um equipamento até ao seu abate.</p>
                     </article>
                 </div>
             </div>

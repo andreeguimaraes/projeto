@@ -22,7 +22,7 @@
                 <i class="fas fa-house me-2"></i>Início
             </a>
 
-            <?php if ($_SESSION['perfil'] === 'administrador') : ?>
+            <?php if (in_array($_SESSION['perfil'], ['administrador', 'tecnico'])) : ?>
                 <a href="/MEDINV/private/views/dashboard.php" class="nav-link sidebar-link">
                     <i class="fas fa-chart-line me-2"></i>Dashboard
                 </a>

@@ -72,7 +72,7 @@ $email_utilizador = $_SESSION['utilizador_email'] ?? '';
             <div class="boas-vindas-card mb-4">
                 <div class="d-flex align-items-center gap-4">
                     <div>
-                        <h4 class="mb-1">Bem-vindo, <?= htmlspecialchars($nome_utilizador) ?></h4>
+                        <h4 class="mb-1">Bem-vindo(a), <?= htmlspecialchars($nome_utilizador) ?></h4>
                         <?php if (!empty($email_utilizador)): ?>
                             <p class="mb-1 text-muted">
                                 <i class="fas fa-envelope me-1"></i><?= htmlspecialchars($email_utilizador) ?>
