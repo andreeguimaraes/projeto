@@ -274,18 +274,7 @@ body.login-page {
     border-top: 1px solid #dee2e6;
     float: left;
 }
-/* DataTables - paginação */
-.dataTables_wrapper .dataTables_paginate {
-    padding: 1rem;
-    border-top: 1px solid #dee2e6;
-    float: right;
-}
 
-.dataTables_wrapper .dataTables_length {
-    padding: 1rem;
-    border-top: 1px solid #dee2e6;
-    float: left;
-}
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
     border-radius: 6px !important;

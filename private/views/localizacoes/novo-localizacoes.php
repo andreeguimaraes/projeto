@@ -200,10 +200,10 @@ $ligacao = null;
                             <div class="col-md-3">
                                 <label class="form-label fw-bold">Sala / Gabinete <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="sala"
-                                    placeholder="Ex.: Sala 201" required
+                                    placeholder="Ex.: 201" maxlength="3" required
                                     value="<?= htmlspecialchars($sala ?? '') ?>">
                             </div>
-                        </div>
+                            </div>
 
                         <hr>
 

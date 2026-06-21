@@ -246,6 +246,8 @@ $ligacao = null;
                                 <input type="text"
                                     class="form-control"
                                     name="sala"
+                                    placeholder="Ex.: 201"
+                                    maxlength="3"
                                     value="<?= htmlspecialchars($_POST['sala'] ?? $localizacao->sala ?? '') ?>"
                                     required>
                             </div>
