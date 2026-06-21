@@ -372,3 +372,17 @@ body.login-page {
     font-size: .875rem;
     color: #212529;
 }
+/* Responsividade da navbar em ecrãs muito pequenos (telemóveis) */
+@media (max-width: 480px) {
+    .navbar-admin .col-6 {
+        flex: 0 0 auto;
+        width: auto;
+    }
+    .navbar-admin img {
+        max-height: 28px;
+    }
+    .navbar-admin .dropdown-toggle {
+        font-size: 0.85rem;
+        padding: 0.375rem 0.5rem;
+    }
+}

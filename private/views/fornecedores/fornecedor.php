@@ -331,22 +331,10 @@ $ligacao = null;
     </div>
 </div>
 
-<script>
-    document.getElementById('modalEliminar')
-        .addEventListener('show.bs.modal', function(e) {
-            const btn = e.relatedTarget;
-            const id = btn.dataset.id;
-            const codigo = btn.dataset.codigo;
-            const nome = btn.dataset.nome;
 
-            document.getElementById('modalFornecedorInfo').textContent =
-                codigo + ' — ' + nome;
-
-            document.getElementById('btnConfirmarEliminar').href =
-                'fornecedor.php?eliminar=' + id;
-        });
-</script>
 <script>
+
+    initModalEliminar('modalEliminar', 'modalFornecedorInfo', 'btnConfirmarEliminar', 'fornecedor.php?eliminar=', ['codigo', 'nome']);
     $(document).ready(function() {
         var tabela = $('#tabela-fornecedores').DataTable({
             language: {

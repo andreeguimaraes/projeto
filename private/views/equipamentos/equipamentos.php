@@ -534,21 +534,9 @@ $ligacao = null;
     </div>
 </div>
 <script>
-    document.getElementById('modalEliminar')
-        .addEventListener('show.bs.modal', function(e) {
-            const btn = e.relatedTarget;
-            const id = btn.dataset.id;
-            const codigo = btn.dataset.codigo;
-            const designacao = btn.dataset.designacao;
 
-            document.getElementById('modalEquipamentoInfo').textContent =
-                codigo + ' — ' + designacao;
+    initModalEliminar('modalEliminar', 'modalEquipamentoInfo', 'btnConfirmarEliminar', 'equipamentos.php?eliminar=', ['codigo', 'designacao']);
 
-            document.getElementById('btnConfirmarEliminar').href =
-                'equipamentos.php?eliminar=' + id;
-        });
-</script>
-<script>
     $(document).ready(function() {
         var tabela = $('#tabela-equipamentos').DataTable({
             language: {

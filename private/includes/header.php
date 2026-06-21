@@ -24,6 +24,8 @@ require_once __DIR__ . '/../../config/config.php';
     <!-- DataTables CSS + JS -->
     <link rel="stylesheet" href="/MEDINV/private/assets/datatables/datatables.min.css">
     <script src="/MEDINV/private/assets/datatables/datatables.min.js"></script> 
+    <!-- Java Script -->
+    <script src="/MEDINV/assets/js/1240722.js"></script>
 </head>
 
 

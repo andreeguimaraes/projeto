@@ -1,3 +1,90 @@
+a505f17 - André Guimarães - 2026-06-21 17:23:10 +0100 - implmentação de ficheiros BD
+493e642 - André Guimarães - 2026-06-21 15:16:19 +0100 - validacoes em gestao de conteudos
+afd0329 - André Guimarães - 2026-06-21 11:47:45 +0100 - verificações finais e adicionar comentários
+67df999 - André Guimarães - 2026-06-21 11:06:57 +0100 - validar agentes
+c49cf67 - André Guimarães - 2026-06-21 09:36:13 +0100 - criação de agentes de login
+799ed18 - André Guimarães - 2026-06-21 01:06:47 +0100 - implmentação de atualizações dinamicas em equipamentos
+a787768 - André Guimarães - 2026-06-21 00:00:21 +0100 - implmentacao de atualizações dinâmicas em fornecedores
+59595a3 - André Guimarães - 2026-06-20 22:58:52 +0100 - implementacao de atualizacoes dinaminas em localizacoes
+501fbb6 - André Guimarães - 2026-06-20 22:09:07 +0100 - atualizacao de fornecedores em novo equipamentos
+79a1753 - André Guimarães - 2026-06-20 21:04:15 +0100 - atualizaçao de fornecedores em equipamentos
+78f9536 - André Guimarães - 2026-06-20 00:21:45 +0100 - validação em conteúdos
+7281205 - André Guimarães - 2026-06-20 00:04:45 +0100 - gestao de conteúdos e index-admin dinamicos
+184096b - André Guimarães - 2026-06-19 23:03:12 +0100 - criação de desativacao em fornecedores
+db3fd48 - André Guimarães - 2026-06-19 22:57:41 +0100 - criação de desativação localizacao
+e17ed1c - André Guimarães - 2026-06-19 22:27:23 +0100 - implementação de detalhes dinamicos do equipamento
+4c42f59 - André Guimarães - 2026-06-19 14:40:15 +0100 - implmentação de validacoes em validacoes.php
+6b426e7 - André Guimarães - 2026-06-19 11:33:47 +0100 - implmentação de verificações em editar
+00e684b - André Guimarães - 2026-06-19 01:11:13 +0100 - implementacao editar localizacoes
+73fcb5a - André Guimarães - 2026-06-19 01:02:37 +0100 - implmentacao get editar-fonnecedor
+acbfc10 - André Guimarães - 2026-06-19 00:42:00 +0100 - implmentação de validações
+f485ce6 - André Guimarães - 2026-06-18 20:01:35 +0100 - implementação de insert com post
+2322764 - André Guimarães - 2026-06-18 15:35:19 +0100 - Preencher o formulário com os dados do equipamento
+37df31c - André Guimarães - 2026-06-18 14:25:54 +0100 - encriptação de dados em equipamentos
+e6f48bf - André Guimarães - 2026-06-18 00:38:19 +0100 - implmentação de upload de ficheiros
+b2de286 - André Guimarães - 2026-06-17 23:55:57 +0100 - implementação de validações em novo-equipamentos
+682e5fc - André Guimarães - 2026-06-16 20:37:12 +0100 - implmentação de associação de equipamentos com fornecedores e localizacoes
+d482c5d - André Guimarães - 2026-06-16 19:35:58 +0100 - implemtação de inserir em localizações
+2804e2c - André Guimarães - 2026-06-16 15:22:40 +0100 - implementação de inserir em fornecedores
+1d514af - André Guimarães - 2026-06-14 13:16:24 +0100 - implementacao de paginação em todas as listas
+0b44f1b - André Guimarães - 2026-06-14 12:57:49 +0100 - implementação de paginação em equipamentos
+fec8235 - André Guimarães - 2026-06-12 23:43:19 +0100 - implmentação listagem em localizações
+8b7dfaf - André Guimarães - 2026-06-12 23:17:20 +0100 - implmentação listagem fornecedor com bd
+b6b46a0 - André Guimarães - 2026-06-11 17:36:00 +0100 - implementação de base dados em equipamentos
+35c9152 - André Guimarães - 2026-06-11 11:09:15 +0100 - ligação à base de dados
+046c9ec - André Guimarães - 2026-06-10 20:57:36 +0100 - implementação de atributos de equipamentos
+69086b2 - André Guimarães - 2026-06-08 14:15:44 +0100 - implementação de ordens de tabelas
+c55918f - André Guimarães - 2026-06-06 11:19:44 +0100 - implementação Envio de dados Formulário (POST)
+9d2d1f3 - André Guimarães - 2026-06-05 10:30:37 +0100 - atualização de caminhos .html para .php
+a3b3158 - André Guimarães - 2026-06-05 09:47:51 +0100 - implmentacao de footer, header, nav e sidebar.php
+8a0e6b1 - André Guimarães - 2026-06-04 22:27:35 +0100 - Restruturação do Projeto para php
+7caee70 - André Guimarães - 2026-06-04 17:01:02 +0100 - implementação de fonte de letra
+36ab1fb - André Guimarães - 2026-06-04 14:51:03 +0100 - implementacao de logo nas paginas
+7397ebe - André Guimarães - 2026-06-04 11:50:34 +0100 - implementacao de separadores em novo-equipamentos
+7abf19e - André Guimarães - 2026-06-03 11:26:38 +0100 - implementação de editar documentacao
+b9b1b01 - André Guimarães - 2026-06-02 23:08:13 +0100 - Implmentação de melhorias em garantias
+1fa60f1 - André Guimarães - 2026-06-02 19:59:14 +0100 - implementação de melhorias na gestão de conteúdos
+e6fecfe - André Guimarães - 2026-06-02 18:19:28 +0100 - implementação de funcionalidades nas páginas
+258f4f2 - André Guimarães - 2026-06-02 13:33:23 +0100 - implementação table responsive
+18e80dd - André Guimarães - 2026-06-02 13:20:45 +0100 - implementação ficheiro charts
+c3c76e0 - André Guimarães - 2026-06-01 15:29:16 +0100 - implementação botão dropdown 'administrador'
+6093d9b - André Guimarães - 2026-05-26 10:17:28 +0100 - implmentação módulo consulta
+3fc0408 - André Guimarães - 2026-05-24 22:50:55 +0100 - implementação informação nos tabs
+637aef2 - André Guimarães - 2026-05-24 20:55:32 +0100 - implementação de tabs em detalhes equipamento
+baa6f06 - André Guimarães - 2026-05-21 16:10:46 +0100 - criação de pagina conteudos
+bafc4a3 - André Guimarães - 2026-05-21 11:17:48 +0100 - criação de pagina editar localizacao
+88a5f68 - André Guimarães - 2026-05-21 11:15:03 +0100 - criação pagona nova localizacao
+e3b2eca - André Guimarães - 2026-05-21 11:13:56 +0100 - implementação pagina novo garantias
+ce0c08f - André Guimarães - 2026-05-21 09:52:37 +0100 - implementação detalhes garantia
+df4125c - André Guimarães - 2026-05-21 09:49:48 +0100 - implementação pagina editar garantias
+4a6d535 - André Guimarães - 2026-05-21 09:42:44 +0100 - criação página garantias
+f714d68 - André Guimarães - 2026-05-20 12:02:29 +0100 - implentacao de detalhes documentacao
+3ffe71f - André Guimarães - 2026-05-20 11:41:56 +0100 - criação página documentação
+eefc3d4 - André Guimarães - 2026-05-20 10:24:38 +0100 - criação de página novo fornecedor
+6ca1c9c - André Guimarães - 2026-05-20 09:54:31 +0100 - criação de paginas localizacoes e fornecedores
+57a475d - André Guimarães - 2026-05-20 09:53:55 +0100 - criação de pagina editar fornecedor
+51f2600 - André Guimarães - 2026-05-19 19:35:52 +0100 - criação da pagina fornecedor
+06731c0 - André Guimarães - 2026-05-19 19:22:14 +0100 - implementação de ações em localizacoes
+25e05d5 - André Guimarães - 2026-05-19 19:08:01 +0100 - criação página localizações
+72caf82 - André Guimarães - 2026-05-19 18:46:43 +0100 - criação páginas secções views
+7d69c3f - André Guimarães - 2026-05-19 11:27:14 +0100 - criação da página novo equipamento
+40d5c14 - André Guimarães - 2026-05-19 11:15:55 +0100 - implementação elemento modal a editar
+441d79d - André Guimarães - 2026-05-19 10:44:37 +0100 - implementação elemento modal a equipamentos
+8090219 - André Guimarães - 2026-05-19 10:18:45 +0100 - criação da página editar equip
+35b555a - André Guimarães - 2026-05-19 10:01:38 +0100 - criação da página detalhes
+4c42b6a - André Guimarães - 2026-05-18 16:51:41 +0100 - implementação de estilo offcanvas em equipamentos
+e312ecc - André Guimarães - 2026-05-18 16:24:45 +0100 - criação página equipamentos
+0c925af - André Guimarães - 2026-05-18 15:09:19 +0100 - criação de paginas backoffice
+b536e05 - André Guimarães - 2026-05-18 14:59:12 +0100 - criação de gráficos no dashboard
+9d6d803 - André Guimarães - 2026-05-18 11:30:26 +0100 - Criação página dashboard
+cd26ef4 - André Guimarães - 2026-05-18 11:11:35 +0100 - criação estilos css index-admin
+2ad037c - André Guimarães - 2026-05-18 10:41:37 +0100 - criação página boas-vindas admin
+9a286d6 - André Guimarães - 2026-05-17 23:44:29 +0100 - criação index do backoffice
+b7c197e - André Guimarães - 2026-05-17 23:01:13 +0100 - Implementação caminhos para acesso login
+55f2dfe - André Guimarães - 2026-05-17 22:51:01 +0100 - criação página de login
+f52dc4e - André Guimarães - 2026-05-17 19:56:40 +0100 - implementação de opçõs no formulário de contacto
+54d1325 - André Guimarães - 2026-05-17 19:55:24 +0100 - implementação de caminhos nas páginas HTML
+9d04d3e - André Guimarães - 2026-05-16 22:52:40 +0100 - criação campos de contactos
 595b56c - André Guimarães - 2026-05-16 20:08:36 +0100 - criação de secções na página "quem-somos"
 3f9c371 - André Guimarães - 2026-05-15 23:48:53 +0100 - criação secção "quem somos" (index)
 48c7251 - André Guimarães - 2026-05-15 23:43:22 +0100 - Edição rodapé

@@ -370,22 +370,9 @@ $ligacao = null;
     </div>
 </div>
 
-<script>
-    document.getElementById('modalEliminar')
-        .addEventListener('show.bs.modal', function(e) {
-            const btn = e.relatedTarget;
-            const id = btn.dataset.id;
-            const codigo = btn.dataset.codigo;
-            const info = btn.dataset.info;
 
-            document.getElementById('modalLocalizacaoInfo').textContent =
-                codigo + ' — ' + info;
-
-            document.getElementById('btnConfirmarEliminar').href =
-                'localizacoes.php?eliminar=' + id;
-        });
-</script>
 <script>
+    initModalEliminar('modalEliminar', 'modalLocalizacaoInfo', 'btnConfirmarEliminar', 'localizacoes.php?eliminar=', ['codigo', 'info']);
     $(document).ready(function() {
         var tabela = $('#tabela-localizacoes').DataTable({
             language: {
