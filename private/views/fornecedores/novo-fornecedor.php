@@ -6,6 +6,7 @@
 // --------------------------------------------------------------------
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+redirect_if_not_allowed(['administrador', 'tecnico']);
 
 $erros        = [];
 $erro_sistema = '';

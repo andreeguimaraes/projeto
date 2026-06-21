@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+redirect_if_not_allowed(['administrador', 'tecnico']);
+
 require_once __DIR__ . '/../../includes/validacoes.php';
 
 // Só aceita GET e POST

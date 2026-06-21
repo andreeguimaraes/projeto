@@ -56,4 +56,13 @@ function aes_decrypt($value) {
         OPENSSL_IV
     );
 } 
+// Verifica se o perfil do utilizador tem permissão; caso contrário redireciona
+function redirect_if_not_allowed($perfis_permitidos, $redirect_to = '/private/home.php')
+{
+    start_session();
+    if (!isset($_SESSION['perfil']) || !in_array($_SESSION['perfil'], $perfis_permitidos)) {
+        header("Location: " . BASE_URL . $redirect_to);
+        exit;
+    }
+}
 ?>

@@ -10,7 +10,7 @@ $total_manutencao = 0;
 $total_inativos = 0;
 $total_garantia_expirada = 0;
 $total_sem_documentacao = 0;
-$total_criticidade_elevada = 0;
+$total_suporte_vida = 0;
 $equipamentos_por_servico = [];
 $equipamentos_por_categoria = [];
 $equipamentos_por_localizacao = [];
@@ -53,7 +53,7 @@ try {
     ")->fetchColumn();
 
     // Equipamentos de criticidade elevada (suporte de vida)
-    $total_criticidade_elevada = (int) $ligacao->query("
+    $total_suporte_vida = (int) $ligacao->query("
         SELECT COUNT(*)
         FROM equipamentos
         WHERE criticidade = 'suporte_de_vida'
@@ -141,7 +141,7 @@ require_once '../includes/header.php'; ?>
                     <i class="fas fa-chart-bar me-2"></i>Indicadores gerais
                 </h5>
                 <div class="row g-3 mb-4">
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-4 col-lg-3 col-xl">
                         <div class="card indicador-card text-center">
                             <div class="card-body">
                                 <i class="fas fa-hospital-user fa-2x mb-2 text-primary"></i>
@@ -150,7 +150,7 @@ require_once '../includes/header.php'; ?>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-4 col-lg-3 col-xl">
                         <div class="card indicador-card text-center">
                             <div class="card-body">
                                 <i class="fas fa-circle-check fa-2x mb-2 text-success"></i>
@@ -159,7 +159,7 @@ require_once '../includes/header.php'; ?>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-4 col-lg-3 col-xl">
                         <div class="card indicador-card text-center">
                             <div class="card-body">
                                 <i class="fas fa-wrench fa-2x mb-2 text-warning"></i>
@@ -168,7 +168,7 @@ require_once '../includes/header.php'; ?>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-4 col-lg-3 col-xl">
                         <div class="card indicador-card text-center">
                             <div class="card-body">
                                 <i class="fas fa-circle-xmark fa-2x mb-2 text-secondary"></i>
@@ -177,7 +177,7 @@ require_once '../includes/header.php'; ?>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-4 col-lg-3 col-xl">
                         <div class="card indicador-card text-center">
                             <div class="card-body">
                                 <i class="fas fa-file-circle-xmark fa-2x mb-2 text-danger"></i>
@@ -186,7 +186,7 @@ require_once '../includes/header.php'; ?>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-4 col-lg-3 col-xl">
                         <div class="card indicador-card text-center">
                             <div class="card-body">
                                 <i class="fas fa-folder-open fa-2x mb-2 text-info"></i>
@@ -195,11 +195,11 @@ require_once '../includes/header.php'; ?>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-6 col-md-4 col-lg-3 col-xl">
                         <div class="card indicador-card text-center">
                             <div class="card-body">
                                 <i class="fas fa-heart-pulse fa-2x mb-2 text-danger"></i>
-                                <h3 class="mb-0"><?= $total_criticidade_elevada ?></h3>
+                                <h3 class="mb-0"><?= $total_suporte_vida ?></h3>
                                 <p class="text-muted mb-0 small">Suporte de vida</p>
                             </div>
                         </div>

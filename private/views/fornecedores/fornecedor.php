@@ -9,6 +9,7 @@ require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
 
 if (isset($_GET['eliminar'])) {
+    redirect_if_not_allowed(['administrador', 'tecnico']);
     $id = (int) $_GET['eliminar'];
 
     try {
@@ -146,9 +147,11 @@ $ligacao = null;
                     <h2 class="mb-0">Fornecedores</h2>
                     <p class="text-muted mb-0">Gere o inventário de fornecedores</p>
                 </div>
-                <a href="novo-fornecedor.php" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i>Novo fornecedor
-                </a>
+                <?php if ($_SESSION['perfil'] !== 'profissional_saude') : ?>
+                    <a href="novo-fornecedor.php" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Novo fornecedor
+                    </a>
+                <?php endif; ?>
             </div>
 
             <!-- Filtros -->
@@ -260,23 +263,25 @@ $ligacao = null;
                                                             class="btn btn-sm btn-outline-primary" title="Ver detalhes">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <a href="editar-fornecedor.php?id_fornecedor=<?= htmlspecialchars(aes_encrypt($f->id)) ?>"
-                                                            class="btn btn-sm btn-outline-warning" title="Editar">
-                                                            <i class="fas fa-pen"></i>
-                                                        </a>
-                                                        <?php if ($f->ativo) : ?>
-                                                            <button class="btn btn-sm btn-outline-danger" title="Eliminar"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#modalEliminar"
-                                                                data-id="<?= $f->id ?>"
-                                                                data-codigo="<?= htmlspecialchars($f->codigo) ?>"
-                                                                data-nome="<?= htmlspecialchars($f->nome) ?>">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        <?php else : ?>
-                                                            <button class="btn btn-sm btn-outline-secondary" disabled title="Fornecedor inativo">
-                                                                <i class="fas fa-ban"></i>
-                                                            </button>
+                                                        <?php if ($_SESSION['perfil'] !== 'profissional_saude') : ?>
+                                                            <a href="editar-fornecedor.php?id_fornecedor=<?= htmlspecialchars(aes_encrypt($f->id)) ?>"
+                                                                class="btn btn-sm btn-outline-warning" title="Editar">
+                                                                <i class="fas fa-pen"></i>
+                                                            </a>
+                                                            <?php if ($f->ativo) : ?>
+                                                                <button class="btn btn-sm btn-outline-danger" title="Eliminar"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#modalEliminar"
+                                                                    data-id="<?= $f->id ?>"
+                                                                    data-codigo="<?= htmlspecialchars($f->codigo) ?>"
+                                                                    data-nome="<?= htmlspecialchars($f->nome) ?>">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            <?php else : ?>
+                                                                <button class="btn btn-sm btn-outline-secondary" disabled title="Fornecedor inativo">
+                                                                    <i class="fas fa-ban"></i>
+                                                                </button>
+                                                            <?php endif; ?>
                                                         <?php endif; ?>
                                                     </div>
                                                 </td>

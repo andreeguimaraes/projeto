@@ -1,4 +1,3 @@
-
 <!-- Offcanvas Sidebar -->
 <div class="offcanvas offcanvas-start sidebar-admin" tabindex="-1" id="sidebarOffcanvas">
 
@@ -23,9 +22,11 @@
                 <i class="fas fa-house me-2"></i>Início
             </a>
 
-            <a href="/MEDINV/private/views/dashboard.php" class="nav-link sidebar-link">
-                <i class="fas fa-chart-line me-2"></i>Dashboard
-            </a>
+            <?php if ($_SESSION['perfil'] === 'administrador') : ?>
+                <a href="/MEDINV/private/views/dashboard.php" class="nav-link sidebar-link">
+                    <i class="fas fa-chart-line me-2"></i>Dashboard
+                </a>
+            <?php endif; ?>
 
             <a href="/MEDINV/private/views/equipamentos/equipamentos.php" class="nav-link sidebar-link">
                 <i class="fas fa-stethoscope me-2"></i>Equipamentos
@@ -46,21 +47,22 @@
             <a href="/MEDINV/private/views/garantias/garantias.php" class="nav-link sidebar-link">
                 <i class="fas fa-file-contract me-2"></i>
                 Garantias e Contratos
-            </a>
+            </a> 
 -->
-            <hr>
+            <?php if ($_SESSION['perfil'] === 'administrador') : ?>
+                <hr>
 
-            <h6 class="sidebar-title">
-                ÁREA PÚBLICA
-            </h6>
+                <h6 class="sidebar-title">
+                    ÁREA PÚBLICA
+                </h6>
 
-            <a href="/MEDINV/private/views/conteudos/conteudos.php" class="nav-link sidebar-link">
-                <i class="fas fa-pen-to-square me-2"></i>
-                Gerir Conteúdos
-            </a>
+                <a href="/MEDINV/private/views/conteudos/conteudos.php" class="nav-link sidebar-link">
+                    <i class="fas fa-pen-to-square me-2"></i>
+                    Gerir Conteúdos
+                </a>
+            <?php endif; ?>
 
         </nav>
 
     </div>
 </div>
-

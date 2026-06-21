@@ -6,6 +6,8 @@
 // --------------------------------------------------------------------
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
+redirect_if_not_allowed(['administrador', 'tecnico']);
+
 require_once __DIR__ . '/../../includes/validacoes.php';
 
 $localizacoes_bd = [];

@@ -72,7 +72,7 @@ try {
     $stmt->execute();
     $utilizador = $stmt->fetch(PDO::FETCH_OBJ);
 
-    if (!$utilizador || $password !== $utilizador->password) {
+    if (!$utilizador || !password_verify($password, $utilizador->password)) {
         $_SESSION['server_error'] = 'Login inválido';
         header('Location: ../public/login.php');
         return;
@@ -84,21 +84,13 @@ try {
     return;
 }
 
+// --------------------------------------------------------------------
+// LOGIN BEM-SUCEDIDO: Guardar o utilizador na sessão
+// --------------------------------------------------------------------
 $_SESSION['utilizador'] = $utilizador->nome;
 $_SESSION['utilizador_id'] = $utilizador->id;
 $_SESSION['utilizador_email'] = $utilizador->email;
+$_SESSION['perfil'] = $utilizador->perfil;
 
 header('Location: home.php');
 exit;
-// Se o status for 1 (válido), o código continuará — aqui será futuramente criada a sessão
-// do utilizador e o redirecionamento para a área privada
-
-// -------------------------------------------------------------------
-// LOGIN BEM-SUCEDIDO: Guardar o utilizador na sessão
-// --------------------------------------------------------------------
-// Guarda o nome de utilizador na sessão para identificar o utilizador autenticado
-// Guarda o nome de utilizador na sessão para identificar o utilizador autenticado
-$_SESSION['utilizador'] = $username;
-// Redirecionar para a página principal privada
-header('Location: home.php');
-exit; 
