@@ -1,29 +1,60 @@
+<?php
+require_once __DIR__ . '/../../../config/config.php';
+
+// ── Carregar conteúdos dinâmicos da BD ──────────────────────────────────────
+$conteudos = [
+    'titulo_principal' => 'MEDINV',
+    'telefone'         => '',
+    'email'            => '',
+    'morada'           => '',
+    'codigo_postal'    => '',
+    'localidade'       => '',
+    'horario'          => '',
+];
+
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt = $ligacao->query("SELECT chave, valor FROM conteudos_site");
+    foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $linha) {
+        $conteudos[$linha->chave] = $linha->valor;
+    }
+} catch (PDOException $e) {
+    // Falha silenciosa — os valores por defeito ficam activos
+}
+
+$ligacao = null;
+
+$morada_completa = htmlspecialchars($conteudos['morada']);
+$cp_localidade   = trim(htmlspecialchars($conteudos['codigo_postal']) . ' ' . htmlspecialchars($conteudos['localidade']));
+?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEDINV - Serviços</title>
+    <title><?= htmlspecialchars($conteudos['titulo_principal']) ?> - Serviços</title>
 
     <!-- favicon -->
     <link rel="icon" type="image/svg+xml" href="../../../assets/img/logo_medinv_icon.svg">
-    <!-- Font Awesome (local) -->
-    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css"> 
-    <!-- estilos de pagina -->
+    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
     <link rel="stylesheet" href="../../../assets/css/1240722.css">
-    
 </head>
 <body>
+
     <!-- Navegação -->
     <nav class="bng-navbar">
-        <!-- Marca -->
         <div class="navbar-brand">
             <div class="brand-text">
                 <img src="../../../assets/img/logo_medinv.svg" alt="Logo da empresa">
             </div>
-        </div>  
+        </div>
 
-        <!-- Links da navegação -->
         <div class="container-navegacao">
             <a href="../../index.php">INÍCIO</a>
             <a href="../quem-somos/quem-somos.php">QUEM SOMOS</a>
@@ -31,13 +62,12 @@
             <a href="../contactos/contactos.php">CONTACTOS</a>
         </div>
 
-        <!-- Área Cliente -->
         <div class="nav-cliente">
             <a href="../../login.php" target="_blank">Área Restrita</a>
         </div>
     </nav>
 
-    <!-- Seção Banner/Hero com Foto -->
+    <!-- Banner/Hero -->
     <section class="hero-banner">
         <img src="../../../assets/img/equipamentos.oticos.jpg" alt="Banner Serviços - MEDINV" class="hero-image">
         <div class="hero-overlay">
@@ -46,7 +76,7 @@
         </div>
     </section>
 
-    <!-- Conteúdo Principal -->
+    <!-- Intro -->
     <section id="servicos-intro" class="section-block section-intro">
         <div class="quem-somos-header">
             <h1 class="section-title">A nossa plataforma</h1>
@@ -57,13 +87,13 @@
         </div>
     </section>
 
-        <!-- Seção "Conteúdo da pagina - Serviços" -->
+    <!-- O que fazemos -->
     <section id="servicos-overview" class="section-block section-overview">
         <h2 class="section-title">O que fazemos</h2>
         <div class="servicos-container">
             <div class="servico">
                 <i class="fa-solid fa-laptop-medical fa-3x"></i>
-                <h3> Software especializado</h3>
+                <h3>Software especializado</h3>
                 <p>Desenvolvemos soluções web para gestão de inventário hospitalar</p>
             </div>
             <div class="servico">
@@ -79,7 +109,7 @@
         </div>
     </section>
 
-    <!-- Seção "cards (-2) de servicos" -->
+    <!-- Cards de serviços -->
     <section id="servicos-cards" class="servicos-cards-section section-block">
         <h2 class="section-title">Os nossos serviços</h2>
         <div class="servicos-container-2">
@@ -114,8 +144,7 @@
                 <i class="fas fa-file-contract fa-3x"></i>
                 <h3>Garantias e contratos</h3>
                 <p>Consulte datas de início e fim de garantia, tipo de contrato de manutenção e entidade responsável. Visualize
-                    de forma destacada as garantias e contratos já expirados, e evite lapsos contratuais que possam comprometer a operação.
-                </p>
+                    de forma destacada as garantias e contratos já expirados, e evite lapsos contratuais que possam comprometer a operação.</p>
             </div>
             <div class="servico-2">
                 <i class="fas fa-chart-line fa-3x"></i>
@@ -126,8 +155,7 @@
         </div>
     </section>
 
-
-        <!-- Seção de contacto-->
+    <!-- Convite -->
     <section id="convite">
         <div>
             <h2>Quer modernizar a gestão do seu hospital?</h2>
@@ -139,17 +167,24 @@
     <footer class="footer-container">
         <div class="footer-section">
             <strong>LOCALIZAÇÃO</strong>
-            <p>Rua de António Bernardino, 431, Porto<br>4200-009, Porto<br>Portugal</p>
+            <p>
+                <?= $morada_completa ?><br>
+                <?= $cp_localidade ?><br>
+                Portugal
+            </p>
         </div>
         <div class="footer-section">
             <strong>HORÁRIO</strong>
-            <p>2ª–6ª: 7h — 21h<br>Sáb: 9h — 15h<br>Dom: Encerrado</p>
+            <p><?= nl2br(htmlspecialchars($conteudos['horario'])) ?></p>
         </div>
         <div class="footer-section">
             <strong>CONTACTOS</strong>
-            <p>Email: geral@medinv.pt<br>Tel: +351 912 345 678</p>
+            <p>
+                Email: <?= htmlspecialchars($conteudos['email']) ?><br>
+                Tel: <?= htmlspecialchars($conteudos['telefone']) ?>
+            </p>
         </div>
     </footer>
-   
+
 </body>
 </html>

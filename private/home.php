@@ -79,12 +79,6 @@ $email_utilizador = $_SESSION['utilizador_email'] ?? '';
                             </p>
                         <?php endif; ?>
                     </div>
-                    <div class="ms-auto text-end">
-                        <span class="badge bg-success px-3 py-2">
-                            <i class="fas fa-circle me-1" style="font-size: 0.6rem;"></i>Online
-                        </span>
-
-                    </div>
                 </div>
             </div>
 
