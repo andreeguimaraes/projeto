@@ -1,11 +1,10 @@
-================================================================================
  MEDINV — Sistema de Gestão de Equipamento Hospitalar
  README.txt
-================================================================================
+
 
 --------------------------------------------------------------------------------
  1. IDENTIFICAÇÃO DO PROJETO
---------------------------------------------------------------------------------
+
 
 Nome do projeto   : MEDINV — Sistema de Gestão de Equipamento Hospitalar
 Unidade curricular: SIBDAS — Sistemas de Informação e Bases de Dados Aplicados
@@ -16,14 +15,13 @@ Ano letivo        : 2025/2026
 
 --------------------------------------------------------------------------------
  2. AUTOR
---------------------------------------------------------------------------------
 
 Nome   : André Sarmento Santos Clara Guimarães
 Número : 1240722
 
 --------------------------------------------------------------------------------
  3. DESCRIÇÃO DA APLICAÇÃO
---------------------------------------------------------------------------------
+
 
 MEDINV é um sistema web desenvolvida em PHP e MySQL que simula uma solução
 de gestão de inventário hospitalar..
@@ -41,84 +39,103 @@ A aplicação é composta por duas áreas distintas:
     e exportação de dados em CSV, JSON e PDF.
 
 --------------------------------------------------------------------------------
+
  4. ESTRUTURA DE DIRETORIAS
---------------------------------------------------------------------------------
+
 
 medinv/
 ├── assets/
 │   ├── bootstrap/
 │   ├── chartjs/
 │   ├── css/
-│   │   └── 1240722.css
+│   │   └── 1240722.css                        Folha de estilos da área pública
 │   ├── fontawesome/
 │   ├── fonts/
 │   ├── img/
 │   └── js/
-│       └── 1240722.js
+│       └── 1240722.js                         Scripts JavaScript globais
 ├── basedados/
 ├── config/
-│   └── config.php
+│   └── config.php                             Configuração da ligação à base de dados
 ├── private/
 │   ├── assets/
 │   │   ├── datatables/
 │   │   ├── jQuery/
-│   │   └── admin1240722.css
+│   │   └── admin1240722.css                   Folha de estilos da área privada
 │   ├── includes/
-│   │   ├── footer.php
-│   │   ├── funcoes.php
-│   │   ├── header.php
-│   │   ├── nav.php
-│   │   ├── sidebar.php
-│   │   └── validacoes.php
+│   │   ├── footer.php                         Rodapé partilhado da área privada
+│   │   ├── funcoes.php                        Funções auxiliares globais (sessão, logs, etc.)
+│   │   ├── header.php                         Cabeçalho partilhado da área privada
+│   │   ├── nav.php                            Barra de navegação superior
+│   │   ├── sidebar.php                        Menu lateral
+│   │   └── validacoes.php                     Funções de validação de formulários
 │   ├── views/
 │   │   ├── conteudos/
-│   │   │   └── conteudos.php
+│   │   │   └── conteudos.php                  Gestão dos conteúdos da área pública
 │   │   ├── equipamentos/
-│   │   │   ├── detalhes-equipamentos.php
-│   │   │   ├── editar-equipamentos.php
-│   │   │   ├── equipamentos.php
-│   │   │   ├── exportar-equipamentos.php
-│   │   │   └── novo-equipamentos.php
+│   │   │   ├── detalhes-equipamentos.php      Visualização detalhada de um equipamento
+│   │   │   ├── editar-equipamentos.php        Formulário de edição de equipamento
+│   │   │   ├── equipamentos.php               Listagem e pesquisa de equipamentos
+│   │   │   ├── exportar-equipamentos.php      Exportação em CSV, JSON e PDF
+│   │   │   └── novo-equipamentos.php          Formulário de criação de equipamento
 │   │   ├── fornecedores/
+│   │   │   ├── detalhes-fornecedor.php        Visualização detalhada de um fornecedor
+│   │   │   ├── editar-fornecedor.php          Formulário de edição de fornecedor
+│   │   │   ├── fornecedor.php                 Listagem e pesquisa de fornecedores
+│   │   │   └── novo-fornecedor.php            Formulário de criação de fornecedor
 │   │   └── localizacoes/
-│   ├── dashboard.php
-│   ├── home.php
-│   ├── index-admin.php
-│   └── processa_login.php
+│   │       ├── detalhes-localizacoes.php      Visualização detalhada de uma localização
+│   │       ├── editar-localizacoes.php        Formulário de edição de localização
+│   │       ├── localizacoes.php               Listagem e pesquisa de localizações
+│   │       └── novo-localizacoes.php          Formulário de criação de localização
+│   ├── dashboard.php                          Dashboard com indicadores e gráficos do inventário
+│   ├── home.php                               Página inicial da área privada
+│   ├── index-admin.php                        Página de redirecionamento pós-login
+│   └── processa_login.php                     Processamento e validação do login
 ├── public/
 │   ├── views/
 │   │   ├── contactos/
-│   │   │   └── contactos.php
+│   │   │   └── contactos.php                  Página de contactos com formulário público
 │   │   ├── quem-somos/
+│   │   │   └── quem-somos.php                 Página institucional da empresa
 │   │   └── servicos/
-│   ├── index.php
-│   ├── login.php
-│   └── logout.php
+│   │       └── servicos.php                   Página de apresentação dos serviços
+│   ├── index.php                              Página inicial da área pública
+│   ├── login.php                              Formulário de autenticação
+│   └── logout.php                             Terminar sessão e redirecionar para login
 ├── uploads/
-│   ├── contratos/
-│   ├── documentos/
-│   └── garantias/
+│   ├── contratos/                             Ficheiros PDF de contratos
+│   ├── documentos/                            Ficheiros PDF de documentação técnica
+│   └── garantias/                             Ficheiros PDF de garantias
 ├── commits.txt
 └── README.txt
 
 --------------------------------------------------------------------------------
  5. INSTRUÇÕES DE ACESSO À APLICAÇÃO
---------------------------------------------------------------------------------
 
-A aplicação está disponível no servidor do ISEP no seguinte endereço:
+Para executar a aplicação localmente (Laragon):
 
-  http://127.0.0.1/sibdas/1240722/medinv/public/index.php
+  1. Copiar a pasta do projeto (medinv/) para o diretório www do Laragon,
+     respeitando a seguinte estrutura:
+       C:\laragon\www\sibdas\1240722\medinv\
+  2. Iniciar o Laragon (botão "Start All")
+  3. Aceder no browser ao seguinte endereço:
+       http://127.0.0.1/sibdas/1240722/medinv/public
+  4. Garantir que o ficheiro config/config.php tem as credenciais corretas
+     da base de dados
 
 Base de dados:
-  Servidor : vsgate-s1.dei.isep.ipp.pt
-  Porto    : 10464
-  Base de dados: db1240722
+  Servidor      : vsgate-s1.dei.isep.ipp.pt
+  Porto         : 10464
+  Base de dados : db1240722
 
-A aplicação corre diretamente no servidor disponibilizado pelo ISEP.
+Nota: O script SQL para criação e população da base de dados encontra-se
+na pasta basedados/. Deve ser executado no servidor indicado antes de
+iniciar a aplicação.
 
 --------------------------------------------------------------------------------
  6. CREDENCIAIS DE ACESSO
---------------------------------------------------------------------------------
+
 
 Existem três perfis de utilizador na aplicação:
 
@@ -141,7 +158,7 @@ Existem três perfis de utilizador na aplicação:
 
 --------------------------------------------------------------------------------
  7. INSTRUÇÕES PARA TESTE DA APLICAÇÃO
---------------------------------------------------------------------------------
+
 
 Recomenda-se a seguinte sequência de testes:
 
@@ -177,7 +194,7 @@ Recomenda-se a seguinte sequência de testes:
 
 --------------------------------------------------------------------------------
  8. INFORMAÇÃO ADICIONAL
---------------------------------------------------------------------------------
+
 
   - Todos os ficheiros enviados (garantias, contratos, documentação) são
     guardados na pasta uploads/ com nome único gerado automaticamente.
@@ -196,4 +213,3 @@ Recomenda-se a seguinte sequência de testes:
     três formatos: CSV (compatível com Excel), JSON e PDF (via impressão
     do browser).
 
-================================================================================
