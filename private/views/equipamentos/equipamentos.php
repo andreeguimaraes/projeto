@@ -177,11 +177,26 @@ $ligacao = null;
                     <h2 class="mb-0">Equipamentos médicos</h2>
                     <p class="text-muted mb-0">Gere o inventário de dispositivos médicos</p>
                 </div>
-                <?php if ($_SESSION['perfil'] !== 'profissional_saude') : ?>
-                    <a href="novo-equipamentos.php" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Novo equipamento
+                <div class="d-flex gap-2">
+                    <!-- Botões de exportação -->
+                    <a href="exportar-equipamentos.php?formato=csv&<?= http_build_query($_GET) ?>"
+                    class="btn btn-outline-success" title="Exportar CSV">
+                        <i class="fas fa-file-csv me-1"></i>CSV
                     </a>
-                <?php endif; ?>
+                    <a href="exportar-equipamentos.php?formato=json&<?= http_build_query($_GET) ?>"
+                    class="btn btn-outline-secondary" title="Exportar JSON">
+                        <i class="fas fa-file-code me-1"></i>JSON
+                    </a>
+                    <a href="exportar-equipamentos.php?formato=pdf&<?= http_build_query($_GET) ?>"
+                        class="btn btn-outline-danger" title="Exportar PDF" target="_blank">
+                        <i class="fas fa-file-pdf me-1"></i>PDF
+                    </a>
+                    <?php if ($_SESSION['perfil'] !== 'profissional_saude') : ?>
+                        <a href="novo-equipamentos.php" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Novo equipamento
+                        </a>
+                    <?php endif; ?>
+                </div>
             </div>
             <!-- Filtros -->
             <div class="card mb-3">

@@ -113,4 +113,22 @@ function redirect_if_not_allowed($perfis_permitidos, $redirect_to = '/private/ho
         exit;
     }
 }
+function registar_log($ligacao, $acao, $modulo, $descricao = '', $sucesso = true) {
+    $utilizador_id = $_SESSION['utilizador_id'] ?? null;
+    $utilizador_email = $_SESSION['utilizador_email'] ?? null;
+    $ip               = $_SERVER['REMOTE_ADDR'] ?? null;
+
+    $stmt = $ligacao->prepare("
+        INSERT INTO logs (utilizador_id, utilizador_email, acao, modulo, descricao, ip, sucesso)
+        VALUES (:utilizador_id, :utilizador_email, :acao, :modulo, :descricao, :ip, :sucesso)
+    ");
+    $stmt->bindParam(':utilizador_id',    $utilizador_id,    PDO::PARAM_INT);
+    $stmt->bindParam(':utilizador_email', $utilizador_email, PDO::PARAM_STR);
+    $stmt->bindParam(':acao',             $acao,             PDO::PARAM_STR);
+    $stmt->bindParam(':modulo',           $modulo,           PDO::PARAM_STR);
+    $stmt->bindParam(':descricao',        $descricao,        PDO::PARAM_STR);
+    $stmt->bindParam(':ip',               $ip,               PDO::PARAM_STR);
+    $stmt->bindParam(':sucesso',          $sucesso,          PDO::PARAM_BOOL);
+    $stmt->execute();
+}
 ?>

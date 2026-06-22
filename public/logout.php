@@ -1,19 +1,39 @@
 <?php
-// Inicia a sessão para aceder e manipular os dados da $_SESSION
+require_once __DIR__ . '/../private/includes/funcoes.php';
+require_once __DIR__ . '/../config/config.php';
 session_start();
+
+// --------------------------------------------------------------------
+// REGISTO DE LOG (antes de destruir a sessão)
+// --------------------------------------------------------------------
+try {
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST . ";port=" . MYSQL_PORT . ";dbname=" . MYSQL_DATABASE . ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    registar_log(
+        $ligacao,
+        'logout',
+        'autenticacao',
+        'Sessão terminada: ' . ($_SESSION['utilizador_email'] ?? 'desconhecido')
+    );
+} catch (PDOException $e) {
+    // Falha silenciosa — o logout continua mesmo que o log falhe
+}
+
+$ligacao = null;
+
 // --------------------------------------------------------------------
 // TERMINAR A SESSÃO
 // --------------------------------------------------------------------
-// Remove todas as variáveis da sessão
-// Isto limpa os dados armazenados, como $_SESSION['utilizador'], etc.
 session_unset();
-// Destroi completamente a sessão no servidor
-// Isto elimina o identificador da sessão e os dados associados
 session_destroy();
+
 // --------------------------------------------------------------------
 // REDIRECIONAMENTO PARA O LOGIN
 // --------------------------------------------------------------------
-// Após terminar a sessão, redireciona o utilizador para a página de login
 header('Location: ../public/login.php');
-// Encerra a execução do script
 return;
