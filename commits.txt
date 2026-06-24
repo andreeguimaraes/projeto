@@ -1,3 +1,9 @@
+31fc81e - André Guimarães - 2026-06-22 13:44:18 +0100 - implemetação de "readme.txt"
+9555888 - André Guimarães - 2026-06-22 11:09:13 +0100 - implmentacao de logs e exportacao CSV, PDF, JSON
+59a671d - André Guimarães - 2026-06-22 10:11:52 +0100 - implmentação de gestão de contúdos na área pública
+82b2546 - André Guimarães - 2026-06-21 19:55:43 +0100 - base de dados atualizada
+0ec720b - André Guimarães - 2026-06-21 19:24:49 +0100 - implementação de caminho absolutos
+3349599 - André Guimarães - 2026-06-21 18:50:15 +0100 - implementacao de "1240722.js"
 a505f17 - André Guimarães - 2026-06-21 17:23:10 +0100 - implmentação de ficheiros BD
 493e642 - André Guimarães - 2026-06-21 15:16:19 +0100 - validacoes em gestao de conteudos
 afd0329 - André Guimarães - 2026-06-21 11:47:45 +0100 - verificações finais e adicionar comentários

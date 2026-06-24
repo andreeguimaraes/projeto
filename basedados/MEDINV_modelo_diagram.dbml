@@ -1,4 +1,3 @@
-
 // MEDINV 
 
 // --- UTILIZADORES (autenticação e controlo de acesso por perfil) ---
@@ -9,6 +8,19 @@ Table utilizadores {
   perfil      enum('administrador', 'tecnico', 'profissional_saude') [not null, default: 'tecnico']
   ativo       boolean [not null, default: true]
   password    varchar(255) [not null]
+}
+
+// --- LOGS (registo de eventos do sistema) ---
+Table logs {
+  id                int          [pk, increment]
+  data_hora         datetime     [not null, default: `now()`]
+  utilizador_id     int
+  utilizador_email  varchar(150)
+  acao              varchar(100) [not null]
+  modulo            varchar(50)  [not null]
+  descricao         text
+  ip                varchar(45)
+  sucesso           boolean      [not null, default: true]
 }
 
 // --- LOCALIZAÇÕES ---
@@ -169,6 +181,9 @@ Table categorias_equipamento {
 // ============================================================
 // RELAÇÕES
 // ============================================================
+
+// Logs
+Ref: logs.utilizador_id > utilizadores.id
 
 // Localização
 Ref: localizacoes.servico_id > servicos.id
