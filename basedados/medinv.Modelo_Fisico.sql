@@ -14,12 +14,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
--- A despejar estrutura da base de dados para db1240722
-DROP DATABASE IF EXISTS `db1240722`;
-CREATE DATABASE IF NOT EXISTS `db1240722` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `db1240722`;
-
 -- A despejar estrutura para tabela db1240722.categorias_equipamento
 CREATE TABLE IF NOT EXISTS `categorias_equipamento` (
   `id` int NOT NULL AUTO_INCREMENT,
